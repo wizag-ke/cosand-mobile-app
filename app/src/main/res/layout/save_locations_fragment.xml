@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp">
+
+  <ImageView
+      android:id="@+id/location_image"
+      android:layout_width="match_parent"
+      android:layout_height="200dp"
+      android:scaleType="centerCrop"
+      android:src="@drawable/shammeel"/>
+
+    <View
+        android:id="@+id/save_location_view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/location_image"
+        android:background="#B8BECC"/>
+
+    <TextView
+        android:id="@+id/enter_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/save_location_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Enter Name:"/>
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/enter_name_label"/>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#16C9E9"
+        android:textStyle="bold"
+        android:layout_below="@id/edit_name"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:textSize="16sp"
+        android:text="SAVE"/>
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#16C9E9"
+        android:textStyle="bold"
+        android:layout_below="@id/edit_name"
+        android:layout_toLeftOf="@id/save"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/transparent"
+        android:textSize="16sp"
+        android:text="CANCEL"/>
+
+</RelativeLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/enable_location_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bariol_bold"
+        android:textSize="22sp"
+        android:text="Supa Duka cannot access your location. Would you like to enable Location in Location settings?"/>
+
+    <View
+        android:id="@+id/view_main"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#DEDEDF"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/location_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/view_main">
+
+        <Button
+            android:id="@+id/no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textColor="#2989FA"
+            android:textSize="20sp"
+            android:text="NO"/>
+
+        <View
+            android:id="@+id/view_sub"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#DEDEDF" />
+
+        <Button
+            android:id="@+id/yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textColor="#2989FA"
+            android:textSize="20sp"
+            android:text="GO TO SETTINGS"/>
+
+    </LinearLayout>
+</RelativeLayout>

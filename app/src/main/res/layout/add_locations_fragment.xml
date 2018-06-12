@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp"
+    android:background="#ffffff">
+
+    <TextView
+        android:id="@+id/site"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/bariol_bold"
+        android:text="Location"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autocomplete_places"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingLeft="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_alignLeft="@id/site"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:layout_below="@id/site"
+        android:fontFamily="@font/bariol_bold"
+        android:hint="@string/autocomplete_hint"
+        android:singleLine="true" />
+
+    <ImageButton
+        android:id="@+id/button_clear"
+        android:layout_width="40dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentRight="true"
+        android:src="@android:drawable/ic_delete"
+        android:background="@android:color/transparent"
+        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:layout_below="@id/site"/>
+
+
+
+    <ImageView
+        android:id="@+id/powered_by_google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/autocomplete_places"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@drawable/powered_by_google_light" />
+
+    <TextView
+        android:id="@+id/place_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:layout_below="@id/powered_by_google"
+        android:autoLink="all"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/place_attribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/place_details"
+        android:layout_marginLeft="30dp"
+        android:visibility="gone"
+        android:autoLink="all"
+        android:text=""
+        android:paddingTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@id/place_attribution">
+
+        <Button
+            android:id="@+id/current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Use Current Location"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:background="@drawable/proceed_button"/>
+
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginLeft="20dp"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Add this Location"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:background="@drawable/proceed_button"/>
+
+
+
+
+    </LinearLayout>
+
+   </RelativeLayout>

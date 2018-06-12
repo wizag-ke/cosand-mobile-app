@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:layout_margin="15dp"
+    android:background="@drawable/trip_green_background">
+
+    <RelativeLayout
+        android:id="@+id/rel_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/material"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="16sp"
+            android:text="#Sand"/>
+
+        <TextView
+            android:id="@+id/trip_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/trip_price"
+            android:layout_centerVertical="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:text="$29"
+            android:textSize="16sp"
+            android:textColor="#58666E"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/trips_view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@id/rel_bottom"
+        android:background="#EDF1F2"/>
+
+    <TextView
+        android:id="@+id/order_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/trips_view"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="#27C24C"
+        android:layout_marginTop="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:text="COMPLETED"/>
+
+    <TextView
+        android:id="@+id/destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/order_status"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:textSize="18sp"
+        android:text="To: Voi"/>
+
+    <TextView
+        android:id="@+id/destination_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/order_status"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"
+        android:text="10:18 PM"/>
+
+    <TextView
+        android:id="@+id/duration_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/starting_time"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:textSize="16sp"
+        android:text="6 hours"/>
+
+    <ImageView
+        android:id="@+id/loc_destination"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@id/destination"
+        android:src="@drawable/location"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/starting_point"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/destination"
+        android:layout_marginLeft="40dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="18sp"
+        android:text="From: Bungoma"/>
+
+    <TextView
+        android:id="@+id/starting_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/destination"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="18sp"
+        android:text="9:18 AM"/>
+
+    <ImageView
+        android:id="@+id/loc_start"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/location"
+        android:layout_alignTop="@id/starting_point" />
+
+    <TextView
+        android:id="@+id/order_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/starting_point"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:text="Order No: 187"/>
+
+    <View
+        android:id="@+id/locations_view"
+        android:layout_width="4dp"
+        android:layout_height="wrap_content"
+        android:background="#4B6677"
+        android:layout_below="@+id/loc_start"
+        android:layout_above="@+id/loc_destination"
+        android:layout_marginLeft="18dp"/>
+
+
+</RelativeLayout>
+
+    <ImageView
+        android:id="@+id/status_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="right"
+        android:padding="6dp"
+        android:src="@drawable/check_mark"
+        android:background="@drawable/green_circle"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="wizag.com.supa">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+       <!-- <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDVN6Mk3YTBh80Ijj4WrX68KJLfHHxEPFo" /> -->
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDWijX2Yy9hur0eOvwCECqg0oqosSbV6G8" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MenuActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".NewOrderActivity" />
+        <activity android:name=".OrderSummaryActivity" />
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".BuyActivity" />
+        <activity android:name=".SupplyActivity" />
+        <activity android:name=".SellActivity" />
+        <activity android:name=".WalletActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".CheckInActivity" />
+        <activity android:name=".TripsActivity" />
+        <activity android:name=".ConfirmActivity" />
+        <activity android:name=".MyTripsActivity" />
+        <activity android:name=".SuppliesActivity" />
+        <activity android:name=".LocationsActivity" />
+        <activity android:name=".PaymentsActivity" />
+        <activity android:name=".OrdersActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+            tools:replace="android:value" />
+
+        <activity android:name=".CurrentLocationActivity" />
+        <activity android:name=".RegisterActivity"></activity>
+    </application>
+
+</manifest>

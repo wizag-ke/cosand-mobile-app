@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+    android:background="@drawable/payment_gradient">
+
+       <ImageView
+        android:id="@+id/payment_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/payment_method_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/payment_image"
+        android:fontFamily="@font/bariol_bold"
+        android:textColor="#757282"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:text="Payment Method*"/>
+
+    <Spinner
+        android:id="@+id/pay_via"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/payment_method_label"
+        android:fontFamily="@font/bariol_regular"/>
+
+    <TextView
+        android:id="@+id/payment_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/pay_via"
+        android:fontFamily="@font/bariol_bold"
+        android:textColor="#757282"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:text="Amount*"/>
+
+    <TextView
+        android:id="@+id/your_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/payment_background"
+        android:layout_below="@id/payment_amount"
+        android:fontFamily="@font/bariol_regular"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:text="Kshs. 11, 800"/>
+
+
+    <Button
+        android:id="@+id/proceed_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/proceed_button"
+        android:layout_below="@id/payment_amount"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/bariol_bold"
+        android:text="Confirm"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"/>
+
+    <Button
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/proceed_buy"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/proceed_button"
+        android:layout_below="@id/payment_amount"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/bariol_bold"
+        android:text="Cancel"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"/>
+
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress_view"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:cpv_color="#16C9E9"
+        app:cpv_thickness="10dp"
+        app:cpv_animAutostart="false"
+        app:cpv_indeterminate="true" />
+
+    <ImageView
+        android:id="@+id/progress_complete"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/payment_method_label"
+        android:visibility="invisible"
+        android:background="@drawable/progressbar"
+        android:padding="15dp"
+        android:src="@drawable/light_blue_tick"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/your_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/payment_image"
+        android:visibility="invisible"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/bariol_bold"
+        android:textSize="18sp"
+        android:text="Your order has been received and is being processed. You will receive a message once your order is confirmed!"/>
+
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/proceed_button"
+        android:layout_below="@id/progress_complete"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/bariol_bold"
+        android:text="OK"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"/>
+
+</RelativeLayout>

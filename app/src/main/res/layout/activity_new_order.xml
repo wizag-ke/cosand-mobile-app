@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:background="#ffffff"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <TextView
+            android:id="@+id/create_order_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="CREATE NEW ORDER"
+            android:textSize="20sp"
+            android:textColor="#8F53DB"/>
+
+        <TextView
+            android:id="@+id/fill_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_order_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"
+            android:text="Fill all fields to proceed"/>
+
+        <com.kofigyan.stateprogressbar.StateProgressBar
+            android:id="@+id/state_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/fill_fields"
+            app:spb_currentStateNumber="one"
+            app:spb_maxStateNumber="three"
+            app:spb_stateBackgroundColor="#BDBDBD"
+            app:spb_stateForegroundColor="#6753D8"
+            app:spb_stateNumberBackgroundColor="#808080"
+            app:spb_stateNumberForegroundColor="#eeeeee"
+            app:spb_currentStateDescriptionColor="#6753D8"
+            app:spb_stateDescriptionColor="#808080"
+            app:spb_animateToCurrentProgressState="true"
+            app:spb_checkStateCompleted="true"/>
+
+        <Button
+            android:id="@+id/progress_button"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="50dp"
+            android:background="@android:color/transparent"
+            android:layout_below="@id/state_progress"/>
+
+        <TextView
+            android:id="@+id/order_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:text="Order Details: "
+            android:textColor="#8F53DB"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:textSize="20sp"
+            android:text="Step 1-3"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/select_material"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/order_details"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:text="Select Material*" />
+
+        <Spinner
+            android:id="@+id/spinner_material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_material"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"></Spinner>
+
+
+        <TextView
+            android:id="@+id/select_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spinner_material"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:text="Select Quantity*" />
+
+        <Spinner
+            android:id="@+id/spinner_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_quantity"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"></Spinner>
+
+        <TextView
+            android:id="@+id/select_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spinner_quantity"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:text="Select Quality*" />
+
+        <Spinner
+            android:id="@+id/spinner_quality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_quality"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"></Spinner>
+
+        <TextView
+            android:id="@+id/delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spinner_quality"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:text="Delivery To:* " />
+
+
+        <AutoCompleteTextView
+            android:id="@+id/autocomplete_places"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:layout_below="@id/delivery"
+            android:hint="@string/autocomplete_hint"
+            android:singleLine="true" />
+
+
+        <ImageView
+            android:id="@+id/powered_by_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/autocomplete_places"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:src="@drawable/powered_by_google_light" />
+
+        <Button
+            android:id="@+id/button_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:padding="10dp"
+            android:layout_below="@id/autocomplete_places"
+            android:layout_marginLeft="40dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/round_buttons"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Clear Text"
+            android:textSize="18sp"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"/>
+
+
+        <TextView
+            android:id="@+id/place_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:layout_below="@id/button_clear"
+            android:autoLink="all"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/place_attribution"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/place_details"
+            android:layout_marginLeft="40dp"
+            android:autoLink="all"
+            android:text=""
+            android:paddingTop="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <TextView
+            android:id="@+id/delivery_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/place_attribution"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:text="Delivery Date *"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relative_delivery_date"
+            android:layout_below="@id/delivery_date_label">
+
+
+
+            <TextView
+                android:id="@+id/exact_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:padding="10dp"
+                android:textSize="20sp"
+                android:text="01"
+                android:textStyle="bold"
+                android:textColor="#6753D8"
+                android:fontFamily="@font/bariol_bold"
+                android:background="@drawable/date_day"/>
+
+
+            <TextView
+                android:id="@+id/exact_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/exact_day"
+                android:background="@drawable/date_day"
+                android:padding="10dp"
+                android:textSize="20sp"
+                android:fontFamily="@font/bariol_bold"
+                android:text="Jan"
+                android:textStyle="bold"
+                android:textColor="#6753D8" />
+
+
+            <TextView
+                android:id="@+id/year1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/date_day"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/exact_month"
+                android:padding="10dp"
+                android:fontFamily="@font/bariol_bold"
+                android:textSize="20sp"
+                android:text="2018"
+                android:textStyle="bold"
+                android:textColor="#6753D8"
+                />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relative_delivery_date"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Next"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:background="@drawable/round_buttons"/>
+
+
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

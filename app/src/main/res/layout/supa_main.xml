@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="wizag.com.supa.MainActivity">
+
+    <TextView
+        android:id="@+id/transporter_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140sp"
+        android:text="SUPADUKA"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:textColor="#000000"/>
+
+    <RelativeLayout
+        android:id="@+id/icon_layout"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="#3B5166"
+        android:rotation="45">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:rotation="-45"
+            android:src="@drawable/truck"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/powered_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transporter_title"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:fontFamily="@font/bariol_bold"
+        android:text="Powered by Wizag"/>
+
+    <EditText
+        android:id="@+id/edit_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/powered_by"
+        android:hint="username"/>
+
+
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/edit_username"
+        android:hint="password"/>
+
+    <Button
+        android:id="@+id/supaduka_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#16C9E9"
+        android:layout_marginTop="30dp"
+        android:padding="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edit_password"
+        android:text="LOGIN TO ACCOUNT"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/supaduka_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#4B6677"
+        android:layout_marginTop="10dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:layout_alignLeft="@id/supaduka_login"
+        android:layout_alignRight="@id/supaduka_login"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/supaduka_login"
+        android:text="REGISTER NOW"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+
+</RelativeLayout>

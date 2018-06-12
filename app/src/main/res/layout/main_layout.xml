@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/supaduka_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#4B6677"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="REGISTER NOW"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/supaduka_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#16C9E9"
+        android:padding="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/supaduka_signup"
+        android:text="LOGIN TO ACCOUNT"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_above="@id/anim"
+        android:src="@drawable/supaduka"/>
+
+
+    <RelativeLayout
+        android:id="@+id/anim"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/main_screen_background"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/supaduka_login">
+
+        <pl.droidsonroids.gif.GifImageView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/truck_anim"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

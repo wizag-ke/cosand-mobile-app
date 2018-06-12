@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="0dp"
+    android:paddingBottom="20dp"
+    android:background="#ffffff">
+
+    <TextView
+        android:id="@+id/complete_details"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_horizontal|center_vertical"
+        android:fontFamily="@font/bariol_bold"
+        android:background="#26173470"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:text="Confirm Order"/>
+
+    <TextView
+        android:id="@+id/payment_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/complete_details"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/bariol_bold"
+        android:textStyle="bold"
+        android:textColor="#006397"
+        android:textSize="18sp"
+        android:text="Payment Details"/>
+
+    <RelativeLayout
+        android:id="@+id/rel_payment_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_below="@id/payment_details"
+        android:background="@drawable/confirmation_background">
+
+        <TextView
+            android:id="@+id/material_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bariol_bold"
+            android:layout_marginBottom="18dp"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Material"/>
+
+        <TextView
+            android:id="@+id/total_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@font/bariol_bold"
+            android:layout_marginBottom="18dp"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Price"/>
+
+        <TextView
+            android:id="@+id/material_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/material_title"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Sand: Grade A"/>
+
+        <TextView
+            android:id="@+id/quantity_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/material_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="1500 x 3"/>
+
+        <TextView
+            android:id="@+id/total_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/total_title"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="4,500"/>
+
+        <TextView
+            android:id="@+id/material_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/material_1"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Ballast: Grade 2"/>
+
+        <TextView
+            android:id="@+id/quantity_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/material_1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="1700 x 2"/>
+
+        <TextView
+            android:id="@+id/total_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/total_1"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="3,800"/>
+
+        <View
+            android:id="@+id/view_confirmation"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/material_2"
+            android:layout_marginBottom="10dp"
+            android:background="#BDBBBC"/>
+
+        <TextView
+            android:id="@+id/subtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_confirmation"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Subtotal"/>
+
+        <TextView
+            android:id="@+id/subtotal_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/view_confirmation"
+            android:textSize="18sp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textColor="#006397"
+            android:text="Kshs. 8,300"/>
+
+        <TextView
+            android:id="@+id/delivery_charge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subtotal"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Delivery Charge"/>
+
+        <TextView
+            android:id="@+id/delivery_charge_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/subtotal_1"
+            android:textSize="18sp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textColor="#006397"
+            android:text="Kshs. 6,000"/>
+
+        <View
+            android:id="@+id/view_confirmation_two"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/delivery_charge"
+            android:layout_marginBottom="10dp"
+            android:background="#BDBBBC"/>
+
+        <TextView
+            android:id="@+id/material_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_confirmation_two"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:text="Total"/>
+
+        <TextView
+            android:id="@+id/total_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/view_confirmation_two"
+            android:textSize="25sp"
+            android:fontFamily="@font/bariol_bold"
+            android:textStyle="bold"
+            android:textColor="#006397"
+            android:text="Kshs. 11,300"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/your_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rel_payment_details"
+        android:paddingTop="10dp"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/bariol_bold"
+        android:textStyle="bold"
+        android:textColor="#006397"
+        android:textSize="18sp"
+        android:text="Your Details"/>
+
+    <LinearLayout
+        android:id="@+id/rel_your_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:layout_below="@id/your_details"
+        android:background="@drawable/confirmation_background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Name: Susan Wanja Kamau"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Phone: 0711 245 678"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Email: susanwanja@gmail.com"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/bariol_bold"
+            android:text="Delivery Date: 9/April"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/delivery_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rel_your_details"
+        android:paddingTop="10dp"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/bariol_bold"
+        android:textStyle="bold"
+        android:textColor="#006397"
+        android:textSize="18sp"
+        android:text="Delivery Address"/>
+
+    <TextView
+        android:id="@+id/delivery_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_below="@id/delivery_address"
+        android:background="@drawable/confirmation_background"
+        android:fontFamily="@font/bariol_bold"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="10 Street Mutithi Road, Unga House Opposite Total Petrol Station"/>
+
+    <Button
+        android:id="@+id/proceed_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/proceed_button"
+        android:layout_below="@id/delivery_location"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/bariol_bold"
+        android:text="Confirm"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"/>
+
+    <Button
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/proceed_buy"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/proceed_button"
+        android:layout_below="@id/delivery_location"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/bariol_bold"
+        android:text="Edit"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"/>
+
+
+</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -36,16 +36,19 @@ public class MenuActivity extends AppCompatActivity {
     GridLayoutManager gridLayoutManager;
     LinearLayoutManager linearLayoutManager;
     RecyclerView rv;
-
+    SessionManager session;
     String name = "Susan";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = getIntent().getStringExtra("Name");
+       // name = getIntent().getStringExtra("Name");
         setContentView(R.layout.menu);
 
+        // Session Manager
+       // session = new SessionManager(getApplicationContext());
 
+//session.checkLogin();
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         rv = (RecyclerView) findViewById(R.id.main_recycler);
         //progressBar = (ProgressBar) findViewById(R.id.main_progress);
@@ -55,6 +58,7 @@ public class MenuActivity extends AppCompatActivity {
         rv.setLayoutManager(mLayoutManager);
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(adapter);
+
 
         //linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //rv.setLayoutManager(linearLayoutManager);

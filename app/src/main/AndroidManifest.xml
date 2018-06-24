@@ -58,6 +58,11 @@
         <activity android:name=".LocationsActivity" />
         <activity android:name=".PaymentsActivity" />
         <activity android:name=".OrdersActivity" />
+        <activity android:name=".Activity_Spinner" >
+
+
+        </activity>
+
 
         <meta-data
             android:name="com.google.android.gms.version"

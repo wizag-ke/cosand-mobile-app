@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -45,15 +46,26 @@ public class MainActivity extends AppCompatActivity {
     EditText enter_username;
     TextInputEditText enter_password;
     SharedPreferences prefs;
-
+    SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+
+
         enter_username = findViewById(R.id.enter_username);
         enter_password = findViewById(R.id.enter_password);
 
+        // Session Manager
+        session = new SessionManager(getApplicationContext());
+
+if(session.isLoggedIn()){
+    startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+}
+        HashMap<String, String> user = session.getUserDetails();
+
+        //session.checkLogin();
         supaduka_login = findViewById(R.id.button_login);
         supaduka_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
                             prefs.edit().putString(REFRESH_TOKEN, refresh_token).apply();
                             prefs.edit().putString(TOKEN_TYPE, token_type).apply();
 
+                          //  String token = prefs.getString("access_token", ACCESS_TOKEN);
+
+                            session.createLoginSession(username, password,access_token);
 
                             //Toast.makeText(FirstActivity.this, "" + access_token, Toast.LENGTH_LONG).show();
                             // Toast.makeText(FirstActivity.this, "" + refresh_token, Toast.LENGTH_LONG).show();

@@ -99,7 +99,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                 final Context context = v.getContext();
                 switch (permission_image){
                     case "Buy":
-                       Intent buy = new Intent(context, BuyActivity.class);
+                       Intent buy = new Intent(context, Activity_Spinner.class);
                        context.startActivity(buy);
                         break;
                     case "Sell":

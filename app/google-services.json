@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "878021190060",
+    "firebase_url": "https://cosand-dd0b2.firebaseio.com",
+    "project_id": "cosand-dd0b2",
+    "storage_bucket": "cosand-dd0b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878021190060:android:0389dc708afb21a6",
+        "android_client_info": {
+          "package_name": "wizag.com.supa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878021190060-rlsebpl7th16er2uv1nl0ckobffkvtlg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "wizag.com.supa",
+            "certificate_hash": "4b7952797cca36f435644c30e96a4e53cdba1264"
+          }
+        },
+        {
+          "client_id": "878021190060-hor8nnbkgbsa6gkofp2i9kaoru3uu30l.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "878021190060-hor8nnbkgbsa6gkofp2i9kaoru3uu30l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcobAA1il6zO5MFnHeWGEwUzlS9Uejtfo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878021190060-hor8nnbkgbsa6gkofp2i9kaoru3uu30l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

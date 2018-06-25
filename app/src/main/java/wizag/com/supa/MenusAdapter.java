@@ -1,18 +1,12 @@
 package wizag.com.supa;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -99,7 +93,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                 final Context context = v.getContext();
                 switch (permission_image){
                     case "Buy":
-                       Intent buy = new Intent(context, Activity_Spinner.class);
+                       Intent buy = new Intent(context, Activity_Buy.class);
                        context.startActivity(buy);
                         break;
                     case "Sell":

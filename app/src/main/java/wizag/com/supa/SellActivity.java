@@ -1,18 +1,38 @@
 package wizag.com.supa;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.http.RequestQueue;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +40,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -32,21 +54,25 @@ import wizag.com.supa.TopModels.TopMaterials;
 
 public class SellActivity extends AppCompatActivity {
     TextView time, date;
-    Spinner spinner_sell_material, spinner_sell_quantity, spinner_sell_quality;
+    Spinner spinner_sell_material, spinner_sell_quantity, spinner_sell_quality, spinner_sell_supplier, spinner_sell_size;
     EditText linear_supplier;
+    LinearLayout sell_layout;
     //MaterialService materialService;
+    Button proceed_sell;
 
-    String[] material = new String[]{
-            "White Sand", "Black Sand", "Rock Sand", "Transport",
-            "Ballast", "Mchele", "Quarry Dust", "Machine Cut Stones"};
+    String GET_MATERIALS = "http://sduka.wizag.biz/api/material";
+    String POST_MATERIAL = "http://sduka.wizag.biz/api/load-request";
 
-    String[] quality = new String[]{
-            "1", "2", "3"};
-
-    String[] quantity = new String[]{
-            "11", "14", "16", "18"};
-
-
+    ArrayList<String> SellName;
+    ArrayList<String> SupplierName;
+    ArrayList<String> CategoryName;
+    ArrayList<String> QualityName;
+    ArrayList<String> SizeName;
+    ArrayList<String> PriceName;
+    SessionManager sessionManager;
+    String token;
+    Button proceed;
+    GPSLocation gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,263 +82,233 @@ public class SellActivity extends AppCompatActivity {
         spinner_sell_material = findViewById(R.id.spinner_sell_material);
         spinner_sell_quantity = findViewById(R.id.spinner_sell_quantity);
         spinner_sell_quality = findViewById(R.id.spinner_sell_quality);
-        linear_supplier = findViewById(R.id.linear_supplier);
-        linear_supplier.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                linear_supplier.setText(" ");
-            }
-        });
+        sell_layout = (LinearLayout) findViewById(R.id.sell_layout);
+        proceed_sell = (Button) findViewById(R.id.proceed_sell);
 
-        final List<String> materialList = new ArrayList<>(Arrays.asList(material));
-        final List<String> qualityList = new ArrayList<>(Arrays.asList(quality));
-        final List<String> quantityList = new ArrayList<>(Arrays.asList(quantity));
+        SellName = new ArrayList<>();
+        SupplierName = new ArrayList<>();
+        CategoryName = new ArrayList<>();
+        QualityName = new ArrayList<>();
+        SizeName = new ArrayList<>();
+        PriceName = new ArrayList<>();
 
-        // Initializing Material ArrayAdapter
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, materialList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                } else {
-                    return true;
-                }
+
+        sessionManager = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = sessionManager.getUserDetails();
+        token = user.get("access_token");
+        gps = new GPSLocation(this);
+        if (gps.canGetLocation()) {
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+        } else {
+            gps.showSettingsAlert();
+        }
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+
+
             }
 
-            @Override
-            public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if (position == 0) {
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                } else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner_sell_material.setAdapter(spinnerArrayAdapter);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        loadSpinnerData(GET_MATERIALS);
 
         spinner_sell_material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItemText = (String) parent.getItemAtPosition(position);
-                // If user change the default selection
-                // First item is disable and it is used for hint
-                if (position > 0) {
-                    // Notify the selected item text
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    /** Toast.makeText
-                     (getApplicationContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
-                     .show(); */
-                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // DO Nothing here
             }
         });
 
-        // Initializing Quantity ArrayAdapter
-        final ArrayAdapter<String> quantityArrayAdapter = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, quantityList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if (position == 0) {
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                } else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-        quantityArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner_sell_quantity.setAdapter(quantityArrayAdapter);
-
-        spinner_sell_quantity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItemText = (String) parent.getItemAtPosition(position);
-                // If user change the default selection
-                // First item is disable and it is used for hint
-                if (position > 0) {
-                    // Notify the selected item text
-
-                    /** Toast.makeText
-                     (getApplicationContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
-                     .show(); */
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // Initializing Quality ArrayAdapter
-        final ArrayAdapter<String> qualityArrayAdapter = new ArrayAdapter<String>(
-                this, R.layout.spinner_item, qualityList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if (position == 0) {
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                } else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-        qualityArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner_sell_quality.setAdapter(qualityArrayAdapter);
-
-        spinner_sell_quality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItemText = (String) parent.getItemAtPosition(position);
-                // If user change the default selection
-                // First item is disable and it is used for hint
-                if (position > 0) {
-                    // Notify the selected item text
-
-                    /** Toast.makeText
-                     (getApplicationContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
-                     .show(); */
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**    spinner_sell_material = findViewById(R.id.spinner_sell_material);
-        materialService = SupaDukaAPI.getClient().create(MaterialService.class);
-        getMaterial();
-
-            spinner_sell_material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedName = parent.getItemAtPosition(position).toString();
-//                requestDetailDosen(selectedName);
-                Toast.makeText(SellActivity.this, " " + selectedName, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    interface MaterialService {
-        @GET("api/material/")
-        Call<TopMaterials> getTopRatedImages();
 
     }
 
-    private void getMaterial(){
-
-        materialService.getTopRatedImages().enqueue(new Callback<TopMaterials>() {
+    private void loadSpinnerData(String url) {
+        final List<String> materialsList = new ArrayList<>();
+        final List<String> materials = new ArrayList<>();
+        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
             @Override
-            public void onResponse(Call<TopMaterials> call, Response<TopMaterials> response) {
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONArray materials = data.getJSONArray("materials");
 
-                if (response.isSuccessful()) {
-                    Toast.makeText(SellActivity.this, "onSuccess",Toast.LENGTH_LONG).show();
+                        if (materials != null) {
+                            for (int i = 0; i < materials.length(); i++) {
 
-                    List<MaterialResults> semuadosenItems = response.body().getListPermissionsM();
-                    List<String> listSpinner = new ArrayList<String>();
+                                JSONObject material_items = materials.getJSONObject(i);
+                                JSONArray supplier = material_items.getJSONArray("supplier");
+                                /*loop thro categories*/
+                                for (int j = 0; j < supplier.length(); j++) {
+                                    JSONObject supplier_items = supplier.getJSONObject(j);
 
-                    for (int i = 0; i < semuadosenItems.size(); i++){
-                        listSpinner.add(semuadosenItems.get(i).getCompany());
+
+                                    if (supplier != null) {
+                                        if (SupplierName.contains(supplier.getJSONObject(j).getString("name"))) {
+
+
+                                        } else {
+
+
+                                            SupplierName.add(supplier.getJSONObject(j).getString("name"));
+                                          //  Toast.makeText(getApplicationContext(), "data\n" + supplier.getJSONObject(j).getString("name"), Toast.LENGTH_SHORT).show();
+
+
+                                        }
+
+
+                                    }
+
+
+                                }
+
+                                /*loop through categories*/
+
+                                JSONArray category = material_items.getJSONArray("category");
+                                for (int k = 0; k < category.length(); k++) {
+
+                                    JSONObject category_items = category.getJSONObject(k);
+                                    JSONArray quality = category_items.getJSONArray("quality");
+                                    /*loop thro quality*/
+                                    for (int l = 0; l < quality.length(); l++) {
+
+                                        /*loop thro size*/
+                                        JSONObject size_items = quality.getJSONObject(k);
+                                        JSONArray size = size_items.getJSONArray("size");
+
+                                        for (int m = 0; m < size.length(); m++) {
+
+
+                                            if (size != null) {
+
+                                                if (SizeName.contains(size.getJSONObject(m).getString("size"))) {
+
+
+                                                } else {
+
+                                                    SizeName.add(size.getJSONObject(m).getString("size"));
+                                                    // Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+
+
+                                                }
+
+                                            }
+
+                                        }
+
+
+                                        if (quality != null) {
+
+                                            if (QualityName.contains(quality.getJSONObject(l).getString("value"))) {
+
+
+                                            } else {
+
+                                                QualityName.add(quality.getJSONObject(l).getString("value"));
+                                                // Toast.makeText(getApplicationContext(), "data\n" + quality.getJSONObject(l).getString("value"), Toast.LENGTH_SHORT).show();
+
+
+                                            }
+
+                                        }
+                                    }
+
+
+                                    if (category != null) {
+                                        if (CategoryName.contains(category.getJSONObject(k).getString("name"))) {
+
+
+                                        } else {
+
+                                            CategoryName.add(category.getJSONObject(k).getString("name"));
+                                            //Toast.makeText(getApplicationContext(), "category\n" + category.getJSONObject(k).getString("name"), Toast.LENGTH_SHORT).show();
+
+
+                                        }
+
+
+                                    }
+
+
+                                }
+
+
+                                //  Toast.makeText(getApplicationContext(), "data\n"+ category, Toast.LENGTH_SHORT).show();
+
+                                List<String> materialsList = new ArrayList<>();
+                                if (material_items != null) {
+                                    if (SellName.contains(materials.getJSONObject(i).getString("name"))) {
+
+                                    } else {
+
+                                        int id = material_items.getInt("id");
+
+
+                                        SellName.add(materials.getJSONObject(i).getString("name"));
+
+                                    }
+
+
+                                }
+
+                            }
+                        }
+
+
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(SellActivity.this,
-                            android.R.layout.simple_spinner_item, listSpinner);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner_sell_material.setAdapter(adapter);
-                }
+                    spinner_sell_material.setAdapter(new ArrayAdapter<String>(SellActivity.this, android.R.layout.simple_spinner_dropdown_item, SellName));
 
-                else {
-                    Toast.makeText(SellActivity.this, "onFailedGetResponse", Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
-
+        }, new com.android.volley.Response.ErrorListener() {
             @Override
-            public void onFailure(Call<TopMaterials> call, Throwable t) {
-                Toast.makeText(SellActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
             }
-        }); */
+
+
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+
+        };
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
     }
+}
 
 
 

@@ -1,13 +1,15 @@
 package wizag.com.supa;
 
+import java.util.List;
+
 public class Model_Material {
     private int id;
-    private String name;
+    private List<String> name;;
 
     public Model_Material() {
     }
 
-    public Model_Material(int id, String name) {
+    public Model_Material(int id, List<String> name) {
         this.id = id;
         this.name = name;
     }
@@ -20,19 +22,11 @@ public class Model_Material {
         this.id = id;
     }
 
-    public String getName() {
+    public List<String> getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(List<String> name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Model_Material{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

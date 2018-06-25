@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <uses-feature android:name="android.hardware.location.gps" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,14 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-       <!-- <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDVN6Mk3YTBh80Ijj4WrX68KJLfHHxEPFo" /> -->
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDWijX2Yy9hur0eOvwCECqg0oqosSbV6G8" />
-
+            android:value="AIzaSyBtVUb5WUJv5HCQqbdmM7PRyzJSNKPV53c" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -45,7 +42,6 @@
         <activity android:name=".NewOrderActivity" />
         <activity android:name=".OrderSummaryActivity" />
         <activity android:name=".PaymentActivity" />
-        <activity android:name=".BuyActivity" />
         <activity android:name=".SupplyActivity" />
         <activity android:name=".SellActivity" />
         <activity android:name=".WalletActivity" />
@@ -58,11 +54,7 @@
         <activity android:name=".LocationsActivity" />
         <activity android:name=".PaymentsActivity" />
         <activity android:name=".OrdersActivity" />
-        <activity android:name=".Activity_Spinner" >
-
-
-        </activity>
-
+        <activity android:name=".Activity_Buy" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -70,7 +62,10 @@
             tools:replace="android:value" />
 
         <activity android:name=".CurrentLocationActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".Activity_location">
+
+        </activity>
     </application>
 
 </manifest>

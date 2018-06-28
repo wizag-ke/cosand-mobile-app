@@ -47,4 +47,57 @@
         functionality.</string>
     <string name="settings">Settings</string>
 
+
+    <string name="material_prompt">Choose a material</string>
+
+    <string-array name="material_arrays">
+        <item>--Select material--</item>
+        <item>Building Blocks</item>
+        <item>Sand</item>
+        <item>Ballast</item>
+    </string-array>
+
+    <string name="quality_prompt">Choose a Quality</string>
+
+    <string-array name="quality_arrays">
+        <item>--Select quality--</item>
+        <item>Premium</item>
+
+    </string-array>
+
+
+    <string name="quantity_prompt">Choose Quantity</string>
+    <string-array name="quantity_arrays">
+        <item>--Select quantity--</item>
+        <item>Premium</item>
+
+    </string-array>
+
+    <string name="size_prompt">Choose a size</string>
+
+    <string-array name="size_arrays">
+        <item>--Select size--</item>
+        <item>9*9</item>
+
+    </string-array>
+
+
+    <string name="price_prompt">Choose a price</string>
+    <string-array name="price_arrays">
+
+        <item>--Select price--</item>
+        <item>37</item>
+
+    </string-array>
+
+    <string name="supplier_prompt">Choose a supplier</string>
+    <string-array name="supplier_arrays">
+
+        <item>--Select Supplier--</item>
+        <item>Test Supplier</item>
+        <item>Mlolongo Supplier Supplier</item>
+
+    </string-array>
+
+
 </resources>

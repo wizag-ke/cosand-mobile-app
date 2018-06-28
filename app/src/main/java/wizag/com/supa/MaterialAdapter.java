@@ -12,18 +12,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+public class MaterialAdapter extends ArrayAdapter<Model_Material> {
+    private List<Model_Material> materialList = new ArrayList<>();
 
-public class Adapter_Material extends ArrayAdapter<Model_Material> {
-    private List<Model_Material> stateList = new ArrayList<>();
-
-    Adapter_Material(@NonNull Context context, int resource, int spinnerText, @NonNull List<Model_Material> stateList) {
-        super(context, resource, spinnerText, stateList);
-        this.stateList = stateList;
+    MaterialAdapter(@NonNull Context context, int resource, int spinnerText, @NonNull List<Model_Material> materialList) {
+        super(context, resource, spinnerText, materialList);
+        this.materialList = materialList;
     }
 
     @Override
     public Model_Material getItem(int position) {
-        return stateList.get(position);
+        return materialList.get(position);
     }
 
     @NonNull
@@ -38,20 +37,16 @@ public class Adapter_Material extends ArrayAdapter<Model_Material> {
         return initView(position);
     }
 
-    /**
-     * Gets the state object by calling getItem and
-     * Sets the state name to the drop-down TextView.
-     *
-     * @param position the position of the item selected
-     * @return returns the updated View
-     */
+
+
     private View initView(int position) {
-        Model_Material material = getItem(position);
+        Model_Material state = getItem(position);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.material_list, null);
-        TextView textView =  v.findViewById(R.id.spinnerText);
-        textView.setText((CharSequence) material.getName());
+        TextView textView =  v.findViewById(R.id.spinnerTextItem);
+        textView.setText(state.getMaterial());
         return v;
 
     }
+
 }

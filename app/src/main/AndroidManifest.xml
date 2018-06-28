@@ -43,7 +43,11 @@
         <activity android:name=".OrderSummaryActivity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".SupplyActivity" />
-        <activity android:name=".SellActivity" />
+        <activity
+            android:name=".SellActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+
+
         <activity android:name=".WalletActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CheckInActivity" />

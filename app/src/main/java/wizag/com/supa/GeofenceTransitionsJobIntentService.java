@@ -107,7 +107,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     /**
      * Posts a notification in the notification bar when a transition is detected.
-     * If the user clicks the notification, control goes to the MainActivity.
+     * If the user clicks the notification, control goes to the SpinnerActivity.
      */
     private void sendNotification(String notificationDetails) {
         // Get an instance of the Notification manager

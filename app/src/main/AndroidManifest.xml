@@ -27,9 +27,10 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
+           >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +59,9 @@
         <activity android:name=".LocationsActivity" />
         <activity android:name=".PaymentsActivity" />
         <activity android:name=".OrdersActivity" />
-        <activity android:name=".Activity_Buy" />
+        <activity
+            android:name=".Activity_Buy"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <meta-data
             android:name="com.google.android.gms.version"

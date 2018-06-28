@@ -110,7 +110,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linear_quantity"
+            android:id="@+id/linear_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/linear_quality"
@@ -126,7 +126,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/bariol_regular"
-                android:text="Quantity"
+                android:text="Size"
                 android:textSize="20sp" />
 
             <View
@@ -135,7 +135,7 @@
                 android:background="#B8BECC" />
 
             <Spinner
-                android:id="@+id/buy_spinner_quantity"
+                android:id="@+id/buy_spinner_size"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
@@ -150,6 +150,16 @@
             </Spinner>
 
         </LinearLayout>
+
+        <EditText
+            android:inputType="number"
+            android:id="@+id/buy_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/sell"
+            android:hint="enter Quantity"
+            android:padding="@dimen/_10sdp" />
 
 
         <Button

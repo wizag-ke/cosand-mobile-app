@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/linear_material"
             android:layout_margin="10dp"
-            android:layout_toRightOf="@id/linear_quantity"
+
             android:background="@drawable/sell"
             android:padding="@dimen/_5sdp">
 
@@ -182,7 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/linear_material"
             android:layout_margin="10dp"
-            android:layout_toRightOf="@id/linear_quantity"
+
             android:background="@drawable/sell"
             android:padding="@dimen/_5sdp">
 

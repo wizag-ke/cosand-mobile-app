@@ -165,12 +165,28 @@ public class SellActivity extends AppCompatActivity {
 
 
         proceed_sell.setOnClickListener(new View.OnClickListener() {
-            String quantity_txt = quantity.getText().toString();
 
             @Override
             public void onClick(View view) {
-                //post material to db
-                // Instantiate the RequestQueue.
+                String quantity_txt = quantity.getText().toString();
+                if (quantity_txt.isEmpty()) {
+                    Snackbar.make(sell_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG).show();
+
+                } else if (Integer.parseInt(quantity_txt) < 12) {
+                    Snackbar.make(sell_layout, "Quantity value should be more than 12", Snackbar.LENGTH_LONG).show();
+
+                } else if ((Integer.parseInt(quantity_txt))% 2 != 0) {
+                    Snackbar.make(sell_layout, "Quantity value should be an even number", Snackbar.LENGTH_LONG).show();
+
+                } else {
+                    loadRequest();
+                }
+
+
+            }
+
+            private void loadRequest() {
+
                 com.android.volley.RequestQueue queue = Volley.newRequestQueue(SellActivity.this);
 
 
@@ -234,8 +250,6 @@ public class SellActivity extends AppCompatActivity {
 
 
         });
-
-
     }
 
     private void loadSpinnerData(String url) {

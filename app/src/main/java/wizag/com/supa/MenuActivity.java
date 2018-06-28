@@ -1,11 +1,13 @@
 package wizag.com.supa;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -147,5 +149,23 @@ public class MenuActivity extends AppCompatActivity {
         @POST("jijinews/supaduka_permissions.php")
         Call<TopPermissions> name(
                 @Field("name") String name);
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        killActivity();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void killActivity() {
+        finish();
     }
 }

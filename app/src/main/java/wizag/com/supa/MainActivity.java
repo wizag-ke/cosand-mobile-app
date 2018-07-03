@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         supaduka_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(MainActivity.this, Activity_Register.class);
                 startActivity(intent);
             }
         });

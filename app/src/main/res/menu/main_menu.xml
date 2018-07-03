@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
 
     <item
-        android:id="@+id/action_start_monitor"
-        android:title="Profile" />
-   <!-- <item
-        android:id="@+id/action_stop_monitor"
-        android:title="Stop Monitor" />-->
+        android:id="@+id/action_sign_out"
+        android:title="Sign out"
+        app:showAsAction="never"/>
 </menu>

@@ -10,11 +10,21 @@ import retrofit2.http.POST;
  */
 
 public interface ApiInterface {
-       @FormUrlEncoded
-        @POST("oauth/token/")
-       Call<AuthUser> loginUser(@Field("username") String username,
+    @FormUrlEncoded
+    @POST("oauth/token/")
+    Call<AuthUser> loginUser(@Field("username") String username,
+                             @Field("password") String password,
+                             @Field("grant_type") String grant_type,
+                             @Field("client_id") String client_id,
+                             @Field("client_secret") String client_secret);
+
+    @FormUrlEncoded
+    @POST("api/register")
+    Call<AuthUser> registerUser(@Field("email") String email,
+                                @Field("id_no") String id_no,
                                 @Field("password") String password,
-                                @Field("grant_type") String grant_type,
-                                @Field("client_id") String client_id,
-                                @Field("client_secret") String client_secret);
+                                @Field("fname") String fname,
+                                @Field("lname") String lname,
+                                @Field("phone") String phone,
+                                @Field("role_id") int role_id);
 }

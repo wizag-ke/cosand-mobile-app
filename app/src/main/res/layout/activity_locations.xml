@@ -1,70 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    tools:context="wizag.com.supa.LocationsActivity">
-
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff">
-
-        <TextView
-            android:id="@+id/saved_locations"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="center_horizontal|center_vertical"
-            android:fontFamily="@font/bariol_bold"
-            android:background="#26173470"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:text="Saved Locations"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@id/complete_details"
-            android:background="#B8BECC"/>
-
-
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/map"
-        android:layout_margin="15dp"
-        android:layout_below="@id/saved_locations"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"/>
-
-    <Button
-        android:id="@+id/add_locations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_below="@id/toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="325dp"
-        android:background="@drawable/proceed_button"
-        android:fontFamily="@font/bariol_bold"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textAllCaps="false"
-        android:textColor="#ffffff"
-        android:text="add location"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_recycler"
-        android:layout_below="@+id/add_locations"
-        android:layout_margin="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</RelativeLayout>
-</RelativeLayout>
+    tools:context=".Activity_Location" />

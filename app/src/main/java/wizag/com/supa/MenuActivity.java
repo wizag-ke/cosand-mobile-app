@@ -15,11 +15,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -46,7 +48,10 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
        // name = getIntent().getStringExtra("Name");
         setContentView(R.layout.menu);
-
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        session = new SessionManager(getApplicationContext());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Session Manager
        // session = new SessionManager(getApplicationContext());
 
@@ -167,5 +172,24 @@ public class MenuActivity extends AppCompatActivity {
 
     private void killActivity() {
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sign_out: {
+                session.logoutUser();
+                finish();
+                break;
+            }
+            // case blocks for other MenuItems (if any)
+        }
+        return false;
     }
 }

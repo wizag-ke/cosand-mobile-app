@@ -29,17 +29,19 @@ public class RegisterActivity extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
     String username;
 
+    int role_id =1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-     /**   checkConnection();
+     // checkConnection();
 
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
         edit_f_name = findViewById(R.id.edit_firstname);
         edit_l_name = findViewById(R.id.edit_lastname);
         edit_id_no = findViewById(R.id.edit_id);
-        edit_kra_pin = findViewById(R.id.kra_pin);
+
         edit_phone = findViewById(R.id.edit_phone);
         edit_email = findViewById(R.id.email_address);
         edit_password = findViewById(R.id.create_password);
@@ -53,11 +55,11 @@ public class RegisterActivity extends AppCompatActivity {
                  but it won't resist the form submission, so we need to check again before submit
                  */
 
-      /**          if (registrationValidation()){
+               if (registrationValidation()){
                     f_name = edit_f_name.getText().toString();
                     l_name = edit_l_name.getText().toString();
                     id_no = edit_id_no.getText().toString();
-                    kra_pin = edit_kra_pin.getText().toString();
+
                     phone = edit_phone.getText().toString();
                     email = edit_email.getText().toString();
                     password = edit_password.getText().toString();
@@ -191,7 +193,21 @@ public class RegisterActivity extends AppCompatActivity {
 
         ApiInterface service = retrofit.create(ApiInterface.class);
         // Call<AuthUser> call = service.loginUser("admin@cosand.com", "Qwerty123!","password", "2", "GEf81B8TnpPDibW4NKygaatvBG3RmbYSaJf8SZTA");
-        Call<AuthUser> call = service.loginUser(username, password,"password", "2", "GEf81B8TnpPDibW4NKygaatvBG3RmbYSaJf8SZTA");
+
+       User user = new User(f_name,l_name,id_no,phone,email,password,role_id);
+
+
+        Call<AuthUser> call = service.registerUser(
+                user.getEmail(),
+                user.getId_no(),
+                user.getPassword(),
+                user.getF_name(),
+                user.getL_name(),
+                user.getPhone(),
+                user.getRole_id()
+        );
+
+
         call.enqueue(new Callback<AuthUser>() {
             @Override
             public void onResponse(Call<AuthUser> call, Response<AuthUser> response) {
@@ -204,7 +220,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
 
-                else if (response.code() >= 400 && response.code() < 599) {
+               /* else if (response.code() >= 400 && response.code() < 599) {
                     Snackbar snackbar = Snackbar
                             // .make(coordinatorLayout, ""+response.code(), Snackbar.LENGTH_INDEFINITE)
                             .make(coordinatorLayout, "Wrong username or password", Snackbar.LENGTH_INDEFINITE)
@@ -217,7 +233,7 @@ public class RegisterActivity extends AppCompatActivity {
                             });
 
                     snackbar.show();
-                }
+                }*/
 
                 else {
                     Snackbar snackbar = Snackbar
@@ -271,6 +287,7 @@ public class RegisterActivity extends AppCompatActivity {
             errorMsg = getResources().getString(R.string.error_msg_timeout);
         }
 
-        return errorMsg; */
+        return errorMsg;
     }
+
 }

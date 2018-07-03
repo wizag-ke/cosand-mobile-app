@@ -15,11 +15,11 @@
             android:id="@+id/complete_details"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#26173470"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:fontFamily="@font/bariol_bold"
             android:gravity="center_horizontal|center_vertical"
             android:text="Complete details"
-            android:textColor="#000000"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -30,6 +30,7 @@
             android:background="#B8BECC" />
 
         <LinearLayout
+
             android:id="@+id/linear_material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,9 +66,10 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="10"
-                android:entries="@array/material_arrays"
+
                 android:fontFamily="@font/bariol_bold"
                 android:prompt="@string/material_prompt"
+                android:entries="@array/material_arrays"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -231,7 +233,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/proceed_button"
             android:fontFamily="@font/bariol_bold"
-            android:text="Proceed"
+            android:text="Next"
             android:textAllCaps="false"
             android:textColor="#ffffff"
             android:textSize="20sp"

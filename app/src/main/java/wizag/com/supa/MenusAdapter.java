@@ -97,7 +97,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                        context.startActivity(buy);
                         break;
                     case "Sell":
-                        Intent sell = new Intent(context,SellActivity.class);
+                        Intent sell = new Intent(context,Activity_Sell.class);
                         context.startActivity(sell);
                         break;
                     case "Wallet":
@@ -109,7 +109,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         context.startActivity(profile);
                         break;
                     case "Locations":
-                        Intent check_in = new Intent(context,LocationsActivity.class);
+                        Intent check_in = new Intent(context,Activity_Location.class);
                         context.startActivity(check_in);
                         break;
                     case "Supply":

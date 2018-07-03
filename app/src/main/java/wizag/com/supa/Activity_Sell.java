@@ -1,24 +1,20 @@
 package wizag.com.supa;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.http.RequestQueue;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,37 +25,24 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.GET;
-import wizag.com.supa.ModelResults.MaterialResults;
-import wizag.com.supa.TopModels.TopMaterials;
-
-public class SellActivity extends AppCompatActivity {
+public class Activity_Sell extends AppCompatActivity {
     TextView time, date;
     Spinner spinner_sell_material, spinner_sell_quantity, spinner_sell_quality, spinner_sell_supplier, spinner_sell_size;
     EditText linear_supplier;
     LinearLayout sell_layout;
     //MaterialService materialService;
     Button proceed_sell;
+
 
     String GET_MATERIALS = "http://sduka.wizag.biz/api/material";
     String POST_MATERIAL = "http://sduka.wizag.biz/api/load-request";
@@ -77,15 +60,23 @@ public class SellActivity extends AppCompatActivity {
     GPSLocation gps;
     EditText quantity;
     String location;
+
     HashMap<String, String> map_values;
     HashMap<String, String> quality_values;
+    HashMap<String, String> supplier_values;
+    HashMap<String, String> size_values;
+
+
     String id_material;
     String id_quality;
+    String id_size;
+    String id_supplier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sell);
+
 
         spinner_sell_material = findViewById(R.id.spinner_sell_material);
         spinner_sell_supplier = findViewById(R.id.spinner_sell_supplier);
@@ -97,6 +88,10 @@ public class SellActivity extends AppCompatActivity {
 
         map_values = new HashMap<String, String>();
         quality_values = new HashMap<String, String>();
+        size_values = new HashMap<String, String>();
+        supplier_values = new HashMap<String, String>();
+
+
         SellName = new ArrayList<>();
         SupplierName = new ArrayList<>();
         CategoryName = new ArrayList<>();
@@ -163,6 +158,32 @@ public class SellActivity extends AppCompatActivity {
             }
         });
 
+        spinner_sell_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = spinner_sell_size.getSelectedItem().toString();
+                id_size = size_values.get(value);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        spinner_sell_supplier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = spinner_sell_supplier.getSelectedItem().toString();
+                id_supplier = supplier_values.get(value);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         proceed_sell.setOnClickListener(new View.OnClickListener() {
 
@@ -170,14 +191,21 @@ public class SellActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String quantity_txt = quantity.getText().toString();
                 if (quantity_txt.isEmpty()) {
-                    Snackbar.make(sell_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(sell_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG);
+                    View snackbar_view = snackbar.getView();
+                    snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                    snackbar.show();
 
                 } else if (Integer.parseInt(quantity_txt) < 12) {
-                    Snackbar.make(sell_layout, "Quantity value should be more than 12", Snackbar.LENGTH_LONG).show();
-
-                } else if ((Integer.parseInt(quantity_txt))% 2 != 0) {
-                    Snackbar.make(sell_layout, "Quantity value should be an even number", Snackbar.LENGTH_LONG).show();
-
+                    Snackbar snackbar = Snackbar.make(sell_layout, "Quantity value should be more than 12", Snackbar.LENGTH_LONG);
+                    View snackbar_view = snackbar.getView();
+                    snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                    snackbar.show();
+                } else if ((Integer.parseInt(quantity_txt)) % 2 != 0) {
+                    Snackbar snackbar = Snackbar.make(sell_layout, "Quantity value should be an even number", Snackbar.LENGTH_LONG);
+                    View snackbar_view = snackbar.getView();
+                    snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                    snackbar.show();
                 } else {
                     loadRequest();
                 }
@@ -185,82 +213,96 @@ public class SellActivity extends AppCompatActivity {
 
             }
 
-            private void loadRequest() {
-
-                com.android.volley.RequestQueue queue = Volley.newRequestQueue(SellActivity.this);
-
-
-                // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_MATERIAL,
-                        new com.android.volley.Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    JSONObject data = jsonObject.getJSONObject("data");
-                                    String success_message = data.getString("message");
-                                    // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(), "New Request Created Successfully", Toast.LENGTH_SHORT).show();
-
-                                    startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                                //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
-                            }
-                        }, new com.android.volley.Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-
-                        Snackbar.make(sell_layout, "An error occurred", Snackbar.LENGTH_LONG).show();
-                    }
-                }) {
-                    //adding parameters to the request
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("material_id", id_material);
-                        params.put("quality_id", id_quality);
-                        params.put("quantity", quantity.getText().toString());
-                        params.put("supplier", spinner_sell_supplier.getSelectedItem().toString());
-                        params.put("location", location);
-                        //params.put("code", "blst786");
-                        //  params.put("")
-                        return params;
-                    }
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        String bearer = "Bearer ".concat(token);
-                        Map<String, String> headersSys = super.getHeaders();
-                        Map<String, String> headers = new HashMap<String, String>();
-                        headersSys.remove("Authorization");
-                        headers.put("Authorization", bearer);
-                        headers.putAll(headersSys);
-                        return headers;
-                    }
-                };
-// Add the request to the RequestQueue.
-                queue.add(stringRequest);
-            }
-
 
         });
+    }
+
+
+    private void loadRequest() {
+
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Sell.this);
+
+        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_MATERIAL,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String success_message = data.getString("message");
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+
+                            Toast.makeText(getApplicationContext(), "New request created successfully", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Snackbar.make(sell_layout, "Request could not be placed", Snackbar.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("material_id", id_material);
+                params.put("quality_id", id_quality);
+                params.put("quantity", quantity.getText().toString());
+                params.put("supplier_id", id_supplier);
+                params.put("material_size_id", id_size);
+                params.put("location", location);
+                //params.put("code", "blst786");
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     private void loadSpinnerData(String url) {
         final List<String> materialsList = new ArrayList<>();
         final List<String> materials = new ArrayList<>();
         com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
+                    pDialog.hide();
                     if (jsonObject != null) {
 
                         JSONObject data = jsonObject.getJSONObject("data");
@@ -282,6 +324,9 @@ public class SellActivity extends AppCompatActivity {
 
                                 for (int j = 0; j < supplier.length(); j++) {
                                     JSONObject supplier_items = supplier.getJSONObject(j);
+                                    String supplier_name = supplier_items.getString("name");
+                                    String supplier_id = supplier_items.getString("id");
+                                    supplier_values.put(supplier_name, supplier_id);
 
 
                                     if (supplier != null) {
@@ -300,7 +345,7 @@ public class SellActivity extends AppCompatActivity {
 
                                     }
                                     //get
-                                    spinner_sell_supplier.setAdapter(new ArrayAdapter<String>(SellActivity.this, android.R.layout.simple_spinner_dropdown_item, SupplierName));
+                                    spinner_sell_supplier.setAdapter(new ArrayAdapter<String>(Activity_Sell.this, android.R.layout.simple_spinner_dropdown_item, SupplierName));
 
 
                                 }
@@ -326,7 +371,11 @@ public class SellActivity extends AppCompatActivity {
                                         JSONArray size = size_items.getJSONArray("size");
 
                                         for (int m = 0; m < size.length(); m++) {
-
+                                            JSONObject size_objects = size.getJSONObject(m);
+                                            String size_name = size_objects.getString("size");
+                                            String size_id = size_objects.getString("id");
+                                            size_values.put(size_name, size_id);
+                                            // Toast.makeText(Activity_Sell.this, "" + size_name, Toast.LENGTH_SHORT).show();
 
                                             if (size != null) {
 
@@ -342,7 +391,7 @@ public class SellActivity extends AppCompatActivity {
                                                 }
 
                                             }
-                                            spinner_sell_size.setAdapter(new ArrayAdapter<String>(SellActivity.this, android.R.layout.simple_spinner_dropdown_item, SizeName));
+                                            spinner_sell_size.setAdapter(new ArrayAdapter<String>(Activity_Sell.this, android.R.layout.simple_spinner_dropdown_item, SizeName));
 
                                         }
 
@@ -361,7 +410,7 @@ public class SellActivity extends AppCompatActivity {
                                             }
 
                                         }
-                                        spinner_sell_quality.setAdapter(new ArrayAdapter<String>(SellActivity.this, android.R.layout.simple_spinner_dropdown_item, QualityName));
+                                        spinner_sell_quality.setAdapter(new ArrayAdapter<String>(Activity_Sell.this, android.R.layout.simple_spinner_dropdown_item, QualityName));
 
                                     }
 
@@ -394,7 +443,7 @@ public class SellActivity extends AppCompatActivity {
                                     } else {
 
                                        /* int id = materials.getJSONObject(i).getInt("id");
-                                        Toast.makeText(SellActivity.this, ""+id, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Activity_Sell.this, ""+id, Toast.LENGTH_SHORT).show();
 */
 
                                         SellName.add(materials.getJSONObject(i).getString("name"));
@@ -412,7 +461,7 @@ public class SellActivity extends AppCompatActivity {
 
                     }
 
-                    spinner_sell_material.setAdapter(new ArrayAdapter<String>(SellActivity.this, android.R.layout.simple_spinner_dropdown_item, SellName));
+                    spinner_sell_material.setAdapter(new ArrayAdapter<String>(Activity_Sell.this, android.R.layout.simple_spinner_dropdown_item, SellName));
 
 
                 } catch (JSONException e) {
@@ -423,6 +472,8 @@ public class SellActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(getApplicationContext(), "An error occured" + error, Toast.LENGTH_SHORT).show();
+                pDialog.hide();
             }
 
 

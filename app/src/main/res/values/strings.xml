@@ -6,7 +6,19 @@
     <string name="error_msg_no_internet">Not connected to internet</string>
     <string name="error_msg_timeout">The server took too long to respond</string>
     <string name="error_msg_unknown">An unexpected error occurred</string>
-
+    <string name="add_new_location">Add new location</string>
+    <string name="location_list">Locations</string>
+    <string name="need_location_permission_message">You need to enable location permissions first</string>
+    <string name="location_permissions_granted_message">Location Permissions Granted</string>
+    <string name="setting_enabled" translatable="false">EnabledSetting</string>
+    <string name="settings_label">Settings</string>
+    <string name="location_permissions">Location Permissions</string>
+    <string name="enable_geofences">Enable Geofences</string>
+    <string name="privacy">http://www.google.com/policies/privacy</string>
+    <string name="ringer_permissions">Ringer Permissions</string>
+    <string name="silent_mode_activated">Silent mode activated</string>
+    <string name="touch_to_relaunch">Touch to launch the app.</string>
+    <string name="back_to_normal">Back to normal</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -52,16 +64,14 @@
 
     <string-array name="material_arrays">
         <item>--Select material--</item>
-        <item>Building Blocks</item>
-        <item>Sand</item>
-        <item>Ballast</item>
+
     </string-array>
 
     <string name="quality_prompt">Choose a Quality</string>
 
     <string-array name="quality_arrays">
         <item>--Select quality--</item>
-        <item>Premium</item>
+
 
     </string-array>
 
@@ -69,7 +79,7 @@
     <string name="quantity_prompt">Choose Quantity</string>
     <string-array name="quantity_arrays">
         <item>--Select quantity--</item>
-        <item>Premium</item>
+
 
     </string-array>
 
@@ -77,7 +87,7 @@
 
     <string-array name="size_arrays">
         <item>--Select size--</item>
-        <item>9*9</item>
+
 
     </string-array>
 
@@ -86,7 +96,7 @@
     <string-array name="price_arrays">
 
         <item>--Select price--</item>
-        <item>37</item>
+
 
     </string-array>
 
@@ -94,10 +104,10 @@
     <string-array name="supplier_arrays">
 
         <item>--Select Supplier--</item>
-        <item>Test Supplier</item>
-        <item>Mlolongo Supplier Supplier</item>
+
 
     </string-array>
+    <string name="title_activity__location">Map</string>
 
 
 </resources>

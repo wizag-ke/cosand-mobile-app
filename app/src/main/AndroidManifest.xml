@@ -18,19 +18,23 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBtVUb5WUJv5HCQqbdmM7PRyzJSNKPV53c" />
+            android:value="AIzaSyCNmyGXMTYmRIpOV3cvrYjZEjv4bugxuK4" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <provider
+            android:name=".PlaceContentProvider"
+            android:authorities="wizag.com.supa"
+            android:exported="false" />
+
         <activity
-            android:windowSoftInputMode="stateHidden|adjustResize"
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-           >
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,16 +43,21 @@
         </activity>
         <activity
             android:name=".MenuActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+
+
+        </activity>
         <activity android:name=".NewOrderActivity" />
         <activity android:name=".OrderSummaryActivity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".SupplyActivity" />
         <activity
-            android:name=".SellActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
-
-
+            android:name=".Activity_Sell"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity_Sell" />
+        </activity>
         <activity android:name=".WalletActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CheckInActivity" />
@@ -56,23 +65,29 @@
         <activity android:name=".ConfirmActivity" />
         <activity android:name=".MyTripsActivity" />
         <activity android:name=".SuppliesActivity" />
-        <activity android:name=".LocationsActivity" />
         <activity android:name=".PaymentsActivity" />
         <activity android:name=".OrdersActivity" />
         <activity
             android:name=".Activity_Buy"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity_Buy" />
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" />
 
-        <activity android:name=".CurrentLocationActivity" />
+        <activity android:name=".CurrentLocationActivity"></activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".Activity_location">
-
-        </activity>
+        <activity
+            android:name=".Activity_Location"
+            android:label="@string/title_activity__location"></activity>
+        <activity android:name=".TestActivity" />
+        <activity android:name=".Activity_Search_Places"></activity>
+        <activity android:name=".Activity_Register"></activity>
     </application>
 
 </manifest>

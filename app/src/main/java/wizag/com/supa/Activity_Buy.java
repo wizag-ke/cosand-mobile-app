@@ -1,5 +1,6 @@
 package wizag.com.supa;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -68,12 +70,22 @@ public class Activity_Buy extends AppCompatActivity {
     String id_size;
 
     EditText quantity;
+    String location;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
         CountryName = new ArrayList<>();
+
+
+        progressDialog = new ProgressDialog(getApplicationContext());
+
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
 
         spinner = (Spinner) findViewById(R.id.buy_spinner);
         buy_spinner_size = (Spinner) findViewById(R.id.buy_spinner_size);
@@ -101,7 +113,8 @@ public class Activity_Buy extends AppCompatActivity {
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
             // Toast.makeText(this, "data\n"+longitude, Toast.LENGTH_SHORT).show();
-
+            location = latitude + "," + longitude;
+            editor.putString("key_name", location);
             //String coordinates = latitude+ ","+longitude;
             //  Toast.makeText(gps, "data\n\n"+latitude, Toast.LENGTH_SHORT).show();
         } else {
@@ -166,100 +179,44 @@ public class Activity_Buy extends AppCompatActivity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //post material to db
-                // Instantiate the RequestQueue.
-                //validate quantity
                 String quantity_txt = quantity.getText().toString();
                 if (quantity_txt.isEmpty()) {
-                    Snackbar.make(buy_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(buy_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG);
+                    View snackbar_view = snackbar.getView();
+                    snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                    snackbar.show();
+
 
                 } else if (Integer.parseInt(quantity_txt) < 12) {
                     Snackbar.make(buy_layout, "Quantity value should be more than 12", Snackbar.LENGTH_LONG).show();
 
-                } else if ((Integer.parseInt(quantity_txt))% 2 != 0) {
+                } else if ((Integer.parseInt(quantity_txt)) % 2 != 0) {
                     Snackbar.make(buy_layout, "Quantity value should be an even number", Snackbar.LENGTH_LONG).show();
 
                 } else {
                     postOrder();
                 }
-
-
-                loadSpinnerData(URL);
-
-
             }
-
-            private void postOrder() {
-                RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
-
-
-                // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_MATERIAL_URL,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    JSONObject data = jsonObject.getJSONObject("data");
-                                    String success_message = data.getString("message");
-                                    Snackbar.make(buy_layout, "Order request made successfully", Snackbar.LENGTH_LONG).show();
-                                    startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                                //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-
-                        Snackbar.make(buy_layout, "An Error Occurred", Snackbar.LENGTH_LONG).show();
-                    }
-                }) {
-                    //adding parameters to the request
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("material-id", "1");
-                        params.put("quality-id", "1");
-                        params.put("size-id", "1");
-                        params.put("quantity", quantity.getText().toString());
-                        //  params.put("")
-                        return params;
-                    }
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        String bearer = "Bearer ".concat(token);
-                        Map<String, String> headersSys = super.getHeaders();
-                        Map<String, String> headers = new HashMap<String, String>();
-                        headersSys.remove("Authorization");
-                        headers.put("Authorization", bearer);
-                        headers.putAll(headersSys);
-                        return headers;
-                    }
-                };
-// Add the request to the RequestQueue.
-                queue.add(stringRequest);
-            }
-
-
         });
+
+        loadSpinnerData(URL);
 
     }
 
 
     private void loadSpinnerData(String url) {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
+
                     JSONObject jsonObject = new JSONObject(response);
+                    pDialog.hide();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONArray materials = data.getJSONArray("materials");
@@ -382,6 +339,8 @@ public class Activity_Buy extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(getApplicationContext(), "An Error Occurred", Toast.LENGTH_SHORT).show();
+                pDialog.hide();
             }
 
 
@@ -410,5 +369,73 @@ public class Activity_Buy extends AppCompatActivity {
 
     }
 
+    private void postOrder() {
+        RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_MATERIAL_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String success_message = data.getString("message");
+                            Toast.makeText(getApplicationContext(), "New Order placed successfully", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), Activity_Search_Places.class));
+                            finish();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Snackbar snackbar = Snackbar.make(buy_layout, "An Error Occurred" + error, Snackbar.LENGTH_LONG);
+                View snackbar_view = snackbar.getView();
+                snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                snackbar.show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("material_id", "1");
+                params.put("quality_id", "1");
+                params.put("size_id", "1");
+                params.put("quantity", quantity.getText().toString());
+                params.put("location", location);
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 
 }
+

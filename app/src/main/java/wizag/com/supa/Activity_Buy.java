@@ -42,7 +42,7 @@ import java.util.Map;
 
 
 public class Activity_Buy extends AppCompatActivity {
-    Spinner spinner, buy_spinner_size, buy_spinner_quality;
+    Spinner spinner, buy_spinner_size, buy_spinner_quality, buy_spinner_category;
     String URL = "http://sduka.wizag.biz/api/material";
     String POST_MATERIAL_URL = "http://sduka.wizag.biz/api/order-request";
 
@@ -64,15 +64,18 @@ public class Activity_Buy extends AppCompatActivity {
     HashMap<String, String> map_values;
     HashMap<String, String> quality_values;
     HashMap<String, String> size_values;
+    HashMap<String, String> category_values;
 
     String id_material;
     String id_quality;
     String id_size;
+    String id_category;
 
     EditText quantity;
     String location;
 
     ProgressDialog progressDialog;
+    String quantity_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +93,14 @@ public class Activity_Buy extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.buy_spinner);
         buy_spinner_size = (Spinner) findViewById(R.id.buy_spinner_size);
         buy_spinner_quality = (Spinner) findViewById(R.id.buy_spinner_quality);
+        buy_spinner_category = (Spinner) findViewById(R.id.buy_spinner_category);
 
         map_values = new HashMap<String, String>();
         quality_values = new HashMap<String, String>();
         size_values = new HashMap<String, String>();
+        category_values = new HashMap<String, String>();
+
+
         quantity = (EditText) findViewById(R.id.buy_quantity);
 
         CategoryName = new ArrayList<>();
@@ -107,7 +114,7 @@ public class Activity_Buy extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
         HashMap<String, String> user = sessionManager.getUserDetails();
         token = user.get("access_token");
-        // Toast.makeText(this, "Data" + token, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Data" + token, Toast.LENGTH_SHORT).show();
         gps = new GPSLocation(this);
         if (gps.canGetLocation()) {
             double latitude = gps.getLatitude();
@@ -175,11 +182,26 @@ public class Activity_Buy extends AppCompatActivity {
             }
         });
 
+        buy_spinner_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = buy_spinner_category.getSelectedItem().toString();
+                id_category = category_values.get(value);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String quantity_txt = quantity.getText().toString();
+                startActivity(new Intent(getApplicationContext(),Activity_Search_Places.class));
+
+               /* quantity_txt = quantity.getText().toString();
                 if (quantity_txt.isEmpty()) {
                     Snackbar snackbar = Snackbar.make(buy_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG);
                     View snackbar_view = snackbar.getView();
@@ -194,8 +216,8 @@ public class Activity_Buy extends AppCompatActivity {
                     Snackbar.make(buy_layout, "Quantity value should be an even number", Snackbar.LENGTH_LONG).show();
 
                 } else {
-                    postOrder();
-                }
+                    startActivity(new Intent(getApplicationContext(),Activity_Search_Places.class));
+                }*/
             }
         });
 
@@ -229,6 +251,8 @@ public class Activity_Buy extends AppCompatActivity {
                                 String material_id = material_items.getString("id");
                                 map_values.put(material_name, material_id);
 
+                                // Toast.makeText(getApplicationContext(), ""+map_values, Toast.LENGTH_SHORT).show();
+
                                 if (material_items != null) {
                                     if (CountryName.contains(materials.getJSONObject(i).getString("name"))) {
 
@@ -248,7 +272,9 @@ public class Activity_Buy extends AppCompatActivity {
                                 for (int k = 0; k < category.length(); k++) {
 
                                     JSONObject category_items = category.getJSONObject(k);
-
+                                    String category_name = category_items.getString("name");
+                                    String category_id = category_items.getString("id");
+                                    category_values.put(category_name, category_id);
                                     /*loop thro quality*/
 
 
@@ -259,11 +285,14 @@ public class Activity_Buy extends AppCompatActivity {
                                         String quality_id = quality_object.getString("id");
                                         quality_values.put(quality_name, quality_id);
                                         /*loop thro size*/
-                                        JSONObject size_items = quality.getJSONObject(k);
+                                        JSONObject size_items = quality.getJSONObject(l);
                                         JSONArray size = size_items.getJSONArray("size");
 
                                         for (int m = 0; m < size.length(); m++) {
-
+                                            JSONObject size_objects = size.getJSONObject(m);
+                                            String size_name = size_objects.getString("size");
+                                            String size_id = size_objects.getString("id");
+                                            size_values.put(size_name, size_id);
 
                                             if (size != null) {
 
@@ -273,7 +302,7 @@ public class Activity_Buy extends AppCompatActivity {
                                                 } else {
 
                                                     SizeName.add(size.getJSONObject(m).getString("size"));
-                                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+                                                    // Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
 
 
                                                 }
@@ -317,6 +346,7 @@ public class Activity_Buy extends AppCompatActivity {
 
 
                                     }
+                                    buy_spinner_category.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, CategoryName));
 
 
                                 }
@@ -369,25 +399,28 @@ public class Activity_Buy extends AppCompatActivity {
 
     }
 
-    private void postOrder() {
-        RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
+    public void loadRequest() {
+
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
-
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_MATERIAL_URL,
-                new Response.Listener<String>() {
+                new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
+
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             JSONObject data = jsonObject.getJSONObject("data");
                             String success_message = data.getString("message");
-                            Toast.makeText(getApplicationContext(), "New Order placed successfully", Toast.LENGTH_SHORT).show();
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+
+                            Toast.makeText(getApplicationContext(), "New request created successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), Activity_Search_Places.class));
-                            finish();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -395,15 +428,12 @@ public class Activity_Buy extends AppCompatActivity {
 
                         //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
                     }
-                }, new Response.ErrorListener() {
+                }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
 
-                Snackbar snackbar = Snackbar.make(buy_layout, "An Error Occurred" + error, Snackbar.LENGTH_LONG);
-                View snackbar_view = snackbar.getView();
-                snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                snackbar.show();
+                Snackbar.make(buy_layout, "Request could not be placed", Snackbar.LENGTH_LONG).show();
                 pDialog.dismiss();
             }
         }) {
@@ -411,11 +441,12 @@ public class Activity_Buy extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("material_id", "1");
-                params.put("quality_id", "1");
-                params.put("size_id", "1");
-                params.put("quantity", quantity.getText().toString());
+                params.put("material_id", id_material);
+                params.put("quality_id", id_quality);
+                params.put("quantity", quantity_txt);
+                params.put("size_id", id_size);
                 params.put("location", location);
+                //params.put("code", "blst786");
                 //  params.put("")
                 return params;
             }

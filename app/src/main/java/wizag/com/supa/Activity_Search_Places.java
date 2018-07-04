@@ -1,6 +1,7 @@
 package wizag.com.supa;
 
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,12 +21,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -39,12 +54,18 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Activity_Search_Places extends AppCompatActivity implements
         ConnectionCallbacks,
-        OnConnectionFailedListener {
+        OnConnectionFailedListener,AdapterView.OnItemClickListener {
 
     // Constants
     public static final String TAG = Activity_Search_Places.class.getSimpleName();
@@ -58,21 +79,51 @@ public class Activity_Search_Places extends AppCompatActivity implements
     private GoogleApiClient mClient;
     private Geofencing mGeofencing;
 
+    String name, address;
+    String POST_Location_URL = "http://sduka.wizag.biz/api/user-ddp";
+    String get_Location_URL = "http://sduka.wizag.biz/api/user-ddp";
+    String token;
+
+    ArrayList<String> LocationName;
+    HashMap<String, String> location_values;
+    String id_location;
+
+    SessionManager sessionManager;
+    Spinner location_spinner;
+    Button next_location;
+
     /**
      * Called when the activity is starting
      *
      * @param savedInstanceState The Bundle that contains the data supplied in onSaveInstanceState
      */
+
+
+    //a list to store all the products
+    List<Model_Existing_Places> productList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_places);
 
         // Set up the recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.places_list_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recylcerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PlaceListAdapter(this, null);
         mRecyclerView.setAdapter(mAdapter);
+
+
+        // location_spinner = (Spinner) findViewById(R.id.location_spinner);
+//loading spinner
+        loadProducts();
+
+        sessionManager = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = sessionManager.getUserDetails();
+        token = user.get("access_token");
+
+        location_values = new HashMap<String, String>();
+        LocationName = new ArrayList<>();
 
 
         Switch onOffSwitch = (Switch) findViewById(R.id.enable_switch);
@@ -105,6 +156,8 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
     }
 
@@ -197,18 +250,29 @@ public class Activity_Search_Places extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
             Place place = PlacePicker.getPlace(this, data);
+            Double latitude = place.getLatLng().latitude;
+            Double longitude = place.getLatLng().longitude;
+            name = place.getName().toString();
+            address = String.valueOf(latitude) + "," + String.valueOf(longitude);
+
+            //Toast.makeText(this, "Data"+name, Toast.LENGTH_SHORT).show();
+
+
             if (place == null) {
                 Log.i(TAG, "No place selected");
                 return;
             }
 
             String placeID = place.getId();
+            //Toast.makeText(this, "data"+placeID, Toast.LENGTH_LONG).show();
 
             // Insert a new place into DB
             ContentValues contentValues = new ContentValues();
             contentValues.put(PlaceContract.PlaceEntry.COLUMN_PLACE_ID, placeID);
             getContentResolver().insert(PlaceContract.PlaceEntry.CONTENT_URI, contentValues);
 
+            //post location data
+            postLocation();
             // Get live data information
             refreshPlacesData();
         }
@@ -220,6 +284,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
         // Initialize location permissions checkbox
         CheckBox locationPermissions = (CheckBox) findViewById(R.id.location_permission_checkbox);
+        locationPermissions.setChecked(true);
         if (ActivityCompat.checkSelfPermission(Activity_Search_Places.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             locationPermissions.setChecked(false);
@@ -232,6 +297,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
         CheckBox ringerPermissions = (CheckBox) findViewById(R.id.ringer_permissions_checkbox);
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Check if the API supports such permission change and check if permission is granted
+        ringerPermissions.setChecked(true);
         if (android.os.Build.VERSION.SDK_INT >= 24 && !nm.isNotificationPolicyAccessGranted()) {
             ringerPermissions.setChecked(false);
         } else {
@@ -250,30 +316,260 @@ public class Activity_Search_Places extends AppCompatActivity implements
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 PERMISSIONS_REQUEST_FINE_LOCATION);
     }
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sign_out)
-        {
+        if (id == R.id.action_sign_out) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void postLocation() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Search_Places.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_Location_URL,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
 
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String success_message = data.getString("message");
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+
+                            Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), Activity_Quotation
+                                    .class));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Search_Places.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", name);
+                params.put("cordinates", address);
+
+                //params.put("code", "blst786");
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    /* private void getPreviousLocation() {
+         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+         final ProgressDialog pDialog = new ProgressDialog(this);
+         pDialog.setMessage("Loading...");
+         pDialog.show();
+
+         StringRequest stringRequest = new StringRequest(Request.Method.GET, get_Location_URL, new Response.Listener<String>() {
+             @Override
+             public void onResponse(String response) {
+                 try {
+
+                     JSONObject jsonObject = new JSONObject(response);
+                     pDialog.hide();
+                     if (jsonObject != null) {
+                         JSONObject data = jsonObject.getJSONObject("data");
+                         JSONArray dropoffs = data.getJSONArray("dropoffs");
+
+                         if (dropoffs != null) {
+                             for (int i = 0; i < dropoffs.length(); i++) {
+
+                                 JSONObject dropoff_places = dropoffs.getJSONObject(i);
+                                 String material_name = dropoff_places.getString("name");
+                                 String material_id = dropoff_places.getString("cordinates");
+                                 location_values.put(material_name, material_id);
+                                 // Toast.makeText(Activity_Search_Places.this, ""+location_values, Toast.LENGTH_SHORT).show();
+
+                                 if (dropoff_places != null) {
+                                     if (LocationName.contains(dropoffs.getJSONObject(i).getString("name"))) {
+
+                                     } else {
+
+                                         LocationName.add(dropoffs.getJSONObject(i).getString("name"));
+
+                                     }
+
+
+                                 }
+
+                             }
+                         }
+                     }
+
+                     location_spinner.setAdapter(new ArrayAdapter<String>(Activity_Search_Places.this, android.R.layout.simple_spinner_dropdown_item, LocationName));
+
+                 } catch (JSONException e) {
+                     e.printStackTrace();
+                 }
+             }
+         }, new Response.ErrorListener() {
+             @Override
+             public void onErrorResponse(VolleyError error) {
+                 error.printStackTrace();
+                 Toast.makeText(getApplicationContext(), "An Error Occurred", Toast.LENGTH_SHORT).show();
+                 pDialog.hide();
+             }
+
+
+         }) {
+             @Override
+             public Map<String, String> getHeaders() throws AuthFailureError {
+                 Map<String, String> params = new HashMap<String, String>();
+                 String bearer = "Bearer ".concat(token);
+                 Map<String, String> headersSys = super.getHeaders();
+                 Map<String, String> headers = new HashMap<String, String>();
+                 headersSys.remove("Authorization");
+                 headers.put("Authorization", bearer);
+                 headers.putAll(headersSys);
+                 return headers;
+             }
+
+         };
+         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+         int socketTimeout = 30000;
+         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+         stringRequest.setRetryPolicy(policy);
+         requestQueue.add(stringRequest);
+
+
+     }
+ */
+    private void loadProducts() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, get_Location_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //converting the string to json array object
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.hide();
+                            if (jsonObject != null) {
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                JSONArray locations = data.getJSONArray("orders");
+                                if (locations != null) {
+                                    //traversing through all the object
+                                    for (int i = 0; i < locations.length(); i++) {
+
+                                        //getting product object from json array
+                                        JSONObject product = locations.getJSONObject(i);
+
+                                        //adding the product to product list
+                                        productList.add(new Model_Existing_Places(
+                                                product.getString("name"),
+                                                product.getInt("id"),
+                                                product.getString("cordinate")
+                                        ));
+                                    }
+
+                                }
+
+                            }
+
+
+                            //creating adapter object and setting it to recyclerview
+                            Adapter_Existing_Places adapter = new Adapter_Existing_Places(Activity_Search_Places.this, productList);
+                            mRecyclerView.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        pDialog.dismiss();
+                        error.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+
+
+        };
+
+        //adding our stringrequest to queue
+        Volley.newRequestQueue(this).
+
+                add(stringRequest);
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
 }
+
+

@@ -221,7 +221,6 @@ public class Activity_Sell extends AppCompatActivity {
     private void loadRequest() {
 
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Sell.this);
-
         com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");

@@ -43,10 +43,7 @@
         </activity>
         <activity
             android:name=".MenuActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-
-
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity android:name=".NewOrderActivity" />
         <activity android:name=".OrderSummaryActivity" />
         <activity android:name=".PaymentActivity" />
@@ -80,14 +77,15 @@
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" />
 
-        <activity android:name=".CurrentLocationActivity"></activity>
+        <activity android:name=".CurrentLocationActivity" />
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".Activity_Location"
-            android:label="@string/title_activity__location"></activity>
+            android:label="@string/title_activity__location" />
         <activity android:name=".TestActivity" />
-        <activity android:name=".Activity_Search_Places"></activity>
-        <activity android:name=".Activity_Register"></activity>
+        <activity android:name=".Activity_Search_Places" />
+        <activity android:name=".Activity_Register" />
+        <activity android:name=".Activity_Quotation"></activity>
     </application>
 
 </manifest>

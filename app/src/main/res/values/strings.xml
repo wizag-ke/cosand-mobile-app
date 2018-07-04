@@ -87,6 +87,12 @@
 
     <string-array name="size_arrays">
         <item>--Select size--</item>
+    </string-array>
+
+    <string name="location_prompt">Choose a location</string>
+
+    <string-array name="location_arrays">
+        <item>--Select location--</item>
 
 
     </string-array>
@@ -96,6 +102,13 @@
     <string-array name="price_arrays">
 
         <item>--Select price--</item>
+
+
+    </string-array>
+    <string name="category_prompt">Choose a category</string>
+    <string-array name="category_arrays">
+
+        <item>--Select category--</item>
 
 
     </string-array>

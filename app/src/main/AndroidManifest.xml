@@ -55,7 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activity_Sell" />
         </activity>
-        <activity android:name=".WalletActivity" />
+        <activity android:name=".Activity_Wallet" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CheckInActivity" />
         <activity android:name=".TripsActivity" />

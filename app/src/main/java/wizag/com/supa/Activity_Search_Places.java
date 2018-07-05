@@ -65,13 +65,13 @@ import java.util.Map;
 
 public class Activity_Search_Places extends AppCompatActivity implements
         ConnectionCallbacks,
-        OnConnectionFailedListener,AdapterView.OnItemClickListener {
+        OnConnectionFailedListener {
 
     // Constants
     public static final String TAG = Activity_Search_Places.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     private static final int PLACE_PICKER_REQUEST = 1;
-
+    private static final String SHARED_PREF_NAME = "location";
     // Member variables
     private PlaceListAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -82,15 +82,24 @@ public class Activity_Search_Places extends AppCompatActivity implements
     String name, address;
     String POST_Location_URL = "http://sduka.wizag.biz/api/user-ddp";
     String get_Location_URL = "http://sduka.wizag.biz/api/user-ddp";
+    String post_Location_calc = "http://sduka.wizag.biz/api/qc";
     String token;
 
     ArrayList<String> LocationName;
     HashMap<String, String> location_values;
     String id_location;
 
+    String material;
+    String quality;
+    String size;
+
     SessionManager sessionManager;
     Spinner location_spinner;
     Button next_location;
+
+    int distance;
+    String unit_measure;
+    String cost_of_delivery_per_unit;
 
     /**
      * Called when the activity is starting
@@ -113,8 +122,17 @@ public class Activity_Search_Places extends AppCompatActivity implements
         mAdapter = new PlaceListAdapter(this, null);
         mRecyclerView.setAdapter(mAdapter);
 
+//get item from order-request
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            material = extras.getString("material_id");
+            quality = extras.getString("quality_id");
+            size = extras.getString("size_id");
 
-        // location_spinner = (Spinner) findViewById(R.id.location_spinner);
+
+        }
+
+
 //loading spinner
         loadProducts();
 
@@ -156,7 +174,6 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
     }
@@ -273,6 +290,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
             //post location data
             postLocation();
+
+            //calculate location
+            postLocationCalc();
+
             // Get live data information
             refreshPlacesData();
         }
@@ -340,6 +361,12 @@ public class Activity_Search_Places extends AppCompatActivity implements
     }
 
     private void postLocation() {
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("address", address);
+        editor.apply();
+
+
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Search_Places.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -359,9 +386,9 @@ public class Activity_Search_Places extends AppCompatActivity implements
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
 
                             Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), Activity_Quotation
+                            /*startActivity(new Intent(getApplicationContext(), Activity_Quotation
                                     .class));
-
+*/
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -404,6 +431,85 @@ public class Activity_Search_Places extends AppCompatActivity implements
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+    private void postLocationCalc() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Search_Places.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, post_Location_calc,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            distance = data.getInt("distance");
+                            unit_measure = data.getString("unit_measure");
+                            cost_of_delivery_per_unit = data.getString("cost_of_delivery_per_unit");
+
+                            // Toast.makeText(Activity_Search_Places.this, "Data\n" + unit_measure,+cost_of_delivery_per_unit, Toast.LENGTH_SHORT).show();
+
+
+                            // String success_message = data.getString("message");
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), Activity_Quotation.class);
+                            intent.putExtra("location", address);
+                            intent.putExtra("distance", distance);
+                            intent.putExtra("unit_measure", unit_measure);
+                            intent.putExtra("cost_of_delivery_per_unit", cost_of_delivery_per_unit);
+                            startActivity(intent);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Search_Places.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("material_id", material);
+                params.put("location", address);
+                params.put("quality_id", quality);
+                params.put("size_id", size);
+
+                //params.put("code", "blst786");
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 
     /* private void getPreviousLocation() {
          RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -566,10 +672,6 @@ public class Activity_Search_Places extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
 }
 
 

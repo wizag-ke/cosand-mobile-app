@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -42,13 +41,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Activity_Buy extends AppCompatActivity {
+public class Buy extends AppCompatActivity {
     Spinner spinner, buy_spinner_size, buy_spinner_quality, buy_spinner_category;
     String URL = "http://sduka.wizag.biz/api/material";
     String POST_MATERIAL_URL = "http://sduka.wizag.biz/api/order-request";
-    private static final String SHARED_PREF_NAME = "mysharedpref";
+
     LinearLayout buy_layout;
     ArrayList<String> CountryName;
+    SharedPreferences.Editor editor;
+    SharedPreferences sharedPreferences;
     SessionManager sessionManager;
     String token;
     Button proceed;
@@ -76,7 +77,6 @@ public class Activity_Buy extends AppCompatActivity {
     ProgressDialog progressDialog;
     String quantity_txt;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +85,10 @@ public class Activity_Buy extends AppCompatActivity {
 
 
         progressDialog = new ProgressDialog(getApplicationContext());
+
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
 
         spinner = (Spinner) findViewById(R.id.buy_spinner);
         buy_spinner_size = (Spinner) findViewById(R.id.buy_spinner_size);
@@ -117,7 +121,7 @@ public class Activity_Buy extends AppCompatActivity {
             double longitude = gps.getLongitude();
             // Toast.makeText(this, "data\n"+longitude, Toast.LENGTH_SHORT).show();
             location = latitude + "," + longitude;
-            // editor.putString("key_name", location);
+            editor.putString("key_name", location);
             //String coordinates = latitude+ ","+longitude;
             //  Toast.makeText(gps, "data\n\n"+latitude, Toast.LENGTH_SHORT).show();
         } else {
@@ -195,22 +199,12 @@ public class Activity_Buy extends AppCompatActivity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
 
-
-                editor.putString("material_id",id_material);
-                editor.putString("quality_id",id_quality);
-                editor.putString("size_id",id_size);
-                editor.apply();
-
-
-                Intent intent = new Intent(getApplicationContext(), Activity_Search_Places.class);
+                Intent intent = new Intent(getApplicationContext(),Activity_Search_Places.class);
                 intent.putExtra("material_id", id_material);
                 intent.putExtra("quality_id", id_quality);
                 intent.putExtra("size_id", id_size);
                 startActivity(intent);
-
             }
         });
 
@@ -301,7 +295,7 @@ public class Activity_Buy extends AppCompatActivity {
                                                 }
 
                                             }
-                                            buy_spinner_size.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, SizeName));
+                                            buy_spinner_size.setAdapter(new ArrayAdapter<String>(Buy.this, android.R.layout.simple_spinner_dropdown_item, SizeName));
 
                                         }
 
@@ -320,7 +314,7 @@ public class Activity_Buy extends AppCompatActivity {
                                             }
 
                                         }
-                                        buy_spinner_quality.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, QualityName));
+                                        buy_spinner_quality.setAdapter(new ArrayAdapter<String>(Buy.this, android.R.layout.simple_spinner_dropdown_item, QualityName));
 
                                     }
 
@@ -339,7 +333,7 @@ public class Activity_Buy extends AppCompatActivity {
 
 
                                     }
-                                    buy_spinner_category.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, CategoryName));
+                                    buy_spinner_category.setAdapter(new ArrayAdapter<String>(Buy.this, android.R.layout.simple_spinner_dropdown_item, CategoryName));
 
 
                                 }
@@ -352,7 +346,7 @@ public class Activity_Buy extends AppCompatActivity {
                     }
 
 
-                    spinner.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, CountryName));
+                    spinner.setAdapter(new ArrayAdapter<String>(Buy.this, android.R.layout.simple_spinner_dropdown_item, CountryName));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -394,7 +388,7 @@ public class Activity_Buy extends AppCompatActivity {
 
     public void loadRequest() {
 
-        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Buy.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
@@ -419,7 +413,7 @@ public class Activity_Buy extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Buy.this, "", Toast.LENGTH_SHORT).show();
                     }
                 }, new com.android.volley.Response.ErrorListener() {
             @Override

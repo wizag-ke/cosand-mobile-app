@@ -3,7 +3,7 @@ package wizag.com.supa;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class WalletActivity extends AppCompatActivity {
+public class Activity_Wallet extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

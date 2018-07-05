@@ -17,28 +17,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Unit Cost"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/_18sdp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/unit_cost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/sell"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/_18sdp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:text="Distance"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
@@ -53,22 +34,62 @@
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unit Measure"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/unit_measure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/sell"
+            android:padding="@dimen/_10sdp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cost of Delivery Per Unit"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/delivery_cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/sell"
+            android:padding="@dimen/_10sdp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold" />
+
+
+
+
 
             <TextView
                 android:id="@+id/quantity_text"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_80sdp"
+                android:layout_marginTop="@dimen/_50sdp"
                 android:text="Enter Quantity"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/_18sdp"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+
 
 
 
@@ -78,12 +99,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Enter Number of pieces"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/quantity"
+            android:inputType="number"
+            android:id="@+id/quantity_buy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
@@ -92,6 +114,39 @@
             android:textColor="@android:color/black"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
+
+
+        <Button
+            android:id="@+id/calc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/_7sdp"
+            android:background="@drawable/proceed_button"
+            android:fontFamily="@font/bariol_bold"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
+
+            android:text="Calculate total cost"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/total_cost_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp"
+            android:background="@drawable/sell"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold" />
+
+
 
         <Button
             android:id="@+id/submit"
@@ -104,7 +159,7 @@
             android:gravity="center"
             android:padding="@dimen/_10sdp"
 
-            android:text="Next"
+            android:text="Place an order"
             android:textAllCaps="false"
             android:textColor="#ffffff"
 

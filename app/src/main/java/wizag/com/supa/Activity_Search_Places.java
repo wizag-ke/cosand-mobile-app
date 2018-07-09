@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -63,6 +64,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wizag.com.supa.adapter.Custom_List_Adapter;
+
 public class Activity_Search_Places extends AppCompatActivity implements
         ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -73,7 +76,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final String SHARED_PREF_NAME = "location";
     // Member variables
-    private PlaceListAdapter mAdapter;
+    private Adapter_Existing_Places mAdapter;
     private RecyclerView mRecyclerView;
     private boolean mIsEnabled;
     private GoogleApiClient mClient;
@@ -101,26 +104,22 @@ public class Activity_Search_Places extends AppCompatActivity implements
     String unit_measure;
     String cost_of_delivery_per_unit;
 
-    /**
-     * Called when the activity is starting
-     *
-     * @param savedInstanceState The Bundle that contains the data supplied in onSaveInstanceState
-     */
+    /*setting up listview*/
 
-
-    //a list to store all the products
-    List<Model_Existing_Places> productList;
+    private List<Model_Existing_Places> Location_List = new ArrayList<Model_Existing_Places>();
+    private ListView listView;
+    private Custom_List_Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_places);
 
-        // Set up the recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.recylcerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new PlaceListAdapter(this, null);
-        mRecyclerView.setAdapter(mAdapter);
+        // Set up the rlistview
+        listView = (ListView) findViewById(R.id.list);
+        adapter = new Custom_List_Adapter(this, Location_List);
+        listView.setAdapter(adapter);
+
 
 //get item from order-request
         Bundle extras = getIntent().getExtras();
@@ -131,10 +130,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
 
         }
-
+        loadProducts();
 
 //loading spinner
-        loadProducts();
+        //loadProducts();
 
         sessionManager = new SessionManager(getApplicationContext());
         HashMap<String, String> user = sessionManager.getUserDetails();
@@ -142,6 +141,9 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
         location_values = new HashMap<String, String>();
         LocationName = new ArrayList<>();
+
+//load recycler view
+        // loadProducts();
 
 
         Switch onOffSwitch = (Switch) findViewById(R.id.enable_switch);
@@ -228,7 +230,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
         placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
             @Override
             public void onResult(@NonNull PlaceBuffer places) {
-                mAdapter.swapPlaces(places);
+                // mAdapter.swapPlaces(places);
                 mGeofencing.updateGeofencesList(places);
                 if (mIsEnabled) mGeofencing.registerAllGeofences();
             }
@@ -510,87 +512,6 @@ public class Activity_Search_Places extends AppCompatActivity implements
         queue.add(stringRequest);
     }
 
-
-    /* private void getPreviousLocation() {
-         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-         final ProgressDialog pDialog = new ProgressDialog(this);
-         pDialog.setMessage("Loading...");
-         pDialog.show();
-
-         StringRequest stringRequest = new StringRequest(Request.Method.GET, get_Location_URL, new Response.Listener<String>() {
-             @Override
-             public void onResponse(String response) {
-                 try {
-
-                     JSONObject jsonObject = new JSONObject(response);
-                     pDialog.hide();
-                     if (jsonObject != null) {
-                         JSONObject data = jsonObject.getJSONObject("data");
-                         JSONArray dropoffs = data.getJSONArray("dropoffs");
-
-                         if (dropoffs != null) {
-                             for (int i = 0; i < dropoffs.length(); i++) {
-
-                                 JSONObject dropoff_places = dropoffs.getJSONObject(i);
-                                 String material_name = dropoff_places.getString("name");
-                                 String material_id = dropoff_places.getString("cordinates");
-                                 location_values.put(material_name, material_id);
-                                 // Toast.makeText(Activity_Search_Places.this, ""+location_values, Toast.LENGTH_SHORT).show();
-
-                                 if (dropoff_places != null) {
-                                     if (LocationName.contains(dropoffs.getJSONObject(i).getString("name"))) {
-
-                                     } else {
-
-                                         LocationName.add(dropoffs.getJSONObject(i).getString("name"));
-
-                                     }
-
-
-                                 }
-
-                             }
-                         }
-                     }
-
-                     location_spinner.setAdapter(new ArrayAdapter<String>(Activity_Search_Places.this, android.R.layout.simple_spinner_dropdown_item, LocationName));
-
-                 } catch (JSONException e) {
-                     e.printStackTrace();
-                 }
-             }
-         }, new Response.ErrorListener() {
-             @Override
-             public void onErrorResponse(VolleyError error) {
-                 error.printStackTrace();
-                 Toast.makeText(getApplicationContext(), "An Error Occurred", Toast.LENGTH_SHORT).show();
-                 pDialog.hide();
-             }
-
-
-         }) {
-             @Override
-             public Map<String, String> getHeaders() throws AuthFailureError {
-                 Map<String, String> params = new HashMap<String, String>();
-                 String bearer = "Bearer ".concat(token);
-                 Map<String, String> headersSys = super.getHeaders();
-                 Map<String, String> headers = new HashMap<String, String>();
-                 headersSys.remove("Authorization");
-                 headers.put("Authorization", bearer);
-                 headers.putAll(headersSys);
-                 return headers;
-             }
-
-         };
-         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-         int socketTimeout = 30000;
-         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-         stringRequest.setRetryPolicy(policy);
-         requestQueue.add(stringRequest);
-
-
-     }
- */
     private void loadProducts() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
@@ -608,7 +529,8 @@ public class Activity_Search_Places extends AppCompatActivity implements
                             pDialog.hide();
                             if (jsonObject != null) {
                                 JSONObject data = jsonObject.getJSONObject("data");
-                                JSONArray locations = data.getJSONArray("orders");
+                                JSONArray locations = data.getJSONArray("dropoffs");
+
                                 if (locations != null) {
                                     //traversing through all the object
                                     for (int i = 0; i < locations.length(); i++) {
@@ -616,12 +538,13 @@ public class Activity_Search_Places extends AppCompatActivity implements
                                         //getting product object from json array
                                         JSONObject product = locations.getJSONObject(i);
 
-                                        //adding the product to product list
-                                        productList.add(new Model_Existing_Places(
-                                                product.getString("name"),
-                                                product.getInt("id"),
-                                                product.getString("cordinate")
-                                        ));
+                                        Model_Existing_Places model_existing_places = new Model_Existing_Places();
+                                        model_existing_places.setName(product.getString("name"));
+                                        model_existing_places.setCordinates(product.getString("cordinates"));
+                                        model_existing_places.setId(product.getInt("id"));
+
+                                        Location_List.add(model_existing_places);
+
                                     }
 
                                 }
@@ -629,9 +552,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
                             }
 
 
-                            //creating adapter object and setting it to recyclerview
-                            Adapter_Existing_Places adapter = new Adapter_Existing_Places(Activity_Search_Places.this, productList);
-                            mRecyclerView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -671,6 +592,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
 
 }
 

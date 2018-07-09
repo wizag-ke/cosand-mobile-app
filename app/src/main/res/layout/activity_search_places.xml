@@ -172,11 +172,11 @@
             android:layout_marginTop="4dp"
             android:background="@color/colorPrimary" />
 
-        <android.support.v7.widget.RecyclerView
-            android:padding="@dimen/_10sdp"
-            android:id="@+id/recylcerView"
+        <ListView
+            android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp" />
 
     </LinearLayout>
 

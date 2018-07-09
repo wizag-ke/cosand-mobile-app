@@ -6,14 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 
 public class Adapter_Existing_Places extends RecyclerView.Adapter<Adapter_Existing_Places.ProductViewHolder> {
 
-
+    private static RecyclerTouchListener.ClickListener clickListener;
     private Context mCtx;
     private List<Model_Existing_Places> productList;
 
@@ -36,6 +38,7 @@ public class Adapter_Existing_Places extends RecyclerView.Adapter<Adapter_Existi
         holder.name.setText(product.getName());
         holder.cordinates.setText(product.getCordinates());
 
+
     }
 
     @Override
@@ -43,17 +46,25 @@ public class Adapter_Existing_Places extends RecyclerView.Adapter<Adapter_Existi
         return productList.size();
     }
 
-    class ProductViewHolder extends RecyclerView.ViewHolder {
+    class ProductViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
 
         TextView name, cordinates;
+        LinearLayout listItemLayout;
 
 
         public ProductViewHolder(View itemView) {
             super(itemView);
-
+            itemView.setOnClickListener(this);
             name = itemView.findViewById(R.id.name);
             cordinates = itemView.findViewById(R.id.cordinates);
 
+
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
+
 }

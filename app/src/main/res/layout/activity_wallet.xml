@@ -30,7 +30,9 @@
             app:civ_border_width="2dp" />
 
         <TextView
-            android:id="@+id/textView"
+
+            android:textStyle="bold"
+            android:id="@+id/balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/textView2"
@@ -38,8 +40,7 @@
             android:layout_marginBottom="-128dp"
             android:text="KSH. 4000"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/_15sdp"
-            android:textStyle="bold" />
+            android:textSize="@dimen/_15sdp" />
 
         <TextView
             android:id="@+id/textView2"
@@ -53,39 +54,35 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/_15sdp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+
+            android:id="@+id/deposit"
+            android:layout_width="@dimen/_140sdp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="@dimen/_190sdp"
+            android:background="@android:color/white"
+            android:text="Deposit"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary" />
 
-            <Button
-                android:padding="@dimen/_10sdp"
-                android:id="@+id/button2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_190sdp"
-                android:layout_weight="0.8"
-                android:background="@android:color/white"
-                android:text="Deposit"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary" />
+        <Button
+            android:id="@+id/withdraw"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
 
-            <Button
-
-                android:id="@+id/button3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_190sdp"
-                android:layout_weight="0.8"
-                android:background="@android:color/white"
-                android:text="Withdraw"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary" />
-
-        </LinearLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/deposit"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/white"
+            android:text="Withdraw"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary" />
 
     </RelativeLayout>
+
 
 
 </LinearLayout>

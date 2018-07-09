@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.places.PlaceBuffer;
 
@@ -57,7 +58,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
     /**
      * PlaceViewHolder class for the recycler view item
      */
-    class PlaceViewHolder extends RecyclerView.ViewHolder {
+    class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView nameTextView;
         TextView addressTextView;
@@ -66,7 +67,19 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.name_text_view);
             addressTextView = (TextView) itemView.findViewById(R.id.address_text_view);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext, "Data", Toast.LENGTH_SHORT).show();
+                }
+            });
+            
+            
         }
 
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/complete_details"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+
             android:background="@color/colorPrimary"
             android:fontFamily="@font/bariol_bold"
             android:gravity="center_horizontal|center_vertical"
@@ -232,6 +232,10 @@
 
             android:textSize="20sp"
             android:textStyle="bold" />
+
+
+
+
 
 
     </LinearLayout>

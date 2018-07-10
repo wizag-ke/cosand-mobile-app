@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name=".MenuActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".NewOrderActivity" />
         <activity android:name=".OrderSummaryActivity" />
         <activity android:name=".PaymentActivity" />
@@ -82,10 +82,28 @@
         <activity
             android:name=".Activity_Location"
             android:label="@string/title_activity__location" />
-        <activity android:name=".TestActivity" />
+        <activity android:name=".TestActivity">
+
+        </activity>
         <activity android:name=".Activity_Search_Places" />
         <activity android:name=".Activity_Register" />
-        <activity android:name=".Activity_Quotation"></activity>
+        <activity android:name=".Activity_Quotation" />
+        <activity android:name=".Activity_Asset_Tracking" />
+        <activity android:name=".Activity_Notifications" />
+
+        <service android:name=".MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".SecondActivity"></activity>
     </application>
 
 </manifest>

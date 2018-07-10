@@ -75,6 +75,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
     private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final String SHARED_PREF_NAME = "location";
+    private static final String SHARED_PREF_CORDINATES = "cordinates";
     // Member variables
     private Adapter_Existing_Places mAdapter;
     private RecyclerView mRecyclerView;
@@ -109,7 +110,8 @@ public class Activity_Search_Places extends AppCompatActivity implements
     private List<Model_Existing_Places> Location_List = new ArrayList<Model_Existing_Places>();
     private ListView listView;
     private Custom_List_Adapter adapter;
-
+    String cordinates;
+    String existing_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +121,21 @@ public class Activity_Search_Places extends AppCompatActivity implements
         listView = (ListView) findViewById(R.id.list);
         adapter = new Custom_List_Adapter(this, Location_List);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                 existing_name = Location_List.get(position).getName();
+                cordinates = Location_List.get(position).getCordinates();
 
+
+                postExistingLocationCalc();
+
+                postExistingLocation();
+
+
+
+            }
+        });
 
 //get item from order-request
         Bundle extras = getIntent().getExtras();
@@ -131,6 +147,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
         }
         loadProducts();
+
+
+
+
 
 //loading spinner
         //loadProducts();
@@ -271,8 +291,17 @@ public class Activity_Search_Places extends AppCompatActivity implements
             Place place = PlacePicker.getPlace(this, data);
             Double latitude = place.getLatLng().latitude;
             Double longitude = place.getLatLng().longitude;
+
             name = place.getName().toString();
             address = String.valueOf(latitude) + "," + String.valueOf(longitude);
+
+            SharedPreferences sp = getSharedPreferences(SHARED_PREF_CORDINATES, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+
+            editor.putString("latitude", String.valueOf(latitude));
+            editor.putString("longitude", String.valueOf(longitude));
+            editor.apply();
+
 
             //Toast.makeText(this, "Data"+name, Toast.LENGTH_SHORT).show();
 
@@ -434,6 +463,81 @@ public class Activity_Search_Places extends AppCompatActivity implements
         queue.add(stringRequest);
     }
 
+
+    private void postExistingLocation() {
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("address", address);
+        editor.apply();
+
+
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Search_Places.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_Location_URL,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String success_message = data.getString("message");
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+
+                            Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_SHORT).show();
+                            /*startActivity(new Intent(getApplicationContext(), Activity_Quotation
+                                    .class));
+*/
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Search_Places.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", existing_name);
+                params.put("cordinates", cordinates);
+
+                //params.put("code", "blst786");
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+
     private void postLocationCalc() {
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Search_Places.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
@@ -511,6 +615,96 @@ public class Activity_Search_Places extends AppCompatActivity implements
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+
+
+    private void postExistingLocationCalc() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Search_Places.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, post_Location_calc,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            distance = data.getInt("distance");
+                            unit_measure = data.getString("unit_measure");
+                            cost_of_delivery_per_unit = data.getString("cost_of_delivery_per_unit");
+
+                            // Toast.makeText(Activity_Search_Places.this, "Data\n" + unit_measure,+cost_of_delivery_per_unit, Toast.LENGTH_SHORT).show();
+
+
+                            // String success_message = data.getString("message");
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), Activity_Quotation.class);
+                            intent.putExtra("location", cordinates);
+                            intent.putExtra("distance", distance);
+                            intent.putExtra("unit_measure", unit_measure);
+                            intent.putExtra("cost_of_delivery_per_unit", cost_of_delivery_per_unit);
+                            startActivity(intent);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Search_Places.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("material_id", material);
+                params.put("location",  cordinates);
+                params.put("quality_id", quality);
+                params.put("size_id", size);
+
+                //params.put("code", "blst786");
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+
+
+
+
+
+
+
+
 
     private void loadProducts() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());

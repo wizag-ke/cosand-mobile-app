@@ -23,6 +23,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -46,14 +48,14 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // name = getIntent().getStringExtra("Name");
+        // name = getIntent().getStringExtra("Name");
         setContentView(R.layout.menu);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         session = new SessionManager(getApplicationContext());
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Session Manager
-       // session = new SessionManager(getApplicationContext());
+        // session = new SessionManager(getApplicationContext());
 
 //session.checkLogin();
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -70,7 +72,7 @@ public class MenuActivity extends AppCompatActivity {
         //linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //rv.setLayoutManager(linearLayoutManager);
         //rv.setItemAnimator(new DefaultItemAnimator());
-       // rv.setAdapter(adapter);
+        // rv.setAdapter(adapter);
 
         //init service and load data
         permissionsService = PermissionsAPI.getPermissions().create(PermissionsService.class);
@@ -81,7 +83,7 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
-    private void getPermissions(){
+    private void getPermissions() {
         //progressBar.setVisibility(View.VISIBLE);
         Call<TopPermissions> callPermissions = permissionsService.name(String.valueOf(name));
         callPermissions.enqueue(new Callback<TopPermissions>() {
@@ -97,9 +99,7 @@ public class MenuActivity extends AppCompatActivity {
 
 
                     }
-                }
-
-                else if (response.code() >= 400 && response.code() < 599) {
+                } else if (response.code() >= 400 && response.code() < 599) {
                     getPermissions();
                 }
             }
@@ -109,7 +109,7 @@ public class MenuActivity extends AppCompatActivity {
                 //progressBar.setVisibility(View.GONE);
                 t.printStackTrace();
                 Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, " "+fetchErrorMessage(t), Snackbar.LENGTH_INDEFINITE)
+                        .make(coordinatorLayout, " " + fetchErrorMessage(t), Snackbar.LENGTH_INDEFINITE)
                         .setAction("RETRY", new View.OnClickListener() {
 
                             @Override
@@ -123,32 +123,30 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
-    private List<PermissionResults> fetchResults(Response<TopPermissions> response){
+    private List<PermissionResults> fetchResults(Response<TopPermissions> response) {
         TopPermissions topPermissions = response.body();
         return topPermissions.getListPermissionsM();
     }
 
 
-
-    private String fetchErrorMessage(Throwable throwable){
+    private String fetchErrorMessage(Throwable throwable) {
         String errorMsg = getResources().getString(R.string.error_msg_unknown);
 
-        if (!isNetworkConnected()){
+        if (!isNetworkConnected()) {
             errorMsg = getResources().getString(R.string.error_msg_no_internet);
-        }
-        else if (throwable instanceof TimeoutException) {
+        } else if (throwable instanceof TimeoutException) {
             errorMsg = getResources().getString(R.string.error_msg_timeout);
         }
 
         return errorMsg;
     }
 
-    private boolean isNetworkConnected(){
+    private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
 
-    interface PermissionsService{
+    interface PermissionsService {
 
         @FormUrlEncoded
         @POST("jijinews/supaduka_permissions.php")

@@ -117,7 +117,7 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
         }
 
         //Place current location marker
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng latLng = new LatLng(-1.2642179,36.804328899999994);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");

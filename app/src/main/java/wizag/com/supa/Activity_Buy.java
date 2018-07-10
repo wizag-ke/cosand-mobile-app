@@ -152,6 +152,9 @@ public class Activity_Buy extends AppCompatActivity {
             }
         });
 
+
+
+
         buy_spinner_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

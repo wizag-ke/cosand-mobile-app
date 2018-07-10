@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/_16sdp"
-    tools:context=".TestActivity">
+    tools:context=".SecondActivity">
 
-    <EditText
-
-        android:id="@+id/txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </android.support.constraint.ConstraintLayout>

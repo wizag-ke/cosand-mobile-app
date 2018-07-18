@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="wizag.com.supa.ProfileActivity">
+    tools:context="wizag.com.supa.activity.ProfileActivity">
 
 <RelativeLayout
     android:layout_width="match_parent"

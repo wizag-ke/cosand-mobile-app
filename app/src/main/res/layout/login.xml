@@ -168,35 +168,6 @@
 
                 </LinearLayout>
 
-                <!--   <Button
-                       android:id="@+id/button_login"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginLeft="20dp"
-                       android:layout_marginBottom="20dp"
-                       android:background="#16C9E9"
-                       android:padding="15dp"
-                       android:layout_centerHorizontal="true"
-                       android:layout_below="@id/enter_password"
-                       android:text="LOGIN TO ACCOUNT"
-                       android:textColor="#ffffff"
-                       android:textStyle="bold"
-                       android:textSize="18sp"/>
-
-                   <Button
-                       android:id="@+id/supaduka_signup"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:background="#173470"
-                       android:padding="15dp"
-                       android:layout_marginLeft="20dp"
-                       android:layout_below="@id/button_login"
-                       android:layout_centerHorizontal="true"
-                       android:text="REGISTER NOW"
-                       android:textColor="#ffffff"
-                       android:textStyle="bold"
-                       android:textSize="18sp"/> -->
-
 
             </RelativeLayout>
         </android.support.design.widget.CoordinatorLayout>

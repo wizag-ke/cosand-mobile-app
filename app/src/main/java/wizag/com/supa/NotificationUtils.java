@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import wizag.com.supa.models.Model_Notification;
+
 public class NotificationUtils {
     private static final int NOTIFICATION_ID = 200;
     private static final String PUSH_NOTIFICATION = "pushNotification";
@@ -33,7 +35,7 @@ public class NotificationUtils {
     public NotificationUtils(Context mContext) {
         this.mContext = mContext;
         //Populate activity map
-        activityMap.put("MainActivity", TestActivity.class);
+        activityMap.put("Activity_Test_Location", TestActivity.class);
         activityMap.put("SecondActivity", SecondActivity.class);
     }
 

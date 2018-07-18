@@ -1,3 +1,4 @@
+/*
 package wizag.com.supa;
 
 import android.content.Context;
@@ -50,3 +51,4 @@ public class MaterialAdapter extends ArrayAdapter<Model_Material> {
     }
 
 }
+*/

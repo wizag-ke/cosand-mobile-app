@@ -12,6 +12,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import wizag.com.supa.activity.Activity_Buy;
+import wizag.com.supa.activity.Activity_Location;
+import wizag.com.supa.activity.Activity_Sell;
+import wizag.com.supa.activity.Activity_Wallet;
+import wizag.com.supa.activity.ProfileActivity;
+
 /**
  * Created by User on 07/05/2018.
  */

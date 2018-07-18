@@ -7,6 +7,8 @@ import android.content.SharedPreferences.Editor;
 
 import java.util.HashMap;
 
+import wizag.com.supa.activity.MainActivity;
+
 public class SessionManager {
     // Shared Preferences
     SharedPreferences prefs;
@@ -127,7 +129,7 @@ public class SessionManager {
     /**
      * Quick check for login
      * **/
-    // Get Login State
+    // Get Login Model_Category
     public boolean isLoggedIn(){
         return prefs.getBoolean(IS_LOGIN, false);
     }

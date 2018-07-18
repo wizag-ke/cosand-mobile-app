@@ -32,31 +32,28 @@
             android:exported="false" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
-            android:name=".MenuActivity"
+            android:name=".activity.MenuActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".NewOrderActivity" />
         <activity android:name=".OrderSummaryActivity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".SupplyActivity" />
         <activity
-            android:name=".Activity_Sell"
+            android:name=".activity.Activity_Sell"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity_Sell" />
+                android:value=".activity.Activity_Sell" />
         </activity>
-        <activity android:name=".Activity_Wallet" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".activity.Activity_Wallet" />
+        <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".CheckInActivity" />
         <activity android:name=".TripsActivity" />
         <activity android:name=".ConfirmActivity" />
@@ -65,11 +62,11 @@
         <activity android:name=".PaymentsActivity" />
         <activity android:name=".OrdersActivity" />
         <activity
-            android:name=".Activity_Buy"
+            android:name=".activity.Activity_Buy"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity_Buy" />
+                android:value=".activity.Activity_Buy" />
         </activity>
 
         <meta-data
@@ -80,30 +77,36 @@
         <activity android:name=".CurrentLocationActivity" />
         <activity android:name=".RegisterActivity" />
         <activity
-            android:name=".Activity_Location"
-            android:label="@string/title_activity__location" />
-        <activity android:name=".TestActivity">
+            android:name=".activity.Activity_Location"
+            android:label="@string/title_activity__location">
 
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".Activity_Search_Places" />
-        <activity android:name=".Activity_Register" />
-        <activity android:name=".Activity_Quotation" />
-        <activity android:name=".Activity_Asset_Tracking" />
-        <activity android:name=".Activity_Notifications" />
 
-        <service android:name=".MyFirebaseInstanceIdService">
+        <activity android:name=".TestActivity" />
+        <activity android:name=".activity.Activity_Search_Places" />
+        <activity android:name=".activity.Activity_Register" />
+        <activity android:name=".activity.Activity_Quotation" />
+
+        <service android:name=".services.MyFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".SecondActivity"></activity>
+        <activity android:name=".SecondActivity" />
+        <service android:name=".services.LocationMonitoringService" />
+        <!-- <activity android:name=".activity.SpinnerCountryActivity" /> -->
     </application>
 
 </manifest>

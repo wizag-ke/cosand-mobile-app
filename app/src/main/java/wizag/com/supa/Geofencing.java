@@ -20,6 +20,8 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import wizag.com.supa.services.GeofenceBroadcastReceiver;
+
 public class Geofencing implements ResultCallback {
 
     // Constants

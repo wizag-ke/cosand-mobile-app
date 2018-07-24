@@ -178,7 +178,7 @@ import wizag.com.supa.helper.DataParser;
             MarkerPoints = new ArrayList<>();
 
             // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()get
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }

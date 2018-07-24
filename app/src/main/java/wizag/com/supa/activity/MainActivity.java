@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.login);
 
 
+        coordinatorLayout =(CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+
         enter_username = findViewById(R.id.enter_username);
         enter_password = findViewById(R.id.enter_password);
 

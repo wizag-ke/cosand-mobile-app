@@ -116,7 +116,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
     private ListView listView;
     private Custom_List_Adapter adapter;
     String cordinates;
-    String existing_name;
+    String existing_name, existing_cordinates;
     AlertDialog.Builder dialogBuilder;
 
     @Override
@@ -127,13 +127,41 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
         // Set up the rlistview
         listView = (ListView) findViewById(R.id.list);
+
+//get item from order-request
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            material = extras.getString("material_id");
+            quality = extras.getString("quality_id");
+            size = extras.getString("size_id");
+
+
+        }
+        loadProducts();
+
+
+//loading spinner
+        //loadProducts();
+
+        sessionManager = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = sessionManager.getUserDetails();
+        token = user.get("access_token");
+
+        location_values = new HashMap<String, String>();
+        LocationName = new ArrayList<>();
+
         adapter = new Custom_List_Adapter(this, Location_List);
         listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-//dialog
+//dial
+                Model_Existing_Places data = (Model_Existing_Places) adapterView.getItemAtPosition(position);
+                existing_name = data.getName();
+                existing_cordinates = data.getCordinates();
+
                 dialogBuilder.setTitle("Confirm Action");
                 dialogBuilder.setMessage("Would you like to add selected location?");
                 dialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -158,31 +186,6 @@ public class Activity_Search_Places extends AppCompatActivity implements
 
             }
         });
-
-//get item from order-request
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            material = extras.getString("material_id");
-            quality = extras.getString("quality_id");
-            size = extras.getString("size_id");
-
-
-        }
-        loadProducts();
-
-
-//loading spinner
-        //loadProducts();
-
-        sessionManager = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = sessionManager.getUserDetails();
-        token = user.get("access_token");
-
-        location_values = new HashMap<String, String>();
-        LocationName = new ArrayList<>();
-
-//load recycler view
-        // loadProducts();
 
 
         Switch onOffSwitch = (Switch) findViewById(R.id.enable_switch);
@@ -344,6 +347,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
             //calculate location
             postLocationCalc();
 
+
             // Get live data information
             refreshPlacesData();
         }
@@ -461,8 +465,6 @@ public class Activity_Search_Places extends AppCompatActivity implements
                 params.put("name", name);
                 params.put("cordinates", address);
 
-                //params.put("code", "blst786");
-                //  params.put("")
                 return params;
             }
 
@@ -532,10 +534,8 @@ public class Activity_Search_Places extends AppCompatActivity implements
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("name", existing_name);
-                params.put("cordinates", cordinates);
+                params.put("cordinates", existing_cordinates);
 
-                //params.put("code", "blst786");
-                //  params.put("")
                 return params;
             }
 
@@ -583,10 +583,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
                             // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), Activity_Quotation.class);
-                            intent.putExtra("location", address);
-                            intent.putExtra("distance", distance);
-                            intent.putExtra("unit_measure", unit_measure);
-                            intent.putExtra("cost_of_delivery_per_unit", cost_of_delivery_per_unit);
+                            intent.putExtra("location", "Nairobi");
+                            intent.putExtra("distance", "10");
+                            intent.putExtra("unit_measure", "Tonnage");
+                            intent.putExtra("cost_of_delivery_per_unit", "200");
                             startActivity(intent);
                             finish();
 
@@ -599,9 +599,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Intent intent = new Intent(getApplicationContext(), Activity_Quotation.class);
+                startActivity(intent);
 
-
-                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
                 pDialog.dismiss();
             }
         }) {
@@ -609,10 +610,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("material_id", material);
-                params.put("location", address);
-                params.put("quality_id", quality);
-                params.put("size_id", size);
+                params.put("material_id", "1");
+                params.put("location", "Nairobi");
+                params.put("quality_id", "1");
+                params.put("size_id", "1");
 
                 //params.put("code", "blst786");
                 //  params.put("")
@@ -663,10 +664,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
                             // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), Activity_Quotation.class);
-                            intent.putExtra("location", cordinates);
-                            intent.putExtra("distance", distance);
-                            intent.putExtra("unit_measure", unit_measure);
-                            intent.putExtra("cost_of_delivery_per_unit", cost_of_delivery_per_unit);
+                            intent.putExtra("location", "Nairobi");
+                            intent.putExtra("distance", "10");
+                            intent.putExtra("unit_measure", "Tonnage");
+                            intent.putExtra("cost_of_delivery_per_unit", "200");
                             startActivity(intent);
                             finish();
                         } catch (JSONException e) {
@@ -678,9 +679,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Intent intent = new Intent(getApplicationContext(), Activity_Quotation.class);
 
-
-                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
+                startActivity(intent);
+//                Toast.makeText(getApplicationContext(), "Location could not be added", Toast.LENGTH_LONG).show();
                 pDialog.dismiss();
             }
         }) {
@@ -746,7 +748,10 @@ public class Activity_Search_Places extends AppCompatActivity implements
                                         model_existing_places.setCordinates(product.getString("cordinates"));
                                         model_existing_places.setId(product.getInt("id"));
 
-                                        Location_List.add(model_existing_places);
+                                        if (!Location_List.contains(model_existing_places)) {
+                                            Location_List.add(model_existing_places);
+                                        }
+
 
                                     }
 

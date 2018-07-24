@@ -76,6 +76,14 @@
 
     </string-array>
 
+    <string name="tonnage_prompt">Choose a Tonnage</string>
+
+    <string-array name="tonnage_arrays">
+        <item>--Select tonnage--</item>
+
+
+    </string-array>
+
 
     <string name="quantity_prompt">Choose Quantity</string>
     <string-array name="quantity_arrays">
@@ -118,6 +126,8 @@
     <string-array name="supplier_arrays">
 
         <item>--Select Supplier--</item>
+        <item>--Supplier 1--</item>
+        <item>--Supplier 2--</item>
 
 
     </string-array>
@@ -125,7 +135,7 @@
     <string name="btn_label_refresh">Refresh</string>
     <string name="no_google_playservice_available">No Google Playservice found. Please install it</string>
 
-  <string name="style_json">
+    <string name="style_json">
   [
     {
       \"featureType\": \"all\",

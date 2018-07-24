@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+
+
+    <LinearLayout
+
+        android:id="@+id/parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/register_title"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/bariol_bold"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Register Truck"
+            android:textColor="#ffffff"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/darker_gray"
+            android:orientation="vertical">
+
+            <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/truck_image"
+                android:layout_width="@dimen/_250sdp"
+                android:layout_height="@dimen/_200sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+
+                android:padding="@dimen/_16sdp"
+                android:src="@drawable/logo_truck" />
+
+            <!--  <View
+                  android:id="@+id/tile_divider"
+                  android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:background="@color/colorPrimary" />-->
+
+            <ImageView
+                android:id="@+id/truck_edit_image"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="end"
+                android:layout_marginRight="@dimen/_30sdp"
+                android:onClick="showMenu"
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/camera" />
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_20sdp"
+
+            android:orientation="vertical"
+            android:padding="@dimen/_16sdp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/bariol_bold"
+                android:text="Plate Number"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/truck_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sell"
+                android:fontFamily="@font/bariol_regular"
+                android:hint="eg KCM 123 P"
+
+                android:inputType="textCapWords"
+                android:padding="@dimen/_14sdp"
+                android:textColorHint="@android:color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/bariol_bold"
+                android:padding="@dimen/_5sdp"
+                android:text="Select Tonnage"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+            <Spinner
+                android:id="@+id/tonnage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/sell"
+                android:entries="@array/tonnage_arrays"
+                android:fontFamily="@font/bariol_bold"
+                android:padding="@dimen/_4sdp"
+                android:prompt="@string/tonnage_prompt"
+                android:textColor="#000000"
+                android:textSize="20sp">
+
+            </Spinner>
+
+
+            <Button
+
+                android:id="@+id/submit_truck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/proceed_button"
+                android:fontFamily="@font/bariol_bold"
+                android:padding="@dimen/_10sdp"
+                android:text="Submit Truck Details "
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</ScrollView>

@@ -6,8 +6,13 @@ import android.content.pm.PackageManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -77,12 +82,20 @@ public class Activity_Sell extends AppCompatActivity {
     String id_quality;
     String id_size;
     String id_supplier;
-
+    private DrawerLayout mDrawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sell);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
 
         spinner_sell_material = findViewById(R.id.spinner_sell_material);
         spinner_sell_supplier = findViewById(R.id.spinner_sell_supplier);
@@ -199,7 +212,7 @@ public class Activity_Sell extends AppCompatActivity {
                 if (quantity_txt.isEmpty()) {
                     Snackbar snackbar = Snackbar.make(sell_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG);
                     View snackbar_view = snackbar.getView();
-                    snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                    snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
                     snackbar.show();
 
                 } else if (Integer.parseInt(quantity_txt) < 12) {
@@ -267,12 +280,12 @@ public class Activity_Sell extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("material_id", id_material);
-                params.put("quality_id", id_quality);
+                params.put("material_id", "1");
+                params.put("quality_id", "1");
                 params.put("quantity", quantity.getText().toString());
-                params.put("supplier_id", id_supplier);
-                params.put("material_size_id", id_size);
-                params.put("location", location);
+                params.put("supplier_id", "1");
+                params.put("material_size_id", "1");
+                params.put("location", "Nairobi");
                 //params.put("code", "blst786");
                 //  params.put("")
                 return params;
@@ -505,6 +518,19 @@ public class Activity_Sell extends AppCompatActivity {
         requestQueue.add(stringRequest);
 
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+
+
+            // case blocks for other MenuItems (if any)
+        }
+        return false;
     }
 }
 

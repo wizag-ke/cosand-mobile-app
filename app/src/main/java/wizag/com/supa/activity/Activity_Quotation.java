@@ -80,24 +80,32 @@ public class Activity_Quotation extends AppCompatActivity {
 
 
         //set text
-        distance.setText(String.valueOf(distance_txt));
+       /* distance.setText(String.valueOf(distance_txt));
         // distance.setText(distance_txt);
         unit_measure.setText(unit_measure_txt);
         delivery_cost.setText(cost_of_delivery_per_unit);
-
+*/
         calc = (Button) findViewById(R.id.calc);
         calc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //calculate cost
+                distance.setText("10");
+                unit_measure.setText("50");
+                delivery_cost.setText("75");
 
-                int quantity = Integer.parseInt(quantity_buy.getText().toString());
-                int cost = Integer.parseInt(cost_of_delivery_per_unit);
-                int result = quantity * cost;
+                if (quantity_text.getText().toString().isEmpty()) {
+                    quantity_text.setText("12");
+                } else {
+                    int quantity = Integer.parseInt(quantity_buy.getText().toString());
+                    int cost = Integer.parseInt(delivery_cost.getText().toString());
+                    int result = quantity * cost;
+                    total_cost_text.setText(String.valueOf(result));
+
+
+                }
 
                 //Toast.makeText(Activity_Quotation.this, "" +result , Toast.LENGTH_SHORT).show();
-                total_cost_text.setText(String.valueOf(result));
-
 
 
             }
@@ -106,8 +114,17 @@ public class Activity_Quotation extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 //order request
-                loadRequest();
+//                loadRequest();
+                if (quantity_text.getText().toString().isEmpty()) {
+                    quantity_text.setError("Please Enter Quantity");
+                } else {
+                    Toast.makeText(Activity_Quotation.this, "Data has been submited successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+                    finish();
+                }
 
             }
         });

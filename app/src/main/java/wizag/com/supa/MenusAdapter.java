@@ -16,7 +16,10 @@ import wizag.com.supa.activity.Activity_Buy;
 import wizag.com.supa.activity.Activity_Location;
 import wizag.com.supa.activity.Activity_Sell;
 import wizag.com.supa.activity.Activity_Wallet;
+import wizag.com.supa.activity.MyTripsActivity;
+import wizag.com.supa.activity.OrdersActivity;
 import wizag.com.supa.activity.ProfileActivity;
+import wizag.com.supa.activity.SuppliesActivity;
 
 /**
  * Created by User on 07/05/2018.

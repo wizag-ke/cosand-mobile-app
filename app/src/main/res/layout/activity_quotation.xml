@@ -24,6 +24,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:text="10"
             android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:text="50"
             android:id="@+id/unit_measure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,6 +66,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:text="100"
             android:id="@+id/delivery_cost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

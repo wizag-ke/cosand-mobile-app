@@ -5,8 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,20 +54,46 @@ public class MenuActivity extends AppCompatActivity {
     RecyclerView rv;
     SessionManager session;
     String name = "Susan";
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // name = getIntent().getStringExtra("Name");
+
+        session = new SessionManager(getApplicationContext());
         setContentView(R.layout.menu);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        session = new SessionManager(getApplicationContext());
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        // Session Manager
-        // session = new SessionManager(getApplicationContext());
 
-//session.checkLogin();
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        int id = menuItem.getItemId();
+                        if (id == R.id.register_truck) {
+                            startActivity(new Intent(getApplicationContext(), Activity_Register_Truck.class));
+
+                        }
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         rv = (RecyclerView) findViewById(R.id.main_recycler);
         //progressBar = (ProgressBar) findViewById(R.id.main_progress);
@@ -187,6 +217,14 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+           /* case R.id.register_truck:
+                startActivity(new Intent(getApplicationContext(), Activity_Register_Truck.class));
+                finish();
+                break;*/
             case R.id.action_sign_out: {
                 session.logoutUser();
                 finish();

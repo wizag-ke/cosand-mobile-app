@@ -35,6 +35,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -79,7 +84,7 @@ import static com.google.android.gms.maps.model.JointType.ROUND;
 public class Activity_Location extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener, RoutingListener {
 
     //    animate mvt
     private float v;
@@ -116,6 +121,7 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
 
         points = new ArrayList<LatLng>();
         polyLineList = new ArrayList<>();
+        polylines = new ArrayList<>();
         gps = new GPSLocation(this);
         if (gps.canGetLocation()) {
 
@@ -181,11 +187,11 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
+//                mMap.setMyLocationEnabled(true);
             }
         } else {
             buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
+//            mMap.setMyLocationEnabled(true);
         }
        /* boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources()
                 .getString(R.string.style_json)));
@@ -244,35 +250,19 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
 //        origin_point = new LatLng(value_lat, value_long);
         LatLng latLng = new LatLng(value_lat, value_long);
         MarkerOptions markerOptions = new MarkerOptions();
-
         points.add(latLng);
+        markerOptions.position(latLng).flat(true).anchor(0.5f, 0.5f).rotation(90.0f);
 
+        mMap.clear();
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         for (int i = 0; i < points.size(); i++) {
             LatLng point = points.get(i);
             options.add(point);
         }
 
-        markerOptions.position(latLng);
+        mMap.addMarker(markerOptions).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.arrow));
         line = mMap.addPolyline(options);
-        mMap.clear();
-        mCurrLocationMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.arrow));
-//        mCurrLocationMarker.setRotation(bearing -45);
-        mMap.addMarker(markerOptions);
-//        mCurrLocationMarker = mMap.addMarker(markerOptions);
 
-        //added
-
-
-        //clears all Markers and Polylines
-
-
-//        mMap.addMarker(markerOptions); //add Marker in current position
-
-
-//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_name));
-//        mCurrLocationMarker = mMap.addMarker(markerOptions);
-        //add Polyline
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
@@ -281,10 +271,21 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+        /*2nd scenario routing*/
 
-
+        getRouteToMarker(latLng);
     }
 
+    private void getRouteToMarker(LatLng pickup) {
+
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .withListener(this)
+                .alternativeRoutes(false)
+                .waypoints(new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()), pickup)
+                .build();
+        routing.execute();
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -342,7 +343,7 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
-                        mMap.setMyLocationEnabled(true);
+//                        mMap.setMyLocationEnabled(true);
                     }
 
                 } else {
@@ -546,187 +547,55 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
     }
 
 
-    /*private List<LatLng> decodePoly(String encoded) {
-        List<LatLng> poly = new ArrayList<>();
-        int index = 0, len = encoded.length();
-        int lat = 0, lng = 0;
+    @Override
+    public void onRoutingFailure(RouteException e) {
+       /* if (e != null) {
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }*/
+    }
 
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
+    @Override
+    public void onRoutingStart() {
 
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
+    }
 
-            LatLng p = new LatLng((((double) lat / 1E5)),
-                    (((double) lng / 1E5)));
-            poly.add(p);
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+        if (polylines.size() > 0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
         }
 
-        return poly;
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i < route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+        }
     }
 
-    private float getBearing(LatLng begin, LatLng end) {
-        double lat = Math.abs(begin.latitude - end.latitude);
-        double lng = Math.abs(begin.longitude - end.longitude);
+    @Override
+    public void onRoutingCancelled() {
 
-        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
-            return (float) (Math.toDegrees(Math.atan(lng / lat)));
-        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
-            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
-        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
-            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
-        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
-            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
-        return -1;
     }
-    String requestUrl = null;
-        try {
-        requestUrl = "https://maps.googleapis.com/maps/api/directions/json?" +
-                "mode=driving&"
-                + "transit_routing_preference=less_driving&"
-                + "origin=" + value_lat + "," + value_long + "&"
-                + "destination=" + destination + "&"
-                + "key=" + getResources().getString(R.string.google_directions_key);
-        Log.d(TAG, requestUrl);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                requestUrl, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, response + "");
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("routes");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject route = jsonArray.getJSONObject(i);
-                                JSONObject poly = route.getJSONObject("overview_polyline");
-                                String polyline = poly.getString("points");
-                                polyLineList = decodePoly(polyline);
-                                Log.d(TAG, polyLineList + "");
-                            }
-                            //Adjusting bounds
-                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                            for (LatLng latLng : polyLineList) {
-                                builder.include(latLng);
-                            }
-                            LatLngBounds bounds = builder.build();
-                            CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2);
-                            mMap.animateCamera(mCameraUpdate);
 
-                            polylineOptions = new PolylineOptions();
-                            polylineOptions.color(Color.GRAY);
-                            polylineOptions.width(5);
-                            polylineOptions.startCap(new SquareCap());
-                            polylineOptions.endCap(new SquareCap());
-                            polylineOptions.jointType(ROUND);
-                            polylineOptions.addAll(polyLineList);
-                            greyPolyLine = mMap.addPolyline(polylineOptions);
-
-                            blackPolylineOptions = new PolylineOptions();
-                            blackPolylineOptions.width(5);
-                            blackPolylineOptions.color(Color.BLACK);
-                            blackPolylineOptions.startCap(new SquareCap());
-                            blackPolylineOptions.endCap(new SquareCap());
-                            blackPolylineOptions.jointType(ROUND);
-                            blackPolyline = mMap.addPolyline(blackPolylineOptions);
-
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(polyLineList.get(polyLineList.size() - 1)));
-
-                            ValueAnimator polylineAnimator = ValueAnimator.ofInt(0, 100);
-                            polylineAnimator.setDuration(2000);
-                            polylineAnimator.setInterpolator(new LinearInterpolator());
-                            polylineAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                    List<LatLng> points = greyPolyLine.getPoints();
-                                    int percentValue = (int) valueAnimator.getAnimatedValue();
-                                    int size = points.size();
-                                    int newPoints = (int) (size * (percentValue / 100.0f));
-                                    List<LatLng> p = points.subList(0, newPoints);
-                                    blackPolyline.setPoints(p);
-                                }
-                            });
-                            polylineAnimator.start();
-                            mCurrLocationMarker = mMap.addMarker(new MarkerOptions().position(origin_point)
-                                    .flat(true)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)));
-                            handler = new android.os.Handler();
-                            index = -1;
-                            next = 1;
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (index < polyLineList.size() - 1) {
-                                        index++;
-                                        next = index + 1;
-                                    }
-                                    if (index < polyLineList.size() - 1) {
-                                        startPosition = polyLineList.get(index);
-                                        endPosition = polyLineList.get(next);
-                                    }
-                                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-                                    valueAnimator.setDuration(3000);
-                                    valueAnimator.setInterpolator(new LinearInterpolator());
-                                    valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                        @Override
-                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                            v = valueAnimator.getAnimatedFraction();
-                                            lng = v * endPosition.longitude + (1 - v)
-                                                    * startPosition.longitude;
-                                            lat = v * endPosition.latitude + (1 - v)
-                                                    * startPosition.latitude;
-                                            LatLng newPos = new LatLng(lat, lng);
-                                            mCurrLocationMarker.setPosition(newPos);
-                                            mCurrLocationMarker.setAnchor(0.5f, 0.5f);
-                                            mCurrLocationMarker.setRotation(getBearing(startPosition, newPos));
-                                            mMap.moveCamera(CameraUpdateFactory
-                                                    .newCameraPosition
-                                                            (new CameraPosition.Builder()
-                                                                    .target(newPos)
-                                                                    .zoom(15.5f)
-                                                                    .build()));
-                                        }
-                                    });
-                                    valueAnimator.start();
-
-
-                                    handler.postDelayed(this, 3000);
-
-
-                                }
-                            }, 3000);
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error + "");
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonObjectRequest);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }*/
+    private void erasePolylines() {
+        for (Polyline line : polylines) {
+            line.remove();
+        }
+        polylines.clear();
+    }
 }
-
 

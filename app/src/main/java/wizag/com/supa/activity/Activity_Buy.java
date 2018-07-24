@@ -6,12 +6,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +38,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +59,7 @@ public class Activity_Buy extends AppCompatActivity {
     Spinner spinner, buy_spinner_size, buy_spinner_quality, buy_spinner_category;
     String URL = "http://sduka.wizag.biz/api/material";
     String POST_MATERIAL_URL = "http://sduka.wizag.biz/api/order-request";
+    String POST_FCM = "http://sduka.wizag.biz/api/fcm-token";
     private static final String SHARED_PREF_NAME = "mysharedpref";
     LinearLayout buy_layout;
     ArrayList<String> CountryName;
@@ -81,7 +89,8 @@ public class Activity_Buy extends AppCompatActivity {
 
     ProgressDialog progressDialog;
     String quantity_txt;
-
+    private DrawerLayout mDrawerLayout;
+    String firebaseToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +98,18 @@ public class Activity_Buy extends AppCompatActivity {
         setContentView(R.layout.activity_buy);
         CountryName = new ArrayList<>();
 
+        firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        Toast.makeText(getApplicationContext(), firebaseToken, Toast.LENGTH_SHORT).show();
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        /*post  fcm token*/
+        postFCM();
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         progressDialog = new ProgressDialog(getApplicationContext());
 
         spinner = (Spinner) findViewById(R.id.buy_spinner);
@@ -109,6 +129,22 @@ public class Activity_Buy extends AppCompatActivity {
         QualityName = new ArrayList<>();
         SizeName = new ArrayList<>();
         PriceName = new ArrayList<>();
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
 
 
         buy_layout = (LinearLayout) findViewById(R.id.buy_layout);
@@ -159,8 +195,6 @@ public class Activity_Buy extends AppCompatActivity {
         });
 
 
-
-
         buy_spinner_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -208,9 +242,9 @@ public class Activity_Buy extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
 
 
-                editor.putString("material_id",id_material);
-                editor.putString("quality_id",id_quality);
-                editor.putString("size_id",id_size);
+                editor.putString("material_id", id_material);
+                editor.putString("quality_id", id_quality);
+                editor.putString("size_id", id_size);
                 editor.apply();
 
 
@@ -225,6 +259,70 @@ public class Activity_Buy extends AppCompatActivity {
 
         loadSpinnerData(URL);
 
+    }
+
+    private void postFCM() {
+
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
+        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_FCM,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String success_message = data.getString("message");
+                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
+
+                            Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Snackbar.make(buy_layout, "Request could not be placed", Snackbar.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", firebaseToken);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 
@@ -443,11 +541,11 @@ public class Activity_Buy extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("material_id", id_material);
-                params.put("quality_id", id_quality);
-                params.put("quantity", quantity_txt);
-                params.put("size_id", id_size);
-                params.put("location", location);
+                params.put("material_id", "1");
+                params.put("quality_id", "1");
+                params.put("quantity", "12");
+                params.put("size_id", "1");
+                params.put("location", "Nairobi");
                 //params.put("code", "blst786");
                 //  params.put("")
                 return params;
@@ -469,5 +567,18 @@ public class Activity_Buy extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+
+
+            // case blocks for other MenuItems (if any)
+        }
+        return false;
+    }
 
 }

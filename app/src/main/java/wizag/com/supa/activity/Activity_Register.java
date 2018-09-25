@@ -35,7 +35,7 @@ public class Activity_Register extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registers);
+        setContentView(R.layout.activity_register);
 
         progressDialog = new ProgressDialog(this);
 
@@ -134,7 +134,7 @@ public class Activity_Register extends AppCompatActivity {
                     Toast.makeText(Activity_Register.this, "User added", Toast.LENGTH_SHORT).show();
 
 
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), Activity_Login.class));
                     finish();
 
 

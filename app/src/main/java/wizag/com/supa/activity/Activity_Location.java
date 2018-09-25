@@ -2,7 +2,6 @@ package wizag.com.supa.activity;
 
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,15 +25,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -46,37 +38,26 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.SquareCap;
 
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 
 import wizag.com.supa.BuildConfig;
 import wizag.com.supa.GPSLocation;
 import wizag.com.supa.R;
 import wizag.com.supa.services.LocationMonitoringService;
-
-import static com.google.android.gms.maps.model.JointType.ROUND;
 
 /*animate marker*/
 
@@ -105,7 +86,7 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private boolean mAlreadyStartedService = false;
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = Activity_Login.class.getSimpleName();
     GPSLocation gps;
     String longitude, latitude;
     private static final String SHARED_PREF_NAME = "location";
@@ -113,11 +94,14 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
     private String destination;
     private ArrayList<LatLng> points; //added
     Polyline line;
-
+    AlertDialog.Builder dialogBuilder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locations);
+
+
+
 
         points = new ArrayList<LatLng>();
         polyLineList = new ArrayList<>();
@@ -282,7 +266,7 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
                 .alternativeRoutes(false)
-                .waypoints(new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()), pickup)
+                .waypoints(new LatLng(1.3122,36.7914), pickup)
                 .build();
         routing.execute();
     }
@@ -597,5 +581,9 @@ public class Activity_Location extends FragmentActivity implements OnMapReadyCal
         }
         polylines.clear();
     }
+
+
+
+
 }
 

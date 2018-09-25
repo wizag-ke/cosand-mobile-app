@@ -15,11 +15,13 @@
         tools:context=".activity.Activity_Quotation">
 
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:text="Distance"
-            android:textColor="@color/colorPrimary"
+
+            android:textColor="@color/textColor"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
@@ -40,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Unit Measure"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
@@ -61,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cost of Delivery Per Unit"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
@@ -88,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_50sdp"
                 android:text="Enter Quantity"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/textColor"
                 android:textSize="@dimen/_18sdp"
                 android:textStyle="bold" />
 
@@ -102,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Enter Number of pieces"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
@@ -132,7 +134,7 @@
 
             android:text="Calculate total cost"
             android:textAllCaps="false"
-            android:textColor="#ffffff"
+            android:textColor="@color/textColor"
 
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -145,7 +147,7 @@
             android:padding="@dimen/_10sdp"
             android:background="@drawable/sell"
             android:layout_marginTop="@dimen/_5sdp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 

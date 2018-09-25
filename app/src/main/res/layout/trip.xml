@@ -151,7 +151,6 @@
         android:text="Order No: 187"/>
 
     <View
-        android:id="@+id/locations_view"
         android:layout_width="4dp"
         android:layout_height="wrap_content"
         android:background="#4B6677"

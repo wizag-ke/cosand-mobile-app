@@ -4,12 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,45 +56,23 @@ public class MenuActivity extends AppCompatActivity {
     RecyclerView rv;
     SessionManager session;
     String name = "Susan";
-    private DrawerLayout mDrawerLayout;
+
+    AlertDialog.Builder dialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         session = new SessionManager(getApplicationContext());
         setContentView(R.layout.menu);
+
+        isNetworkConnectionAvailable();
+
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
-                        mDrawerLayout.closeDrawers();
 
-                        int id = menuItem.getItemId();
-                        if (id == R.id.register_truck) {
-                            startActivity(new Intent(getApplicationContext(), Activity_Register_Truck.class));
-
-                        }
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
-                        return true;
-                    }
-                });
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         rv = (RecyclerView) findViewById(R.id.main_recycler);
@@ -117,6 +97,39 @@ public class MenuActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void checkNetworkConnection(){
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setMessage("Please turn on internet connection to continue");
+        builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    public boolean isNetworkConnectionAvailable(){
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        if(isConnected) {
+            Log.d("Network", "Connected");
+            return true;
+        }
+        else{
+            checkNetworkConnection();
+            Log.d("Network","Not Connected");
+            return false;
+        }
     }
 
     private void getPermissions() {
@@ -214,24 +227,26 @@ public class MenuActivity extends AppCompatActivity {
         return true;
     }
 
+
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        int id = item.getItemId();
 
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-           /* case R.id.register_truck:
-                startActivity(new Intent(getApplicationContext(), Activity_Register_Truck.class));
-                finish();
-                break;*/
-            case R.id.action_sign_out: {
-                session.logoutUser();
-                finish();
-                break;
-            }
-            // case blocks for other MenuItems (if any)
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_sign_out) {
+
+            session.logoutUser();
+//            return true;
         }
-        return false;
+
+        return super.onOptionsItemSelected(item);
     }
+
 }

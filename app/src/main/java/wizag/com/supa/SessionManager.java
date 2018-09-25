@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 
 import java.util.HashMap;
 
-import wizag.com.supa.activity.MainActivity;
+import wizag.com.supa.activity.Activity_Login;
 
 public class SessionManager {
     // Shared Preferences
@@ -74,7 +74,7 @@ public class SessionManager {
         // Check login status
         if(!this.isLoggedIn()){
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, MainActivity.class);
+            Intent i = new Intent(_context, Activity_Login.class);
             // Closing all the Activities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -114,7 +114,7 @@ public class SessionManager {
         editor.commit();
 
         // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, MainActivity.class);
+        Intent i = new Intent(_context, Activity_Login.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -135,25 +135,3 @@ public class SessionManager {
     }
 }
 
-    /*JSONObject mainObj = new JSONOBject(myString);
-if(mainObj != null){
-        JSONArray list = mainObj.getJSONArray("prodCat_list");
-        if(list != null){
-        for(int i = 0; i < list.length();i++){
-        JSONObject elem = list.getJSONObject(i);
-        if(elem != null){
-        JSONArray prods = elem.getJSONArray("prods");
-        if(prods != null){
-        for(int j = 0; j < prods.length();j++){
-        JSONObject innerElem = prods.getJSONObject(j);
-        if(innerElem != null){
-        int cat_id = innerELem.getInt("cat_id");
-        int pos = innerElem.getInt("position");
-        String sku = innerElem.getString("sku");
-        }
-        }
-        }
-        }
-        }
-        }
-        }*/

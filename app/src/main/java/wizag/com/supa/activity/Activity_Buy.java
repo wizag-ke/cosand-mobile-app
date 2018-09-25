@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -105,11 +103,7 @@ public class Activity_Buy extends AppCompatActivity {
         /*post  fcm token*/
         postFCM();
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+
         progressDialog = new ProgressDialog(getApplicationContext());
 
         spinner = (Spinner) findViewById(R.id.buy_spinner);
@@ -129,22 +123,6 @@ public class Activity_Buy extends AppCompatActivity {
         QualityName = new ArrayList<>();
         SizeName = new ArrayList<>();
         PriceName = new ArrayList<>();
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
-                        mDrawerLayout.closeDrawers();
-
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
-                        return true;
-                    }
-                });
 
 
         buy_layout = (LinearLayout) findViewById(R.id.buy_layout);

@@ -11,6 +11,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         useLibrary 'org.apache.http.legacy'
 
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
     }
     buildTypes {
         release {
@@ -47,6 +52,15 @@ dependencies {
         transitive = false
     }
 
+
+    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:6.3.0@aar') {
+        transitive = true
+    }
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.16.0'
+    implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.16.0') {
+        transitive = true
+    }
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.firebase:geofire-android:2.3.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
@@ -74,6 +88,8 @@ dependencies {
 
 repositories {
     maven { url "https://jitpack.io" }
+    mavenCentral()
+
 }
 
 apply plugin: 'com.google.gms.google-services'

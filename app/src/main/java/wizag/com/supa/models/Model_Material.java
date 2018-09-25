@@ -2,23 +2,40 @@ package wizag.com.supa.models;
 
 public class Model_Material {
 
-    private String material_name;
-    private int material_id;
+    public String id, name;
 
-
-    public String getMaterial_name() {
-        return material_name;
+    public String getId() {
+        return id;
     }
 
-    public void setMaterial_name(String material_name) {
-        this.material_name = material_name;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public int getMaterial_id() {
-        return material_id;
+    public String getName() {
+        return name;
     }
 
-    public void setMaterial_id(int material_id) {
-        this.material_id = material_id;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Model_Material{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Model_Material) {
+            Model_Material c = (Model_Material) obj;
+            if (c.getName().equals(name) && c.getId() == id) return true;
+        }
+
+        return false;
     }
 }
+
+

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Supa</string>
+    <string name="access_token">pk.eyJ1Ijoic2ltb240MzMiLCJhIjoiY2prODMycHpsMjliYjNxa2MwZ21laWdhOCJ9.dOLyvGMJ5eFmXBAJDtnC9A</string>
     <string name="autocomplete_hint">Enter place name or address</string>
     <string name="place_details">&lt;b&gt;%1$s&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Place Id: %2$s&lt;/i&gt;&lt;br/&gt;Address: %3$s&lt;br/&gt;Phone: %4$s&lt;br/&gt;Website: %5$s</string>
     <string name="password_hint">Password</string>
@@ -7,9 +8,7 @@
     <string name="error_msg_timeout">The server took too long to respond</string>
     <string name="error_msg_unknown">An unexpected error occurred</string>
     <string name="add_new_location">Add new location</string>
-    <string name="location_list">Locations</string>
     <string name="need_location_permission_message">You need to enable location permissions first</string>
-    <string name="location_permissions_granted_message">Location Permissions Granted</string>
     <string name="setting_enabled" translatable="false">EnabledSetting</string>
     <string name="settings_label">Settings</string>
     <string name="location_permissions">Location Permissions</string>
@@ -19,18 +18,10 @@
     <string name="silent_mode_activated">Silent mode activated</string>
     <string name="touch_to_relaunch">Touch to launch the app.</string>
     <string name="back_to_normal">Back to normal</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_geolocation">Map</string>
-
+    <string name="material_type">Material Type</string>
     <!-- Buttons strings -->
-    <string name="add_geofences">Add geofences</string>
-    <string name="remove_geofences">Remove geofences</string>
-
-    <string name="geofences_added">Geofences added</string>
-    <string name="geofences_removed">Geofences removed</string>
-    <string name="google_directions_key">AIzaSyCNmyGXMTYmRIpOV3cvrYjZEjv4bugxuK4</string>
 
     <!-- Error strings -->
     <string name="geofence_not_available">Geofence service is not available now</string>
@@ -54,7 +45,6 @@
         Click notification to return to app
     </string>
 
-    <string name="insufficient_permissions">Insufficient permissions.</string>
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
@@ -68,10 +58,10 @@
 
     </string-array>
 
-    <string name="quality_prompt">Choose a Quality</string>
+    <string name="details_prompt">Choose a Details</string>
 
-    <string-array name="quality_arrays">
-        <item>--Select quality--</item>
+    <string-array name="details_arrays">
+        <item>--Select details--</item>
 
 
     </string-array>
@@ -85,35 +75,23 @@
     </string-array>
 
 
-    <string name="quantity_prompt">Choose Quantity</string>
-    <string-array name="quantity_arrays">
-        <item>--Select quantity--</item>
-
-
-    </string-array>
-
     <string name="size_prompt">Choose a size</string>
 
     <string-array name="size_arrays">
         <item>--Select size--</item>
     </string-array>
 
-    <string name="location_prompt">Choose a location</string>
+    <string name="classes_prompt">Choose a classes</string>
+    <string-array name="classes_arrays">
+        <item>--Select class--</item>
+    </string-array>
 
-    <string-array name="location_arrays">
-        <item>--Select location--</item>
-
-
+    <string name="units_prompt">Choose a units</string>
+    <string-array name="units_arrays">
+        <item>--Select Unit--</item>
     </string-array>
 
 
-    <string name="price_prompt">Choose a price</string>
-    <string-array name="price_arrays">
-
-        <item>--Select price--</item>
-
-
-    </string-array>
     <string name="category_prompt">Choose a category</string>
     <string-array name="category_arrays">
 
@@ -128,206 +106,44 @@
         <item>--Select Supplier--</item>
         <item>--Supplier 1--</item>
         <item>--Supplier 2--</item>
+    </string-array>
 
+    <string name="building_prompt">Building Material</string>
+    <string-array name="building_arrays">
+        <item>--Select Building Material--</item>
+    </string-array>
+
+    <string name="agriculture_prompt">Choose agriculture</string>
+    <string-array name="agriculture_arrays">
+        <item>--Select Agricultural Product--</item>
+    </string-array>
+
+    <string name="transport_prompt">Choose transport</string>
+    <string-array name="transport_arrays">
+        <item>--Select Transport Service--</item>
+    </string-array>
+
+
+    <string name="service_prompt">Choose service</string>
+    <string-array name="service_arrays">
+        <item>--Select Material Type--</item>
 
     </string-array>
+
+
     <string name="title_activity__location">Map</string>
     <string name="btn_label_refresh">Refresh</string>
     <string name="no_google_playservice_available">No Google Playservice found. Please install it</string>
 
-    <string name="style_json">
-  [
-    {
-      \"featureType\": \"all\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#242f3e\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"all\",
-      \"elementType\": \"labels.text.stroke\",
-      \"stylers\": [
-        {
-          \"lightness\": -80
-        }
-      ]
-    },
-    {
-      \"featureType\": \"administrative\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#746855\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"administrative.locality\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#d59563\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"poi\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#d59563\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"poi.park\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#263c3f\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"poi.park\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#6b9a76\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#2b3544\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#9ca5b3\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.arterial\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#38414e\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.arterial\",
-      \"elementType\": \"geometry.stroke\",
-      \"stylers\": [
-        {
-          \"color\": \"#212a37\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.highway\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#746855\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.highway\",
-      \"elementType\": \"geometry.stroke\",
-      \"stylers\": [
-        {
-          \"color\": \"#1f2835\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.highway\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#f3d19c\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.local\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#38414e\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.local\",
-      \"elementType\": \"geometry.stroke\",
-      \"stylers\": [
-        {
-          \"color\": \"#212a37\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"transit\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#2f3948\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"transit.station\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#d59563\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"water\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#17263c\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"water\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#515c6d\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"water\",
-      \"elementType\": \"labels.text.stroke\",
-      \"stylers\": [
-        {
-          \"lightness\": -20
-        }
-      ]
-    }
-  ]
-  </string>
+    <string name="font_awesome_android_icon">&#xf17b;</string>
+    <string name="font_awesome_area_chart_icon">&#xf1fe;</string>
+    <string name="font_awesome_cubes_icon">&#xf1b3;</string>
+    <string name="font_awesome_mobile_phone_icon">&#xf10b;</string>
 
+
+    <string name="font_driver">&#xf0d1;</string>
+    <string name="font_ind_client">&#xf007;</string>
+    <string name="font_cop_client">&#xf0b1;</string>
+    <string name="font_truck_owner">&#xf508;</string>
 
 </resources>

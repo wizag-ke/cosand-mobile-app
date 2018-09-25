@@ -22,7 +22,6 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/login_truck"
                     android:layout_width="350dp"
                     android:layout_height="100dp"
                     android:layout_centerHorizontal="true"
@@ -52,7 +51,6 @@
                     android:paddingLeft="20dp" />
 
                 <ImageView
-                    android:id="@+id/correct_username"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
@@ -66,7 +64,6 @@
                     android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/wrong_username"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
@@ -101,7 +98,6 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/correct_password"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
@@ -114,7 +110,6 @@
                     android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/wrong_password"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"

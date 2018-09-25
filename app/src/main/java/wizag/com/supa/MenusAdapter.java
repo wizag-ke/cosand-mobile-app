@@ -16,6 +16,7 @@ import wizag.com.supa.activity.Activity_Buy;
 import wizag.com.supa.activity.Activity_Location;
 import wizag.com.supa.activity.Activity_Sell;
 import wizag.com.supa.activity.Activity_Wallet;
+import wizag.com.supa.activity.MapsActivity;
 import wizag.com.supa.activity.MyTripsActivity;
 import wizag.com.supa.activity.OrdersActivity;
 import wizag.com.supa.activity.ProfileActivity;
@@ -118,7 +119,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         context.startActivity(profile);
                         break;
                     case "Locations":
-                        Intent check_in = new Intent(context,Activity_Location.class);
+                        Intent check_in = new Intent(context,MapsActivity.class);
                         context.startActivity(check_in);
                         break;
                     case "Supply":

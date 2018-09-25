@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/coordinatorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/colorPrimary"
+                    android:fontFamily="@font/opensans_bold"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Truck Details"
+                    android:textColor="#ffffff"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <EditText
+                        android:inputType="textCapSentences"
+                        android:id="@+id/model"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@drawable/sell"
+                        android:fontFamily="@font/opensans_regular"
+                        android:hint="Vehicle Model"
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:inputType="textCapSentences"
+                        android:id="@+id/make"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@drawable/sell"
+                        android:fontFamily="@font/opensans_regular"
+                        android:hint="Vehicle Make"
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="20sp" />
+
+
+                    <EditText
+                        android:inputType="textCapSentences"
+                        android:id="@+id/plate_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@drawable/sell"
+                        android:fontFamily="@font/opensans_regular"
+                        android:hint="Plate Number"
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:inputType="textCapSentences"
+                        android:id="@+id/log_book"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@drawable/sell"
+                        android:fontFamily="@font/opensans_regular"
+                        android:hint="Log Book"
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="20sp" />
+
+
+                    <EditText
+                        android:inputType="number"
+                        android:id="@+id/year"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@drawable/sell"
+                        android:fontFamily="@font/opensans_regular"
+                        android:hint="Year of Make"
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="20sp" />
+
+
+                    <LinearLayout
+
+                        android:id="@+id/linear_material"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/complete_details"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/sell"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/_5sdp">
+
+                        <TextView
+                            android:id="@+id/spinnerText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/opensans_regular"
+                            android:text="Tonnage"
+                            android:textSize="20sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#B8BECC" />
+
+                        <Spinner
+                            android:id="@+id/tonnage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="10"
+                            android:entries="@array/tonnage_arrays"
+                            android:fontFamily="@font/opensans_bold"
+                            android:prompt="@string/tonnage_prompt"
+                            android:textColor="#000000"
+                            android:textSize="20sp" />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp">
+
+                        <Button
+                            android:id="@+id/previous"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/next"
+                            android:layout_alignBottom="@+id/next"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_gravity="start"
+                            android:layout_margin="7dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:text="Previous"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF" />
+
+                        <Button
+                            android:id="@+id/submit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="end"
+                            android:layout_margin="7dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:text="Submit"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
+</ScrollView>

@@ -11,7 +11,7 @@ import retrofit2.http.POST;
 
 public interface ApiInterface {
     @FormUrlEncoded
-    @POST("oauth/token/")
+    @POST("oauth/token")
     Call<AuthUser> loginUser(@Field("username") String username,
                              @Field("password") String password,
                              @Field("grant_type") String grant_type,

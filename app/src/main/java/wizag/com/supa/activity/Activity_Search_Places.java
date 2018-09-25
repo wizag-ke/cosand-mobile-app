@@ -3,11 +3,14 @@ package wizag.com.supa.activity;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -58,9 +61,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import wizag.com.supa.Adapter_Existing_Places;
@@ -118,6 +123,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
     String cordinates;
     String existing_name, existing_cordinates;
     AlertDialog.Builder dialogBuilder;
+    Double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,10 +317,11 @@ public class Activity_Search_Places extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
             Place place = PlacePicker.getPlace(this, data);
-            Double latitude = place.getLatLng().latitude;
-            Double longitude = place.getLatLng().longitude;
+             latitude = place.getLatLng().latitude;
+             longitude = place.getLatLng().longitude;
 
-            name = place.getName().toString();
+           name =   getAddress(this, latitude, longitude);
+//            name = place.getAddress().toString();
             address = String.valueOf(latitude) + "," + String.valueOf(longitude);
 
             SharedPreferences sp = getSharedPreferences(SHARED_PREF_CORDINATES, MODE_PRIVATE);
@@ -352,6 +359,36 @@ public class Activity_Search_Places extends AppCompatActivity implements
             refreshPlacesData();
         }
     }
+
+    public static String getAddress(Context context, double LATITUDE, double LONGITUDE) {
+
+//Set Address
+        try {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null && addresses.size() > 0) {
+
+
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                Log.d(TAG, "getAddress:  address" + address);
+                Log.d(TAG, "getAddress:  city" + city);
+                Log.d(TAG, "getAddress:  state" + state);
+                Log.d(TAG, "getAddress:  postalCode" + postalCode);
+                Log.d(TAG, "getAddress:  knownName" + knownName);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @Override
     public void onResume() {
@@ -399,20 +436,6 @@ public class Activity_Search_Places extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sign_out) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void postLocation() {
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);

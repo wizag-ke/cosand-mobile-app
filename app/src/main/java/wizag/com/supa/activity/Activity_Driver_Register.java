@@ -49,8 +49,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
     ArrayList<String> Tonnage;
     int id_tonnage;
     JSONArray tonnage_array;
-    SessionManager sessionManager;
-    String token;
+
     String fname_txt, lname_txt, id_no_txt, email_txt, phone_txt,
             password_txt, confirm_password_txt, model_txt, make_txt,
             plate_no_txt, log_book_txt, year_txt;
@@ -60,9 +59,6 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_register);
 
-        sessionManager = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = sessionManager.getUserDetails();
-        token = user.get("access_token");
 
         Tonnage = new ArrayList<>();
         fname = findViewById(R.id.fname);
@@ -181,10 +177,13 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
     }
 
     private void registerDriver() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Driver_Register.this);
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Signing in...");
         progressDialog.show();
         //getText
+
+//        Toast.makeText(this, String.valueOf(id_tonnage), Toast.LENGTH_SHORT).show();
         fname_txt = fname.getText().toString();
         lname_txt = lname.getText().toString();
         id_no_txt = id_no.getText().toString();
@@ -204,21 +203,55 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-
+                String data_message = "";
                 try {
                     //converting response to json object
                     JSONObject obj = new JSONObject(response);
+                    progressDialog.dismiss();
+                    String message = obj.getString("message");
+                    String status = obj.getString("status");
+//                    JSONArray jsonArray = obj.getJSONArray("data");
+
+                    if (status.equalsIgnoreCase("success")) {
+                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                        finish();
+                    } else {
+
+                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
 
 
-                    Toast.makeText(Activity_Driver_Register.this, "User added", Toast.LENGTH_SHORT).show();
+                    }
 
+                    /*if (status.equalsIgnoreCase("success")) {
+                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                        finish();
+                    }
+*/
+                   /* for (int k = 0; k < jsonArray.length(); k++) {
+                        data_message = jsonArray.getString(k);
 
-                    startActivity(new Intent(getApplicationContext(), Activity_Login.class));
-                    finish();
+                    }
+
+                    if (obj.getString("status").equals("fail")) {
+                        Toast.makeText(Activity_Driver_Register.this, data_message, Toast.LENGTH_SHORT).show();
+
+                    } else if (obj.getString("status").equals("error")) {
+                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
+
+                    } else if (status.equals("success")) {
+                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Activity_Driver_Register.this, MenuActivity.class));
+                        finish();
+                    }*/
+
+//                    Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(Activity_Driver_Register.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         },
@@ -234,7 +267,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
         ) {
 
             @Override
-            protected HashMap<String, String> getParams() {
+            protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("email", email_txt);
                 params.put("id_no", id_no_txt);
@@ -245,9 +278,9 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
                 params.put("phone", phone_txt);
                 params.put("model", model_txt);
                 params.put("make", make_txt);
-                params.put("plate", plate_no_txt);
+                params.put("plate_no", plate_no_txt);
                 params.put("log_book", log_book_txt);
-                params.put("year_txt", year_txt);
+                params.put("year", year_txt);
                 params.put("tonnage_id", String.valueOf(id_tonnage));
                 params.put("role_id", "XDRI");
                 return params;
@@ -255,8 +288,8 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
 
         };
 
-        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
+        queue.add(stringRequest);
 
     }
 
@@ -278,7 +311,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
                     pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
-                        tonnage_array = data.getJSONArray("tonnage");
+                        tonnage_array = data.getJSONArray("tonnages");
 
                         for (int z = 0; z < tonnage_array.length(); z++) {
                             JSONObject suppliers_object = tonnage_array.getJSONObject(z);
@@ -324,26 +357,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
             }
 
 
-        }) {
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                sessionManager = new SessionManager(getApplicationContext());
-                HashMap<String, String> user = sessionManager.getUserDetails();
-                String accessToken = user.get("access_token");
-
-                String bearer = "Bearer " + accessToken;
-                Map<String, String> headersSys = super.getHeaders();
-                Map<String, String> headers = new HashMap<String, String>();
-                headersSys.remove("Authorization");
-                headers.put("Authorization", bearer);
-                headers.putAll(headersSys);
-                return headers;
-            }
-        };
-
+        });
 
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
 

@@ -127,9 +127,15 @@
         <activity
             android:name=".activity.Activity_Driver_Register"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activity.FontAwesome">
-
-        </activity>
+        <activity android:name=".activity.FontAwesome" />
+        <activity
+            android:name=".activity.Activity_Truck_Owner"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activity.Activity_Individual_Client"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activity.Activity_Corporate_Client"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
     </application>
 
 </manifest>

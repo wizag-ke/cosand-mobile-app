@@ -721,7 +721,6 @@ public class Activity_Sell extends AppCompatActivity {
 
     private void loadRequest() {
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Sell.this);
-        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
@@ -753,7 +752,7 @@ public class Activity_Sell extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
 
-                Snackbar.make(sell_layout, "Request could not be placed", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(sell_layout, "Request could not be placed"+error.getMessage(), Snackbar.LENGTH_LONG).show();
                 pDialog.dismiss();
             }
         }) {
@@ -788,8 +787,6 @@ public class Activity_Sell extends AppCompatActivity {
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-
-    /*get material units*/
 
 
     /*Selecting Material type*/

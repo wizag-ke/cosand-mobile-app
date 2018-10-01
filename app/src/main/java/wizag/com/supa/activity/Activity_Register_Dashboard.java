@@ -32,12 +32,12 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
             }
         });
 
-       /* truck_owner.setOnClickListener(new View.OnClickListener() {
+        truck_owner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), Activity_Truck_Owner.class));
             }
-        });*/
+        });
 
         individual_client.setOnClickListener(new View.OnClickListener() {
             @Override

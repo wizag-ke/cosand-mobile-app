@@ -1,7 +1,9 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +53,13 @@ public class Activity_Truck_Owner extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerTruckOwner();
+
+                if (!isNetworkConnected()) {
+                    Toast.makeText(Activity_Truck_Owner.this, "Ensure that you are connected to the internet", Toast.LENGTH_SHORT).show();
+                } else {
+                    registerTruckOwner();
+                }
+
             }
         });
     }
@@ -80,16 +89,25 @@ public class Activity_Truck_Owner extends AppCompatActivity {
                             pDialog.dismiss();
                             String message = obj.getString("message");
                             String status = obj.getString("status");
-
+//                            JSONObject data = new JSONObject("data");
                             if (status.equalsIgnoreCase("success")) {
                                 Toast.makeText(Activity_Truck_Owner.this, message, Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                                 finish();
-                            } else {
+                            } else if (status.equalsIgnoreCase("error")) {
 
                                 Toast.makeText(Activity_Truck_Owner.this, message, Toast.LENGTH_SHORT).show();
 
 
+                            }
+
+                            JSONArray jsonArray = obj.getJSONArray("data");
+                            for (int k = 0; k < jsonArray.length(); k++) {
+                                String data_message = jsonArray.getString(k);
+
+                                if (status.equalsIgnoreCase("fail")) {
+                                    Toast.makeText(Activity_Truck_Owner.this, data_message, Toast.LENGTH_SHORT).show();
+                                }
                             }
 
 
@@ -118,7 +136,7 @@ public class Activity_Truck_Owner extends AppCompatActivity {
                 params.put("password", password_txt);
                 params.put("password_confirmation", confirm_password_txt);
                 params.put("role_id", "XTON");
-                params.put("trucks", "[{}]");
+
                 //params.put("code", "blst786");
                 //  params.put("")
                 return params;
@@ -130,5 +148,9 @@ public class Activity_Truck_Owner extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
 
 }

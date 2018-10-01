@@ -153,11 +153,13 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
                     Toast.makeText(this, "Enter Vehicle make to continue", Toast.LENGTH_LONG).show();
                 } else if (plate_no.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Vehicle plate number to continue", Toast.LENGTH_LONG).show();
-                } else if (log_book.getText().toString().isEmpty()) {
+                } /*else if (log_book.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Vehicle logbook number to continue", Toast.LENGTH_LONG).show();
                 } else if (year.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Vehicle year of manufacture to continue", Toast.LENGTH_LONG).show();
-                } else if (!isNetworkConnected()) {
+                }*/
+
+                else if (!isNetworkConnected()) {
 
                     Toast.makeText(Activity_Driver_Register.this, "Ensure you have internet connection", Toast.LENGTH_SHORT).show();
 
@@ -203,51 +205,33 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                String data_message = "";
+
                 try {
                     //converting response to json object
                     JSONObject obj = new JSONObject(response);
-                    progressDialog.dismiss();
+
                     String message = obj.getString("message");
                     String status = obj.getString("status");
-//                    JSONArray jsonArray = obj.getJSONArray("data");
-
+//                            JSONObject data = new JSONObject("data");
                     if (status.equalsIgnoreCase("success")) {
                         Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         finish();
-                    } else {
+                    } else if(status.equalsIgnoreCase("error")){
 
                         Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
 
 
                     }
 
-                    /*if (status.equalsIgnoreCase("success")) {
-                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-                        finish();
+                    JSONArray jsonArray = obj.getJSONArray("data");
+                    for (int k = 0; k < jsonArray.length(); k++) {
+                        String data_message = jsonArray.getString(k);
+
+                        if (status.equalsIgnoreCase("fail")) {
+                            Toast.makeText(Activity_Driver_Register.this, data_message, Toast.LENGTH_SHORT).show();
+                        }
                     }
-*/
-                   /* for (int k = 0; k < jsonArray.length(); k++) {
-                        data_message = jsonArray.getString(k);
-
-                    }
-
-                    if (obj.getString("status").equals("fail")) {
-                        Toast.makeText(Activity_Driver_Register.this, data_message, Toast.LENGTH_SHORT).show();
-
-                    } else if (obj.getString("status").equals("error")) {
-                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
-
-                    } else if (status.equals("success")) {
-                        Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Activity_Driver_Register.this, MenuActivity.class));
-                        finish();
-                    }*/
-
-//                    Toast.makeText(Activity_Driver_Register.this, message, Toast.LENGTH_SHORT).show();
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();

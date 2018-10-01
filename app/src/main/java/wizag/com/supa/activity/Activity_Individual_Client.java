@@ -1,7 +1,9 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -49,7 +51,12 @@ public class Activity_Individual_Client extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerTruckOwner();
+                if (!isNetworkConnected()) {
+                    Toast.makeText(Activity_Individual_Client.this, "Ensure that you are connected to the internet", Toast.LENGTH_SHORT).show();
+                } else {
+                    registerTruckOwner();
+                }
+
             }
         });
     }
@@ -79,16 +86,25 @@ public class Activity_Individual_Client extends AppCompatActivity {
                             pDialog.dismiss();
                             String message = obj.getString("message");
                             String status = obj.getString("status");
-
+//                            JSONObject data = new JSONObject("data");
                             if (status.equalsIgnoreCase("success")) {
                                 Toast.makeText(Activity_Individual_Client.this, message, Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                                 finish();
-                            } else {
+                            } else if (status.equalsIgnoreCase("error")) {
 
                                 Toast.makeText(Activity_Individual_Client.this, message, Toast.LENGTH_SHORT).show();
 
 
+                            }
+
+                            JSONArray jsonArray = obj.getJSONArray("data");
+                            for (int k = 0; k < jsonArray.length(); k++) {
+                                String data_message = jsonArray.getString(k);
+
+                                if (status.equalsIgnoreCase("fail")) {
+                                    Toast.makeText(Activity_Individual_Client.this, data_message, Toast.LENGTH_SHORT).show();
+                                }
                             }
 
 
@@ -129,5 +145,9 @@ public class Activity_Individual_Client extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
 
 }

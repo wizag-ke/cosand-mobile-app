@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -156,51 +157,33 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                String data_message = "";
+
                 try {
                     //converting response to json object
                     JSONObject obj = new JSONObject(response);
-                    progressDialog.dismiss();
+
                     String message = obj.getString("message");
                     String status = obj.getString("status");
-//                    JSONArray jsonArray = obj.getJSONArray("data");
-
+//                            JSONObject data = new JSONObject("data");
                     if (status.equalsIgnoreCase("success")) {
                         Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         finish();
-                    } else {
+                    } else if(status.equalsIgnoreCase("error")){
 
                         Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
 
 
                     }
 
-                    /*if (status.equalsIgnoreCase("success")) {
-                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-                        finish();
+                    JSONArray jsonArray = obj.getJSONArray("data");
+                    for (int k = 0; k < jsonArray.length(); k++) {
+                        String data_message = jsonArray.getString(k);
+
+                        if (status.equalsIgnoreCase("fail")) {
+                            Toast.makeText(Activity_Corporate_Client.this, data_message, Toast.LENGTH_SHORT).show();
+                        }
                     }
-*/
-                   /* for (int k = 0; k < jsonArray.length(); k++) {
-                        data_message = jsonArray.getString(k);
-
-                    }
-
-                    if (obj.getString("status").equals("fail")) {
-                        Toast.makeText(Activity_Corporate_Client.this, data_message, Toast.LENGTH_SHORT).show();
-
-                    } else if (obj.getString("status").equals("error")) {
-                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-
-                    } else if (status.equals("success")) {
-                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Activity_Corporate_Client.this, MenuActivity.class));
-                        finish();
-                    }*/
-
-//                    Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();

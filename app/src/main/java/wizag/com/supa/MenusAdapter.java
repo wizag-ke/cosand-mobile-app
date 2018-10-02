@@ -1,20 +1,46 @@
 package wizag.com.supa;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import wizag.com.supa.activity.Activity_Buy;
+import wizag.com.supa.activity.Activity_Corporate_Client;
+import wizag.com.supa.activity.Activity_Corporate_Profile;
+import wizag.com.supa.activity.Activity_Driver_Profile;
+import wizag.com.supa.activity.Activity_Driver_Register;
+import wizag.com.supa.activity.Activity_Individual_Client;
+import wizag.com.supa.activity.Activity_Indvidual_Client_Profile;
 import wizag.com.supa.activity.Activity_Location;
+import wizag.com.supa.activity.Activity_Login;
 import wizag.com.supa.activity.Activity_Sell;
+import wizag.com.supa.activity.Activity_Truck_Owner_Profile;
 import wizag.com.supa.activity.Activity_Wallet;
 import wizag.com.supa.activity.MapsActivity;
 import wizag.com.supa.activity.MyTripsActivity;
@@ -22,14 +48,16 @@ import wizag.com.supa.activity.OrdersActivity;
 import wizag.com.supa.activity.ProfileActivity;
 import wizag.com.supa.activity.SuppliesActivity;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by User on 07/05/2018.
  */
 
 public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> {
-
+    private static final String SHARED_PREF_NAME = "profilePref";
     private Context context;
-
+    SessionManager sessionManager;
     //List to store all superheroes
     private List<PermissionResults> movieResults;
 
@@ -43,8 +71,9 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menus,parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menus, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
+        sessionManager = new SessionManager(parent.getContext());
         return viewHolder;
 
     }
@@ -56,7 +85,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
         final String permission_image = result.getPermission();
         holder.permission.setText(result.getPermission());
 
-        switch (permission_image){
+        switch (permission_image) {
             case "Buy":
                 holder.menu_image.setBackgroundResource(R.drawable.menu_buy);
                 holder.menu_image.setImageResource(R.drawable.new_order);
@@ -101,58 +130,110 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 final Context context = v.getContext();
-                switch (permission_image){
+                switch (permission_image) {
                     case "Buy":
-                       Intent buy = new Intent(context, Activity_Buy.class);
-                       context.startActivity(buy);
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("profile", MODE_PRIVATE);
+                        String driver_code_buy = sharedPreferences.getString("driver_code", null);
+                        if (sharedPreferences != null) {
+                            if (driver_code_buy.equalsIgnoreCase("XDRI")) {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setTitle("Access Denied!");
+                                builder1.setMessage("Login as a Client to proceed");
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                sessionManager.logoutUser();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            } else {
+                                Intent buy = new Intent(context, Activity_Buy.class);
+                                context.startActivity(buy);
+                            }
+                        }
+
                         break;
                     case "Sell":
-                        Intent sell = new Intent(context,Activity_Sell.class);
+                        Intent sell = new Intent(context, Activity_Sell.class);
                         context.startActivity(sell);
                         break;
                     case "Wallet":
-                        Intent wallet = new Intent(context,Activity_Wallet.class);
+                        Intent wallet = new Intent(context, Activity_Wallet.class);
                         context.startActivity(wallet);
                         break;
                     case "Profile":
-                        Intent profile = new Intent(context,ProfileActivity.class);
-                        context.startActivity(profile);
+                        SharedPreferences sp = context.getSharedPreferences("profile", MODE_PRIVATE);
+                        String driver_code = sp.getString("driver_code", null);
+                        if (sp != null) {
+                            if (driver_code.equalsIgnoreCase("XDRI")) {
+                                Intent driver_profile = new Intent(context, Activity_Driver_Profile.class);
+                                context.startActivity(driver_profile);
+                            }
+                            else if(driver_code.equalsIgnoreCase("XIND")){
+                                Intent ind_profile = new Intent(context, Activity_Indvidual_Client_Profile.class);
+                                context.startActivity(ind_profile);
+                            }
+                            else if(driver_code.equalsIgnoreCase("XCOR")){
+                                Intent cor_profile = new Intent(context, Activity_Corporate_Profile.class);
+                                context.startActivity(cor_profile);
+                            }
+                            else if(driver_code.equalsIgnoreCase("XTON")){
+                                Intent truck_profile = new Intent(context, Activity_Truck_Owner_Profile.class);
+                                context.startActivity(truck_profile);
+                            }
+                        }
+
+
+
                         break;
                     case "Locations":
-                        Intent check_in = new Intent(context,MapsActivity.class);
+                        Intent check_in = new Intent(context, MapsActivity.class);
                         context.startActivity(check_in);
                         break;
                     case "Supply":
-                        Intent supply = new Intent(context,SuppliesActivity.class);
+                        Intent supply = new Intent(context, SuppliesActivity.class);
                         context.startActivity(supply);
                         break;
                     case "Trips":
-                        Intent trips = new Intent(context,MyTripsActivity.class);
+                        Intent trips = new Intent(context, MyTripsActivity.class);
                         context.startActivity(trips);
                         break;
                     case "Payments":
-                        Intent payments = new Intent(context,PaymentActivity.class);
+                        Intent payments = new Intent(context, PaymentActivity.class);
                         context.startActivity(payments);
                         break;
                     case "Orders":
-                        Intent orders = new Intent(context,OrdersActivity.class);
+                        Intent orders = new Intent(context, OrdersActivity.class);
                         context.startActivity(orders);
                         break;
                     default:
                         break;
                 }
-                 }
+            }
         });
 
     }
 
-    public void addRecycler(List<PermissionResults>moveResults){
+    public void addRecycler(List<PermissionResults> moveResults) {
         movieResults.addAll(moveResults);
         notifyDataSetChanged();
 
     }
 
-    public void clearRecycler(){
+    public void clearRecycler() {
         movieResults.clear();
         notifyDataSetChanged();
     }
@@ -162,7 +243,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
         return movieResults.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         //Views
         private ImageView menu_image;
         private TextView permission;
@@ -176,5 +257,6 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
 
         }
     }
+
 
 }

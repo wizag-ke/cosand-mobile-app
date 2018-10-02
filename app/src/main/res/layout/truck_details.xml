@@ -40,7 +40,6 @@
                     android:padding="@dimen/_5sdp">
 
                     <EditText
-                        android:inputType="textCapSentences"
                         android:id="@+id/model"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -48,11 +47,11 @@
                         android:background="@drawable/sell"
                         android:fontFamily="@font/opensans_regular"
                         android:hint="Vehicle Model"
+                        android:inputType="textCapSentences"
                         android:padding="@dimen/_10sdp"
                         android:textSize="20sp" />
 
                     <EditText
-                        android:inputType="textCapSentences"
                         android:id="@+id/make"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -60,12 +59,12 @@
                         android:background="@drawable/sell"
                         android:fontFamily="@font/opensans_regular"
                         android:hint="Vehicle Make"
+                        android:inputType="textCapSentences"
                         android:padding="@dimen/_10sdp"
                         android:textSize="20sp" />
 
 
                     <EditText
-                        android:inputType="textCapSentences"
                         android:id="@+id/plate_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -73,11 +72,11 @@
                         android:background="@drawable/sell"
                         android:fontFamily="@font/opensans_regular"
                         android:hint="Plate Number"
+                        android:inputType="textCapSentences"
                         android:padding="@dimen/_10sdp"
                         android:textSize="20sp" />
 
                     <EditText
-                        android:inputType="textCapSentences"
                         android:id="@+id/log_book"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -85,12 +84,12 @@
                         android:background="@drawable/sell"
                         android:fontFamily="@font/opensans_regular"
                         android:hint="Log Book"
+                        android:inputType="textCapSentences"
                         android:padding="@dimen/_10sdp"
                         android:textSize="20sp" />
 
 
                     <EditText
-                        android:inputType="number"
                         android:id="@+id/year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -98,6 +97,7 @@
                         android:background="@drawable/sell"
                         android:fontFamily="@font/opensans_regular"
                         android:hint="Year of Make"
+                        android:inputType="number"
                         android:padding="@dimen/_10sdp"
                         android:textSize="20sp" />
 

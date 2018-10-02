@@ -108,9 +108,7 @@
         <!-- <activity android:name=".activity.SpinnerCountryActivity" /> -->
         <activity
             android:name=".activity.Activity_Register_Truck"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-            >
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".Spinner_Demo_Activity">
 
             <!--
@@ -131,11 +129,21 @@
         <activity
             android:name=".activity.Activity_Truck_Owner"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activity.Activity_Individual_Client"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activity.Activity_Individual_Client"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activity.Activity_Corporate_Client"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.Activity_Driver_Profile"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.Activity_Indvidual_Client_Profile"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activity.TestActivity" />
+        <activity android:name=".activity.Activity_Corporate_Profile" />
+        <activity android:name=".activity.Activity_Truck_Owner_Profile"></activity>
     </application>
 
 </manifest>

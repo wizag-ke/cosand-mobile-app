@@ -3,6 +3,7 @@ package wizag.com.supa.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -41,14 +42,21 @@ import wizag.com.supa.SessionManager;
 public class Activity_Wallet extends AppCompatActivity {
     TextView balance;
     Button deposit, withdraw;
-    String LoadWalletUrl = "http://sduka.wizag.biz/api/wallet";
+    String LoadWalletUrl = "http://sduka.wizag.biz/api/v1/wallet/load";
     SessionManager sessionManager;
-    String token, amount_txt;
+    String token, amount_txt,phone_txt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
+
+        SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
+        String driver_code_orders = prefs_orders.getString("driver_code", null);
+        Toast.makeText(this, driver_code_orders, Toast.LENGTH_SHORT).show();
+
+
 
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -90,18 +98,16 @@ public class Activity_Wallet extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.layout_amount, null);
         dialogBuilder.setView(dialogView);
 
-        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
-        edt.setInputType(InputType.TYPE_CLASS_NUMBER);
-        edt.setFilters(new InputFilter[]{new CurrencyFormat()});
-
-
-
+        final EditText amount = dialogView.findViewById(R.id.amount);
+        final EditText phone = dialogView.findViewById(R.id.phone);
+        amount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        phone.setFilters(new InputFilter[]{new CurrencyFormat()});
         dialogBuilder.setTitle("Load Wallet");
-        dialogBuilder.setMessage("Enter amount");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //do something with edt.getText().toString();
-                amount_txt = edt.getText().toString();
+                amount_txt = amount.getText().toString();
+                phone_txt = phone.getText().toString();
                 loadWallet();
 
                // Toast.makeText(Activity_Wallet.this, amount_txt, Toast.LENGTH_SHORT).show();
@@ -132,12 +138,12 @@ public class Activity_Wallet extends AppCompatActivity {
 
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            String success_message = data.getString("message");
+//                            JSONObject data = jsonObject.getJSONObject("data");
+                            String success_message = jsonObject.getString("message");
                             // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), MenuActivity.class));
 
                         } catch (JSONException e) {
@@ -160,6 +166,7 @@ public class Activity_Wallet extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("amount", amount_txt);
+                params.put("phoneNumber", phone_txt);
 
                 //params.put("code", "blst786");
                 //  params.put("")

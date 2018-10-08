@@ -385,21 +385,6 @@ public class Activity_Login extends AppCompatActivity {
         }) {
 
 
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                session = new SessionManager(getApplicationContext());
-                HashMap<String, String> user = session.getUserDetails();
-                String accessToken = user.get("access_token");
-
-                String bearer = "Bearer " + accessToken;
-                Map<String, String> headersSys = super.getHeaders();
-                Map<String, String> headers = new HashMap<String, String>();
-                headersSys.remove("Authorization");
-                headers.put("Authorization", bearer);
-                headers.putAll(headersSys);
-                return headers;
-            }
         };
 
 

@@ -6,11 +6,52 @@
     android:padding="10dp"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit1"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:text="Amount :"
+        android:textAlignment="viewStart"
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:focusable="false"
+        android:inputType="number"
+        android:padding="8dp"
+        android:textAlignment="textStart"
+        android:textColorHint="@color/textColor" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:text="Phone Number(07XX..) :"
+        android:textAlignment="viewStart"
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:focusable="false"
+        android:padding="8dp"
+        android:inputType="number"
+        android:textAlignment="textStart"
+        android:textColorHint="@color/textColor" />
+
 
 
 </LinearLayout>

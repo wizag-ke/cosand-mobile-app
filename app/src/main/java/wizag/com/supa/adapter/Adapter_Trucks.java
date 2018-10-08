@@ -1,61 +1,71 @@
 package wizag.com.supa.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import java.util.List;
 
 import wizag.com.supa.R;
 import wizag.com.supa.models.Trucks;
 
-public class Adapter_Trucks extends ArrayAdapter<Trucks> {
+/**
+ * Created by Ravi Tamada on 18/05/16.
+ */
+public class Adapter_Trucks extends RecyclerView.Adapter<Adapter_Trucks.MyViewHolder> {
 
-    //the truck list that will be displayed
+    private Context mContext;
     private List<Trucks> truckList;
 
-    //the context object
-    private Context mCtx;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView plate_no, year, model, make, tonnage;
 
-    //here we are getting the herolist and context
-    //so while creating the object of this adapter class we need to give herolist and context
-    public Adapter_Trucks(List<Trucks> truckList, Context mCtx) {
-        super(mCtx, R.layout.owner_trucks_model, truckList);
-        this.truckList = truckList;
-        this.mCtx = mCtx;
+        public MyViewHolder(View view) {
+            super(view);
+            plate_no = (TextView) view.findViewById(R.id.plate_no);
+            year = (TextView) view.findViewById(R.id.year);
+            model = (TextView) view.findViewById(R.id.model);
+            make = (TextView) view.findViewById(R.id.make);
+            tonnage = (TextView) view.findViewById(R.id.tonnage);
+        }
     }
 
-    //this method will return the list item
+
+    public Adapter_Trucks(Context mContext, List<Trucks> truckList) {
+        this.mContext = mContext;
+        this.truckList = truckList;
+    }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        //getting the layoutinflater
-        LayoutInflater inflater = LayoutInflater.from(mCtx);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.owner_trucks_model, parent, false);
 
-        //creating a view with our xml layout
-        View listViewItem = inflater.inflate(R.layout.owner_trucks_model, null, true);
+        return new MyViewHolder(itemView);
+    }
 
-        //getting text views
-        TextView plate_no= listViewItem.findViewById(R.id.plate_no);
-        TextView make= listViewItem.findViewById(R.id.make);
-        TextView model= listViewItem.findViewById(R.id.model);
-        TextView year= listViewItem.findViewById(R.id.year);
-        TextView tonnage= listViewItem.findViewById(R.id.tonnage);
-
-        //Getting the truck for the specified position
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         Trucks truck = truckList.get(position);
+        holder.plate_no.setText(truck.getPlate_no());
+        holder.make.setText(truck.getMake());
+        holder.model.setText(truck.getModel());
+        holder.tonnage.setText(truck.getTonnage());
+        holder.year.setText(truck.getYear());
+    }
 
-        //setting truck values to textviews
-        plate_no.setText(truck.getPlate_no());
-        make.setText(truck.getMake());
-        model.setText(truck.getModel());
-        year.setText(truck.getYear());
-        tonnage.setText(truck.getTonnage());
 
-        //returning the listitem
-        return listViewItem;
+    @Override
+    public int getItemCount() {
+        return truckList.size();
     }
 }

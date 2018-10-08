@@ -135,7 +135,7 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         SharedPreferences sharedPreferences = context.getSharedPreferences("profile", MODE_PRIVATE);
                         String driver_code_buy = sharedPreferences.getString("driver_code", null);
                         if (sharedPreferences != null) {
-                            if (driver_code_buy.equalsIgnoreCase("XDRI")) {
+                            if (driver_code_buy.equalsIgnoreCase("XDRI") || driver_code_buy.equalsIgnoreCase("XTON")) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                                 builder1.setTitle("Access Denied!");
                                 builder1.setMessage("Login as a Client to proceed");
@@ -167,8 +167,40 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
 
                         break;
                     case "Sell":
-                        Intent sell = new Intent(context, Activity_Sell.class);
-                        context.startActivity(sell);
+                        SharedPreferences sharedPreferences_sell = context.getSharedPreferences("profile", MODE_PRIVATE);
+                        String driver_code_sell = sharedPreferences_sell.getString("driver_code", null);
+                        if (sharedPreferences_sell != null) {
+                            if (driver_code_sell.equalsIgnoreCase("XIND") || driver_code_sell.equalsIgnoreCase("XCOR")) {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setTitle("Access Denied!");
+                                builder1.setMessage("Login as a Driver or Truck Owner to proceed");
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                sessionManager.logoutUser();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            } else {
+                                Intent sell = new Intent(context, Activity_Sell.class);
+                                context.startActivity(sell);
+                            }
+                        }
+
+
                         break;
                     case "Wallet":
                         Intent wallet = new Intent(context, Activity_Wallet.class);
@@ -181,43 +213,132 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                             if (driver_code.equalsIgnoreCase("XDRI")) {
                                 Intent driver_profile = new Intent(context, Activity_Driver_Profile.class);
                                 context.startActivity(driver_profile);
-                            }
-                            else if(driver_code.equalsIgnoreCase("XIND")){
+                            } else if (driver_code.equalsIgnoreCase("XIND")) {
                                 Intent ind_profile = new Intent(context, Activity_Indvidual_Client_Profile.class);
                                 context.startActivity(ind_profile);
-                            }
-                            else if(driver_code.equalsIgnoreCase("XCOR")){
+                            } else if (driver_code.equalsIgnoreCase("XCOR")) {
                                 Intent cor_profile = new Intent(context, Activity_Corporate_Profile.class);
                                 context.startActivity(cor_profile);
-                            }
-                            else if(driver_code.equalsIgnoreCase("XTON")){
+                            } else if (driver_code.equalsIgnoreCase("XTON")) {
                                 Intent truck_profile = new Intent(context, Activity_Truck_Owner_Profile.class);
                                 context.startActivity(truck_profile);
                             }
                         }
 
 
-
                         break;
                     case "Locations":
-                        Intent check_in = new Intent(context, MapsActivity.class);
-                        context.startActivity(check_in);
+                        /*Intent check_in = new Intent(context, MapsActivity.class);
+                        context.startActivity(check_in);*/
                         break;
                     case "Supply":
-                        Intent supply = new Intent(context, SuppliesActivity.class);
-                        context.startActivity(supply);
+                        SharedPreferences prefs = context.getSharedPreferences("profile", MODE_PRIVATE);
+                        String driver_code_supply = prefs.getString("driver_code", null);
+                        if (prefs != null) {
+                            if (driver_code_supply.equalsIgnoreCase("XCOR") || driver_code_supply.equalsIgnoreCase("XIND")) {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setTitle("Access Denied!");
+                                builder1.setMessage("Login as a Driver or Truck Owner to proceed");
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                sessionManager.logoutUser();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            } else {
+                                Intent supply = new Intent(context, SuppliesActivity.class);
+                                context.startActivity(supply);
+                            }
+                        }
+
+
                         break;
                     case "Trips":
-                        Intent trips = new Intent(context, MyTripsActivity.class);
-                        context.startActivity(trips);
+                        SharedPreferences prefs_trip = context.getSharedPreferences("profile", MODE_PRIVATE);
+                        String driver_code_trip = prefs_trip.getString("driver_code", null);
+                        if (prefs_trip != null) {
+                            if (driver_code_trip.equalsIgnoreCase("XCOR") || driver_code_trip.equalsIgnoreCase("XIND")) {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setTitle("Access Denied!");
+                                builder1.setMessage("Login as a Driver or Truck Owner to proceed");
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                sessionManager.logoutUser();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            } else {
+                                Intent trips = new Intent(context, TripsActivity.class);
+                                context.startActivity(trips);
+                            }
+                        }
+
                         break;
                     case "Payments":
-                        Intent payments = new Intent(context, PaymentActivity.class);
-                        context.startActivity(payments);
+                        /*Intent payments = new Intent(context, PaymentActivity.class);
+                        context.startActivity(payments);*/
                         break;
                     case "Orders":
-                        Intent orders = new Intent(context, OrdersActivity.class);
-                        context.startActivity(orders);
+                        SharedPreferences prefs_orders = context.getSharedPreferences("profile", MODE_PRIVATE);
+                        String driver_code_orders = prefs_orders.getString("driver_code", null);
+                        if (prefs_orders != null) {
+                            if (driver_code_orders.equalsIgnoreCase("XCOR") || driver_code_orders.equalsIgnoreCase("XIND")) {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setTitle("Access Denied!");
+                                builder1.setMessage("Login as a Driver or Truck Owner to proceed");
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                sessionManager.logoutUser();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            } else {
+                                Intent orders = new Intent(context, OrdersActivity.class);
+                                context.startActivity(orders);
+                            }
+                        }
                         break;
                     default:
                         break;

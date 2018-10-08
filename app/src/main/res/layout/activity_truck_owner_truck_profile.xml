@@ -19,38 +19,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_28sdp"
-            android:text="Truck owner's Details"
+            android:text="Trucks"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"></ListView>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/_16sdp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <FrameLayout
-        android:id="@+id/FrameLayout01"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/previous_list"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/_7sdp"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_30sdp"
-            android:background="@drawable/rounded2"
-            android:padding="@dimen/_2sdp"
-            android:text="Previous"
-            android:textColor="@android:color/white" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+
+
+        <!--  <Button
+              android:id="@+id/previous_list"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/_45sdp"
+              android:layout_gravity="bottom"
+              android:layout_marginBottom="@dimen/_7sdp"
+              android:layout_marginLeft="@dimen/_10sdp"
+              android:layout_marginRight="@dimen/_10sdp"
+              android:layout_alignBottom="@+id/relative"
+              android:layout_marginTop="@dimen/_30sdp"
+              android:background="@drawable/rounded2"
+              android:padding="@dimen/_2sdp"
+              android:text="Previous"
+              android:textColor="@android:color/white" />-->
+
+    </RelativeLayout>
+
 
 </LinearLayout>
 

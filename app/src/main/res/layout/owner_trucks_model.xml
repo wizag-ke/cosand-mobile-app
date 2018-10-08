@@ -4,32 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_28sdp"
-            android:text="Trucks Details"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/_15sdp"
-            android:textStyle="bold" />
-    </android.support.v7.widget.Toolbar>
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/_16sdp"
+        android:padding="@dimen/_7sdp"
         android:weightSum="1">
 
         <TextView
@@ -57,18 +36,18 @@
 
     </LinearLayout>
 
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/_16sdp"
+        android:padding="@dimen/_7sdp"
         android:weightSum="1">
 
         <TextView
 
             android:id="@+id/make"
-            android:layout_width="0dp"
+            android:layout_width="246dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="Make"
@@ -90,12 +69,15 @@
 
     </LinearLayout>
 
+
+
+
     <TextView
         android:id="@+id/tonnage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Tonnage"
-        android:layout_marginTop="@dimen/_7sdp"
+        android:padding="@dimen/_7sdp"
         android:textColor="@color/textColor"
         android:textStyle="bold"
 

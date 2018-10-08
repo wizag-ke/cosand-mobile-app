@@ -2,8 +2,14 @@ package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,14 +51,25 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
     SessionManager session;
     ListView listView;
     List<Trucks> trucksList;
+    Adapter_Trucks adapter_trucks;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_owner_user_profile);
 
-        listView = (ListView) findViewById(R.id.listView);
         trucksList = new ArrayList<>();
+        adapter_trucks = new Adapter_Trucks(this, trucksList);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter_trucks);
+
 
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String truck_owner_fname = sp.getString("truck_owner_fname", null);
@@ -77,7 +94,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         company_mobile_no = findViewById(R.id.truck_owner_co_mobile_no);
 
         next = findViewById(R.id.next);
-        previous_list = findViewById(R.id.previous_list);
+//        previous_list = findViewById(R.id.previous_list);
         previous = findViewById(R.id.previous);
         next_trucks = findViewById(R.id.next_trucks);
         next.setOnClickListener(this);
@@ -90,12 +107,12 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             }
         });
 
-        previous_list.setOnClickListener(new View.OnClickListener() {
+       /* previous_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 flipper.showPrevious();
             }
-        });
+        });*/
 
         fname.setText(truck_owner_fname);
         lname.setText(truck_owner_lname);
@@ -148,27 +165,43 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
                             JSONObject heroObject = trucks.getJSONObject(i);
                             JSONObject tonnage = heroObject.getJSONObject("tonnage");
 
-                            Trucks hero = new Trucks(heroObject.getString("plate_no"),
+
+                           /* Trucks hero = new Trucks(heroObject.getString("plate_no"),
                                     heroObject.getString("year"),
                                     heroObject.getString("make"),
                                     heroObject.getString("model"),
                                     tonnage.getString("tonnage"));
+                            */
+
+                            Trucks hero = new Trucks("KCN 112P",
+                                   "2012",
+                                    "Isuzu",
+                                    "FH",
+                                    "20 Tonnes");
+
+
+                            Trucks hero1 = new Trucks("KBN 132P",
+                                    "2007",
+                                   "Isuzu",
+                                    "NPR",
+                                    "12 Tonnes");
+
+
+
+
+
 
                             //adding the hero to herolist
                             trucksList.add(hero);
-
+                            trucksList.add(hero1);
+                            adapter_trucks.notifyDataSetChanged();
                         }
-                        Adapter_Trucks adapter = new Adapter_Trucks(trucksList, getApplicationContext());
-
-                        //adding the adapter to listview
-                        listView.setAdapter(adapter);
-
 
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(Activity_Truck_Owner_Profile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Activity_Truck_Owner_Profile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -176,7 +209,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
 //               pDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
 
@@ -214,4 +247,49 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         //adding the string request to request queue
         requestQueue.add(stringRequest);
     }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
 }
+
+

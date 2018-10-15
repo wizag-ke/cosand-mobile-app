@@ -143,7 +143,9 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activity.TestActivity" />
         <activity android:name=".activity.Activity_Corporate_Profile" />
-        <activity android:name=".activity.Activity_Truck_Owner_Profile"></activity>
+        <activity android:name=".activity.Activity_Truck_Owner_Profile" />
+        <activity android:name=".activity.Activity_Supplier_Profile" />
+        <activity android:name=".activity.Activity_Supplier_Register"></activity>
     </application>
 
 </manifest>

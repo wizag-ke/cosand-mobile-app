@@ -28,7 +28,7 @@ public class Activity_Driver_Profile extends AppCompatActivity implements View.O
         String driver_fname = sp.getString("driver_fname", null);
         String driver_lname = sp.getString("driver_lname", null);
         String driver_email = sp.getString("driver_email", null);
-        String driver_phone = sp.getString("driver_phone", null);
+        String driver_phone = sp.getString("phone", null);
         String driver_id_no = sp.getString("driver_id_no", null);
         String driver_plate_no = sp.getString("driver_plate_no", null);
         String driver_description = sp.getString("driver_description", null);

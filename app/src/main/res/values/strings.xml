@@ -146,4 +146,6 @@
     <string name="font_cop_client">&#xf0b1;</string>
     <string name="font_truck_owner">&#xf508;</string>
 
+    <string name="Ksh">%d</string>
+
 </resources>

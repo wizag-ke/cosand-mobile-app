@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -187,11 +188,18 @@ public class Activity_Sell extends AppCompatActivity {
                     id_material = dataClicked.getInt("id");
 //                    getMaterialDetails();
                     Toast.makeText(getApplicationContext(), "" + id_material, Toast.LENGTH_SHORT).show();
-//                    getMaterialDetails();
+
+//                    Material.clear();
+
                     getMaterialDetails();
+
+                    DetailsName.clear();
                     getMaterialClasses();
+                    ClassName.clear();
                     getMaterialUnits();
+                    UnitsName.clear();
                     getSupplier();
+                    Supplier.clear();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -301,7 +309,7 @@ public class Activity_Sell extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                 quantity_txt = quantity.getText().toString();
+                quantity_txt = quantity.getText().toString();
                 if (quantity_txt.isEmpty()) {
                     Snackbar snackbar = Snackbar.make(sell_layout, "Enter Quantity to continue", Snackbar.LENGTH_LONG);
                     View snackbar_view = snackbar.getView();
@@ -327,6 +335,8 @@ public class Activity_Sell extends AppCompatActivity {
 
 
         });
+
+
     }
 
     /*get supplier*/
@@ -752,7 +762,7 @@ public class Activity_Sell extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
 
-                Snackbar.make(sell_layout, "Request could not be placed"+error.getMessage(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(sell_layout, "Request could not be placed" + error.getMessage(), Snackbar.LENGTH_LONG).show();
                 pDialog.dismiss();
             }
         }) {
@@ -908,13 +918,7 @@ public class Activity_Sell extends AppCompatActivity {
                 try {
                     JSONObject dataClicked = materialTypes.getJSONObject(i);
                     id_service = dataClicked.getInt("id");
-                   /* SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
 
-                    editor.putString("service_id", id_service);
-                    editor.apply();*/
-//                    Toast.makeText(getApplicationContext(), "" + id_service, Toast.LENGTH_SHORT).show();
-//                    getMaterial();
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -961,7 +965,7 @@ public class Activity_Sell extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+//                finish();
             }
         });
         alertDialog = builder.create();
@@ -1008,13 +1012,6 @@ public class Activity_Sell extends AppCompatActivity {
                                 }
 
                             }
-
-
-                          /*  Intent intent = new Intent();
-                            intent.putExtra("type_id", type_id);
-                            startActivity(intent);
-                            finish();*/
-
 
                         }
 

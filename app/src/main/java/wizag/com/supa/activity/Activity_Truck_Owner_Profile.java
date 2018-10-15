@@ -75,7 +75,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         String truck_owner_fname = sp.getString("truck_owner_fname", null);
         String truck_owner_lname = sp.getString("truck_owner_lname", null);
         String truck_owner_email = sp.getString("truck_owner_email", null);
-        String truck_owner_phone = sp.getString("truck_owner_phone", null);
+        String truck_owner_phone = sp.getString("phone", null);
         String truck_owner_id_no = sp.getString("truck_owner_id_no", null);
         String truck_owner_company_name = sp.getString("truck_owner_company_name", null);
         String truck_owner_company_location = sp.getString("truck_owner_company_location", null);

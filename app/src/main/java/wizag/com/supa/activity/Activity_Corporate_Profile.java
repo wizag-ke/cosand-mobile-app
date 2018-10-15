@@ -27,7 +27,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
         String corporate_fname = sp.getString("corporate_fname", null);
         String corporate_lname = sp.getString("corporate_lname", null);
         String corporate_email = sp.getString("corporate_email", null);
-        String corporate_phone = sp.getString("corporate_phone", null);
+        String corporate_phone = sp.getString("phone", null);
         String corporate_id_no = sp.getString("corporate_id_no", null);
         String company_name_txt = sp.getString("company_name", null);
         String company_kra = sp.getString("company_kra_pin", null);

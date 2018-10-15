@@ -353,7 +353,7 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("driver_fname", fname);
                         editor.putString("driver_lname", lname);
                         editor.putString("driver_email", email);
-                        editor.putString("driver_phone", phone);
+                        editor.putString("phone", phone);
                         editor.putString("driver_id_no", id_no);
                         editor.putString("driver_code", code);
                         editor.putString("driver_plate_no", plate_no);
@@ -434,7 +434,7 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("individual_fname", fname);
                         editor.putString("individual_lname", lname);
                         editor.putString("individual_email", email);
-                        editor.putString("individual_phone", phone);
+                        editor.putString("phone", phone);
                         editor.putString("individual_id_no", id_no);
                         editor.putString("driver_code", code);
                         editor.apply();
@@ -533,7 +533,7 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("corporate_fname", fname);
                         editor.putString("corporate_lname", lname);
                         editor.putString("corporate_email", email);
-                        editor.putString("corporate_phone", phone);
+                        editor.putString("phone", phone);
                         editor.putString("corporate_id_no", id_no);
                         editor.putString("driver_code", code);
                         editor.putString("company_name", company_name);
@@ -635,7 +635,7 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("truck_owner_fname", fname);
                         editor.putString("truck_owner_lname", lname);
                         editor.putString("truck_owner_email", email);
-                        editor.putString("truck_owner_phone", phone);
+                        editor.putString("phone", phone);
                         editor.putString("truck_owner_id_no", id_no);
                         editor.putString("driver_code", code);
                         editor.putString("truck_owner_company_name", company_name);

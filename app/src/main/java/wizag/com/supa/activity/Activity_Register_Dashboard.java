@@ -11,7 +11,7 @@ import android.widget.TextView;
 import wizag.com.supa.R;
 
 public class Activity_Register_Dashboard extends AppCompatActivity {
-    CardView driver,truck_owner,individual_client,corporate_client;
+    CardView driver,truck_owner,individual_client,corporate_client,supplier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,7 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
 
 
 
+        supplier = findViewById(R.id.supplier);
         driver = findViewById(R.id.driver);
         corporate_client = findViewById(R.id.corporate_client);
         individual_client = findViewById(R.id.individual_client);
@@ -29,6 +30,13 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), Activity_Driver_Register.class));
+            }
+        });
+
+        supplier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_Supplier_Register.class));
             }
         });
 

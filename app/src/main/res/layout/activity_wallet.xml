@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
-
+    android:background="#f4f4f4"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,81 +27,105 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_250sdp"
+        android:layout_height="@dimen/_150sdp"
         android:background="@color/colorPrimary"
-        android:fitsSystemWindows="true">
-
-
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="80dp"
-            android:layout_weight="0.2"
-            android:src="@drawable/buy"
-            app:civ_border_color="#303F9F"
-            app:civ_border_width="2dp" />
-
-        <TextView
-
-            android:textStyle="bold"
-            android:id="@+id/balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/textView2"
-            android:layout_alignStart="@+id/textView2"
-            android:layout_marginBottom="-128dp"
-            android:text="KSH. 4000"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/_15sdp" />
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="@dimen/_80sdp"
-            android:layout_marginTop="128dp"
-            android:text="Wallet Balance"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:text="Wallet Balance(Ksh)"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_15sdp" />
 
-        <Button
-
-            android:id="@+id/deposit"
-            android:layout_width="@dimen/_140sdp"
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="@dimen/_190sdp"
-            android:background="@android:color/white"
-            android:text="Deposit"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary" />
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/withdraw"
-            android:layout_width="@dimen/_140sdp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
 
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/deposit"
-            android:layout_marginEnd="10dp"
-            android:background="@android:color/white"
-            android:text="Withdraw"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary" />
+            <Button
+                android:id="@+id/deposit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/next"
+                android:layout_alignBottom="@+id/next"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="start"
+                android:layout_margin="7dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:textSize="@dimen/_25sdp"
+                android:text="Deposit"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/withdraw"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:layout_margin="7dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="Withdraw"
+                android:textSize="@dimen/_25sdp"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/_9sdp"
+        android:text="Transaction History"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/_18sdp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:scrollbars="vertical" />
+
+
+
+
 
 
 
 </LinearLayout>
-    <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->

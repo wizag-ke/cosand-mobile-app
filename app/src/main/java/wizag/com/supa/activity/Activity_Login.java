@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +66,7 @@ public class Activity_Login extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "profile";
     String get_profile_url = "http://sduka.wizag.biz/api/v1/profiles";
     String token;
+    JSONArray role_array;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +81,17 @@ public class Activity_Login extends AppCompatActivity {
 
         // Session Manager
         session = new SessionManager(getApplicationContext());
-
-        if (session.isLoggedIn()) {
-            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-            finish();
-        }
         HashMap<String, String> user = session.getUserDetails();
         token = user.get("access_token");
+
+
+        if (session.isLoggedIn()) {
+            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+            finish();
+        }
+//        checkUserRole();
+
+//        getDriverProfile();
         //session.checkLogin();
         supaduka_login = findViewById(R.id.button_login);
         supaduka_login.setOnClickListener(new View.OnClickListener() {
@@ -123,8 +129,9 @@ public class Activity_Login extends AppCompatActivity {
         supaduka_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Activity_Login.this, Activity_Register_Dashboard.class);
+                Intent intent = new Intent(Activity_Login.this, Activity_Register.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -226,17 +233,18 @@ public class Activity_Login extends AppCompatActivity {
                         //  String token = prefs.getString("access_token", ACCESS_TOKEN);
 
                         session.createLoginSession(username, password, access_token);
-                        getDriverProfile();
+                        /*getDriverProfile();
                         getIndividualProfile();
                         getCorporateProfile();
-                        getTruckOwner();
-                        //Toast.makeText(FirstActivity.this, "" + access_token, Toast.LENGTH_LONG).show();
-                        // Toast.makeText(FirstActivity.this, "" + refresh_token, Toast.LENGTH_LONG).show();
-                        // Toast.makeText(FirstActivity.this, "" + token_type, Toast.LENGTH_LONG).show();
-                        Intent go_to_menu = new Intent(Activity_Login.this, MenuActivity.class);
-                        go_to_menu.putExtra("Name", "Susan");
-                        startActivity(go_to_menu);
+                        getTruckOwner();*/
+
+                        getIndividualProfile();
+                        getDriverProfile();
+
+
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                         finish();
+
                     }
 
                 } else if (response.code() >= 400 && response.code() < 599) {
@@ -325,44 +333,49 @@ public class Activity_Login extends AppCompatActivity {
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
-
                         String fname = user.getString("fname");
                         String lname = user.getString("lname");
                         String email = user.getString("email");
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                        JSONObject role = user.getJSONObject("role");
-                        String code = role.getString("code");
 
-                        JSONObject truck = user.getJSONObject("truck");
-                        String plate_no = truck.getString("plate_no");
+                        JSONArray roles = user.getJSONArray("roles");
+                        for (int i = 0; i < roles.length(); i++) {
 
-                        JSONObject tonnage = truck.getJSONObject("tonnage");
-                        String description = tonnage.getString("description");
-
-                        String log_book = truck.getString("log_book");
-                        String make = truck.getString("make");
-                        String model = truck.getString("model");
-                        String year = truck.getString("year");
-
-                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
+                            JSONObject roles_object = roles.getJSONObject(i);
+                            String code = roles_object.getString("code");
 
 
-                        editor.putString("driver_fname", fname);
-                        editor.putString("driver_lname", lname);
-                        editor.putString("driver_email", email);
-                        editor.putString("phone", phone);
-                        editor.putString("driver_id_no", id_no);
-                        editor.putString("driver_code", code);
-                        editor.putString("driver_plate_no", plate_no);
-                        editor.putString("driver_description", description);
-                        editor.putString("logbook", log_book);
-                        editor.putString("make", make);
-                        editor.putString("model", model);
-                        editor.putString("year", year);
-                        editor.apply();
+                            JSONObject details = roles_object.getJSONObject("details");
+                            JSONObject truck = details.getJSONObject("truck");
+                            String plate_no = truck.getString("plate_no");
+                            JSONObject tonnage = truck.getJSONObject("tonnage");
+                            String description = tonnage.getString("description");
+
+                            String log_book = truck.getString("log_book");
+                            String make = truck.getString("make");
+                            String model = truck.getString("model");
+                            String year = truck.getString("year");
+
+                            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+
+                            editor.putString("driver_fname",fname);
+                            editor.putString("driver_lname",lname);
+                            editor.putString("driver_email",email);
+                            editor.putString("driver_phone",phone);
+                            editor.putString("driver_id_no",id_no);
+                            editor.putString("driver_code", code);
+                            editor.putString("driver_plate_no", plate_no);
+                            editor.putString("driver_description", description);
+                            editor.putString("driver_logbook", log_book);
+                            editor.putString("driver_make", make);
+                            editor.putString("driver_model", model);
+                            editor.putString("driver_year", year);
+                            editor.apply();
+
+                        }
 
 
                     }
@@ -384,7 +397,21 @@ public class Activity_Login extends AppCompatActivity {
 
         }) {
 
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
 
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
         };
 
 
@@ -424,35 +451,40 @@ public class Activity_Login extends AppCompatActivity {
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                        JSONObject role = user.getJSONObject("role");
-                        String code = role.getString("code");
+                        JSONArray roles = user.getJSONArray("roles");
+                        for (int i = 0; i < roles.length(); i++) {
 
-                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
+                            JSONObject roles_object = roles.getJSONObject(i);
+                            String code = roles_object.getString("code");
+
+                            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
 
 
-                        editor.putString("individual_fname", fname);
-                        editor.putString("individual_lname", lname);
-                        editor.putString("individual_email", email);
-                        editor.putString("phone", phone);
-                        editor.putString("individual_id_no", id_no);
-                        editor.putString("driver_code", code);
-                        editor.apply();
+                            editor.putString("individual_fname", fname);
+                            editor.putString("individual_lname", lname);
+                            editor.putString("individual_email", email);
+                            editor.putString("phone", phone);
+                            editor.putString("individual_id_no", id_no);
+                            editor.putString("driver_code", code);
+                            editor.apply();
+
+                        }
 
 
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//               pDialog.dismiss();
-//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Individual client profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
 
@@ -694,5 +726,78 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
+    private void checkUserRole() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
 
+                    JSONObject jsonObject = new JSONObject(response);
+                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject user = data.getJSONObject("user");
+
+                        role_array = user.getJSONArray("roles");
+                        for (int i = 0; i < role_array.length(); i++) {
+                            JSONObject object = role_array.getJSONObject(i);
+                            String role = object.getString("code");
+
+                            if (role.isEmpty()) {
+                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                finish();
+
+                            } else {
+                                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                                finish();
+                            }
+
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+//               pDialog.dismiss();
+//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
 }

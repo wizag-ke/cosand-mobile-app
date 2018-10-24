@@ -22,6 +22,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <android.support.v7.widget.Toolbar
+                    android:background="@color/colorPrimary"
+                    android:id="@+id/toolbar"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:minHeight="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -33,6 +42,8 @@
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
+                </android.support.v7.widget.Toolbar>
+
                 <LinearLayout
 
                     android:layout_width="match_parent"
@@ -41,6 +52,8 @@
                     android:padding="@dimen/_5sdp">
 
                     <EditText
+                        android:textColorHint="@color/textColor"
+                        android:textColor="@color/textColor"
                         android:id="@+id/company_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -53,6 +66,8 @@
                         android:textSize="20sp" />
 
                     <EditText
+                        android:textColorHint="@color/textColor"
+                        android:textColor="@color/textColor"
                         android:id="@+id/company_pin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -66,6 +81,8 @@
 
 
                     <EditText
+                        android:textColorHint="@color/textColor"
+                        android:textColor="@color/textColor"
                         android:id="@+id/cert_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -78,6 +95,8 @@
                         android:textSize="20sp" />
 
                     <EditText
+                        android:textColorHint="@color/textColor"
+                        android:textColor="@color/textColor"
                         android:id="@+id/office_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -89,46 +108,74 @@
                         android:padding="@dimen/_10sdp"
                         android:textSize="20sp" />
 
-
-                    <LinearLayout
+                    <EditText
+                        android:textColorHint="@color/textColor"
+                        android:textColor="@color/textColor"
+                        android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp">
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@drawable/sell"
+                        android:fontFamily="@font/opensans_regular"
+                        android:hint="Email"
+                        android:inputType="textCapSentences"
+                        android:padding="@dimen/_10sdp"
+                        android:textSize="20sp" />
 
-                        <Button
-                            android:id="@+id/previous"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/next"
-                            android:layout_alignBottom="@+id/next"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_gravity="start"
-                            android:layout_margin="7dp"
-                            android:layout_weight="1"
-                            android:background="@color/colorPrimary"
-                            android:text="Previous"
-                            android:textAllCaps="false"
-                            android:textColor="#FFFFFF" />
 
-                        <Button
-                            android:id="@+id/submit"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="end"
-                            android:layout_margin="7dp"
-                            android:layout_marginBottom="20dp"
-                            android:layout_marginTop="30dp"
-                            android:layout_weight="1"
-                            android:background="@color/colorPrimary"
-                            android:text="Submit"
-                            android:textAllCaps="false"
-                            android:textColor="#FFFFFF" />
+                    <Button
+                        android:onClick="showOptions"
+                        android:id="@+id/upload_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/sell"
+                        android:drawableLeft="@android:drawable/ic_menu_camera"
+                        android:drawableStart="@android:drawable/ic_menu_camera"
+                        android:drawableTint="@color/colorPrimary"
+                        android:fontFamily="@font/bariol_bold"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Upload Image of ID"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
+                    <LinearLayout
+                        android:id="@+id/image_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/id_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_150sdp"
+
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:padding="@dimen/_16sdp" />
 
                     </LinearLayout>
+
+
+                    <Button
+                        android:id="@+id/submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/proceed_button"
+                        android:fontFamily="@font/opensans_bold"
+                        android:text="Submit"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+             >
 
                     </LinearLayout>
 

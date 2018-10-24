@@ -1,15 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/_16sdp"
+    android:orientation="vertical"
     tools:context=".TestActivity">
 
-    <EditText
 
-        android:id="@+id/txt"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/previous"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/next"
+            android:layout_alignBottom="@+id/next"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="start"
+            android:layout_margin="7dp"
+            android:layout_weight="0.5"
+            android:background="@null"
+            android:text="Back"
+            android:drawableLeft="@drawable/back"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:textColor="#000000" />
+
+        <Button
+
+            android:id="@+id/submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end"
+            android:layout_margin="7dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0.5"
+            android:background="@null"
+            android:drawableEnd="@drawable/skip"
+            android:text="Skip"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:textColor="#000000" />
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

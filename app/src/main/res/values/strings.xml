@@ -126,7 +126,7 @@
 
     <string name="service_prompt">Choose service</string>
     <string-array name="service_arrays">
-        <item>--Select Material Type--</item>
+        <item>--Material Type--</item>
 
     </string-array>
 

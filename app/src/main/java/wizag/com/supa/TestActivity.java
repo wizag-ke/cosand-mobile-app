@@ -86,13 +86,13 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        EditText textView = (EditText) findViewById(R.id.txt);
+       /* EditText textView = (EditText) findViewById(R.id.txt);
 
         String token = FirebaseInstanceId.getInstance().getToken();
         Toast.makeText(this, "data\n" + token, Toast.LENGTH_SHORT).show();
         textView.setText(token);
 
-        Log.d("firebase_id", "Refreshed token: " + token);
+        Log.d("firebase_id", "Refreshed token: " + token);*/
 
     }
 

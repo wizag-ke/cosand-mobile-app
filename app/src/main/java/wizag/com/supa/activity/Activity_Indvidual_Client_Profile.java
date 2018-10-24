@@ -3,6 +3,7 @@ package wizag.com.supa.activity;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,11 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_individual_client_profile);
+
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String individual_fname = sp.getString("individual_fname", null);
@@ -42,6 +48,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
         id_no.setText(individual_id_no);
 
         next = findViewById(R.id.next);
+        next.setOnClickListener(this);
 
     }
 

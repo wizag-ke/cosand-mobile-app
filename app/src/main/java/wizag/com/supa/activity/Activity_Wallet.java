@@ -4,12 +4,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,9 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -55,8 +49,8 @@ import wizag.com.supa.CurrencyFormat;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
+import wizag.com.supa.adapter.Adapter_Transaction;
 import wizag.com.supa.models.Model_Transaction;
-import wizag.com.supa.utils.Currency_Format;
 
 public class Activity_Wallet extends AppCompatActivity {
     TextView balance;
@@ -79,6 +73,7 @@ public class Activity_Wallet extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
 
+
         SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code_orders = prefs_orders.getString("driver_code", null);
         prefs_phone = prefs_orders.getString("phone", null);
@@ -98,8 +93,10 @@ public class Activity_Wallet extends AppCompatActivity {
         //Adding adapter to recyclerview
         recycler_view.setAdapter(adapter_transaction);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 
         sessionManager = new SessionManager(getApplicationContext());

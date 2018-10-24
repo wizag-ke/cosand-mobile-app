@@ -7,177 +7,94 @@ import wizag.com.supa.BR;
 
 public class Model_Supplier extends BaseObservable {
 
-    String fname, lname, email, phone, id_no, company, kra_pin, company_phone, location, password, confirm_password;
+    int material_id, detail_id, class_id, unit_id, unit_price;
+    String class_name, unit_name, material_name, type_name, detail_name, unit_cost;
 
-    @Bindable
-    public String getFname() {
-        return fname;
+    public int getMaterial_id() {
+        return material_id;
     }
 
-    @Bindable
-    public String getPassword() {
-        return password;
+    public void setMaterial_id(int material_id) {
+        this.material_id = material_id;
     }
 
-    @Bindable
-    public String getConfirm_password() {
-        return confirm_password;
+    public int getDetail_id() {
+        return detail_id;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
-        notifyPropertyChanged(BR.fname);
+    public void setDetail_id(int detail_id) {
+        this.detail_id = detail_id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-        notifyPropertyChanged(BR.password);
+    public int getClass_id() {
+        return class_id;
     }
 
-    public void setConfirm_password(String confirm_password) {
-        this.confirm_password = confirm_password;
-        notifyPropertyChanged(BR.confirm_password);
+    public void setClass_id(int class_id) {
+        this.class_id = class_id;
     }
 
-
-    @Bindable
-    public String getLname() {
-        return lname;
+    public int getUnit_id() {
+        return unit_id;
     }
 
-    public void setLname(String lname) {
-        this.lname = lname;
-        notifyPropertyChanged(BR.lname);
+    public void setUnit_id(int unit_id) {
+        this.unit_id = unit_id;
     }
 
-    @Bindable
-    public String getEmail() {
-        return email;
+    public int getUnit_price() {
+        return unit_price;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-        notifyPropertyChanged(BR.email);
+    public void setUnit_price(int unit_price) {
+        this.unit_price = unit_price;
     }
 
-    @Bindable
-    public String getPhone() {
-        return phone;
+    public String getClass_name() {
+        return class_name;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-        notifyPropertyChanged(BR.phone);
+    public void setClass_name(String class_name) {
+        this.class_name = class_name;
     }
 
-    @Bindable
-    public String getId_no() {
-        return id_no;
+    public String getUnit_name() {
+        return unit_name;
     }
 
-    public void setId_no(String id_no) {
-        this.id_no = id_no;
-        notifyPropertyChanged(BR.id_no);
+    public void setUnit_name(String unit_name) {
+        this.unit_name = unit_name;
     }
 
-    @Bindable
-    public String getCompany() {
-        return company;
+    public String getMaterial_name() {
+        return material_name;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
-        notifyPropertyChanged(BR.company);
+    public void setMaterial_name(String material_name) {
+        this.material_name = material_name;
     }
 
-    @Bindable
-    public String getKra_pin() {
-        return kra_pin;
+    public String getType_name() {
+        return type_name;
     }
 
-    public void setKra_pin(String kra_pin) {
-        this.kra_pin = kra_pin;
-        notifyPropertyChanged(BR.kra_pin);
+    public void setType_name(String type_name) {
+        this.type_name = type_name;
     }
 
-    @Bindable
-    public String getCompany_phone() {
-        return company_phone;
+    public String getDetail_name() {
+        return detail_name;
     }
 
-    public void setCompany_phone(String company_phone) {
-        this.company_phone = company_phone;
-        notifyPropertyChanged(BR.company);
+    public void setDetail_name(String detail_name) {
+        this.detail_name = detail_name;
     }
 
-    @Bindable
-    public String getLocation() {
-        return location;
+    public String getUnit_cost() {
+        return unit_cost;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-        notifyPropertyChanged(BR.location);
+    public void setUnit_cost(String unit_cost) {
+        this.unit_cost = unit_cost;
     }
-
-    @Bindable({"fname"})
-    public String getFnameError(){
-        if(getFname().isEmpty()){
-            return "Enter First name";
-        }
-        return "";
-    }
-
-    @Bindable({"lname"})
-    public String getLnameError(){
-        if(getLname().isEmpty()){
-            return "Enter Last name";
-        }
-        return "";
-    }
-
-    @Bindable({"email"})
-    public String getEmailError(){
-        if(getEmail().isEmpty()){
-            return "Enter Email";
-        }
-        return "";
-    }
-
-    @Bindable({"phone"})
-    public String getPhoneError(){
-        if(getPhone().isEmpty()){
-            return "Enter Phone number";
-        }
-        return "";
-    }
-
-    @Bindable({"id_no"})
-    public String getIdError(){
-        if(getPhone().isEmpty()){
-            return "Enter Phone number";
-        }
-        return "";
-    }
-
-    /*validations*/
-    @Bindable({"password"})
-    public String getPasswordError() {
-        if (getPassword().isEmpty()) {
-            return "Enter Password";
-        } else {
-            return "";
-        }
-    }
-
-    @Bindable({"confirm_password"})
-    public String getConfirmPasswordError() {
-        if (!getPassword().equalsIgnoreCase(getConfirm_password())) {
-            return "Passwords do not match";
-        } else {
-            return "";
-        }
-    }
-
-
 }

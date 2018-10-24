@@ -164,6 +164,6 @@
 
         </LinearLayout>
     </ScrollView>
-    <!--<include layout="@layout/activity_individual_client_sites"></include>-->
+    <include layout="@layout/activity_individual_client_sites"></include>
 
 </ViewFlipper>

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:layout_marginTop="30dp">
+    android:orientation="vertical"
+   >
+
+    <TextView
+        android:text="No Sites Available"
+        android:textStyle="italic"
+        android:textColor="@color/textColor"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+<!--
 
     <Button
         android:id="@+id/previous"
@@ -37,5 +47,6 @@
         android:textAllCaps="false"
         android:textColor="#FFFFFF" />
 
+-->
 
 </LinearLayout>

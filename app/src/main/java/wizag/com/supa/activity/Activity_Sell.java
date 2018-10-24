@@ -100,8 +100,6 @@ public class Activity_Sell extends AppCompatActivity {
     int id_material;
     int id_class;
     int id_unit;
-    String id_quality;
-    String id_size;
     int id_detail;
     int id_supplier;
     int id_service;
@@ -192,7 +190,6 @@ public class Activity_Sell extends AppCompatActivity {
 //                    Material.clear();
 
                     getMaterialDetails();
-
                     DetailsName.clear();
                     getMaterialClasses();
                     ClassName.clear();
@@ -264,7 +261,7 @@ public class Activity_Sell extends AppCompatActivity {
                 String value = spinner_sell_units.getSelectedItem().toString();
 
                 try {
-                    JSONObject dataClicked = class_array.getJSONObject(i);
+                    JSONObject dataClicked = units_array.getJSONObject(i);
                     id_unit = dataClicked.getInt("id");
 
 
@@ -749,7 +746,7 @@ public class Activity_Sell extends AppCompatActivity {
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
 
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -966,6 +963,7 @@ public class Activity_Sell extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                finish();
+                alertDialog.dismiss();
             }
         });
         alertDialog = builder.create();

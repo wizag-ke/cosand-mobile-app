@@ -13,6 +13,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.location.gps" />
 
@@ -124,28 +125,87 @@
         <activity android:name=".activity.Activity_Register_Dashboard" />
         <activity
             android:name=".activity.Activity_Driver_Register"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Supplier_Register" />
+
+        </activity>
+
         <activity android:name=".activity.FontAwesome" />
         <activity
             android:name=".activity.Activity_Truck_Owner"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activity.Activity_Truck_Owner"/>
+        </activity>
+
+
         <activity
             android:name=".activity.Activity_Individual_Client"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Individual_Client" />
+
+        </activity>
+
         <activity
             android:name=".activity.Activity_Corporate_Client"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Corporate_Client" />
+        </activity>
+
+
         <activity
             android:name=".activity.Activity_Driver_Profile"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Driver_Profile" />
+        </activity>
+
         <activity
             android:name=".activity.Activity_Indvidual_Client_Profile"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Indvidual_Client_Profile" />
+
+        </activity>
+
+
         <activity android:name=".activity.TestActivity" />
-        <activity android:name=".activity.Activity_Corporate_Profile" />
-        <activity android:name=".activity.Activity_Truck_Owner_Profile" />
-        <activity android:name=".activity.Activity_Supplier_Profile" />
-        <activity android:name=".activity.Activity_Supplier_Register"></activity>
+        <activity android:name=".activity.Activity_Corporate_Profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Corporate_Profile" />
+        </activity>
+
+        <activity android:name=".activity.Activity_Truck_Owner_Profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Truck_Owner_Profile" />
+        </activity>
+
+        <activity android:name=".activity.Activity_Supplier_Profile" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activity.Activity_Supplier_Profile" />
+
+        </activity>
+
+        <activity android:name=".activity.Activity_Supplier_Register">
+             <meta-data
+                 android:name="android.support.PARENT_ACTIVITY"
+                 android:value=".activity.Activity_Supplier_Register" />
+        </activity>
+
+        <activity android:name=".activity.Activity_Home"></activity>
     </application>
 
 </manifest>

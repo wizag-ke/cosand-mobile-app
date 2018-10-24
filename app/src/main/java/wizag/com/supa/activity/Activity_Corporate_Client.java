@@ -1,14 +1,28 @@
 package wizag.com.supa.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -23,83 +37,62 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import wizag.com.supa.R;
+import wizag.com.supa.SessionManager;
 
-public class Activity_Corporate_Client extends AppCompatActivity implements View.OnClickListener {
-    EditText fname, lname, id_no, phone, email, password, confirm_password;
-    Button next, submit, previous;
+public class Activity_Corporate_Client extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+    Button submit;
     EditText office_location, cert_no, company_pin, company_name;
     ViewFlipper flipper;
-    String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/auth/signup";
+    String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
 
-    String fname_txt, lname_txt, id_no_txt, email_txt, phone_txt,
-            password_txt, confirm_password_txt, office_location_txt, cert_no_txt,
+    String cert_no_txt,
             company_pin_txt, company_name_txt;
+    EditText email;
+    LinearLayout image_layout;
+    ImageView id_image;
+    private int SELECT_FILE = 1;
+    private int REQUEST_CAMERA = 0;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    Bitmap photo;
+    SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_corporate_client);
+        setContentView(R.layout.company_details);
+
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        fname = findViewById(R.id.fname);
-        lname = findViewById(R.id.lname);
-        id_no = findViewById(R.id.id_no);
-        email = findViewById(R.id.email);
-        phone = findViewById(R.id.phone);
-        password = findViewById(R.id.password);
-        confirm_password = findViewById(R.id.confirm_password);
         office_location = findViewById(R.id.office_location);
         cert_no = findViewById(R.id.cert_no);
         company_pin = findViewById(R.id.company_pin);
         company_name = findViewById(R.id.company_name);
+        email = findViewById(R.id.email);
+        id_image = findViewById(R.id.id_image);
+        image_layout = findViewById(R.id.image_layout);
+        image_layout.setVisibility(View.GONE);
+
         flipper = findViewById(R.id.flipper);
 
-        next = findViewById(R.id.next);
-        next.setOnClickListener(this);
+
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(this);
 
-        previous = findViewById(R.id.previous);
-        next.setOnClickListener(this);
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                flipper.showPrevious();
-            }
-        });
+
     }
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
-
-            case R.id.next:
-                /*validate*/
-
-                if (fname.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter first name to continue", Toast.LENGTH_LONG).show();
-                } else if (lname.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter last name to continue", Toast.LENGTH_LONG).show();
-                } else if (id_no.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter ID No or Passport to continue", Toast.LENGTH_LONG).show();
-                } else if (email.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter Email address to continue", Toast.LENGTH_LONG).show();
-                } else if (phone.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter Phone Number to continue", Toast.LENGTH_LONG).show();
-                } else if (password.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter Password to continue", Toast.LENGTH_LONG).show();
-                } else if (!password.getText().toString().equals(confirm_password.getText().toString())) {
-                    Toast.makeText(this, "Both passwords should be matching", Toast.LENGTH_LONG).show();
-                } else {
-                    flipper.showNext();
-                }
-
-
-                break;
 
             case R.id.submit:
 //                validate
@@ -111,6 +104,8 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                     Toast.makeText(this, "Enter Vehicle plate number to continue", Toast.LENGTH_LONG).show();
                 } else if (company_name.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Vehicle logbook number to continue", Toast.LENGTH_LONG).show();
+                } else if (email.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter email to proceed", Toast.LENGTH_LONG).show();
                 } else if (!isNetworkConnected()) {
 
                     Toast.makeText(Activity_Corporate_Client.this, "Ensure you have internet connection", Toast.LENGTH_SHORT).show();
@@ -138,15 +133,6 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         progressDialog.show();
         //getText
 
-//        Toast.makeText(this, String.valueOf(id_tonnage), Toast.LENGTH_SHORT).show();
-        fname_txt = fname.getText().toString();
-        lname_txt = lname.getText().toString();
-        id_no_txt = id_no.getText().toString();
-        email_txt = email.getText().toString();
-        phone_txt = phone.getText().toString();
-        password_txt = password.getText().toString();
-        confirm_password_txt = confirm_password.getText().toString();
-        office_location_txt = office_location.getText().toString();
         cert_no_txt = cert_no.getText().toString();
         company_pin_txt = company_pin.getText().toString();
         company_name_txt = company_name.getText().toString();
@@ -167,9 +153,9 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
 //                            JSONObject data = new JSONObject("data");
                     if (status.equalsIgnoreCase("success")) {
                         Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                         finish();
-                    } else if(status.equalsIgnoreCase("error")){
+                    } else if (status.equalsIgnoreCase("error")) {
 
                         Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
 
@@ -205,19 +191,30 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
             @Override
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("email", email_txt);
-                params.put("id_no", id_no_txt);
-                params.put("password", password_txt);
-                params.put("password_confirmation", confirm_password_txt);
-                params.put("fname", fname_txt);
-                params.put("lname", lname_txt);
-                params.put("phone", phone_txt);
-                params.put("location", office_location_txt);
+                params.put("email", email.getText().toString());
+                params.put("location", office_location.getText().toString());
                 params.put("certificate_number", cert_no_txt);
                 params.put("kra_pin", company_pin_txt);
                 params.put("company", company_name_txt);
                 params.put("role_id", "XCOR");
+//                params.put("id_file", "");
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
             }
 
         };
@@ -230,6 +227,84 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void showOptions(View view) {
+
+
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.truck_menu);
+        popup.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.existing:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+
+                return true;
+            case R.id.camera_photo:
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE);
+                }
+
+
+               /* if (ContextCompat.checkSelfPermission(Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA},
+                            MY_CAMERA_PERMISSION_CODE);
+                }*/
+                else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, REQUEST_CAMERA);
+                }
+
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == SELECT_FILE) {
+                photo = null;
+                if (data != null) {
+                    image_layout.setVisibility(View.VISIBLE);
+                    try {
+                        photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                id_image.setImageBitmap(photo);
+            } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
+                image_layout.setVisibility(View.VISIBLE);
+                photo = (Bitmap) data.getExtras().get("data");
+                id_image.setImageBitmap(photo);
+
+//                encodedCameraImage = encodeImage(photo);
+
+
+            }
+
+
+        }
     }
 
 }

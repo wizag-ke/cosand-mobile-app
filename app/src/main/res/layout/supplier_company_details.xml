@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,136 +40,95 @@
                     android:textStyle="bold" />
             </android.support.v7.widget.Toolbar>
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:text="Company name :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/company_name"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="KRA pin :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/kra_pin"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Mobile no :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/company_mobile_no"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Location :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/location"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
-
             <LinearLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_170sdp"
+                android:background="#D2D2D2"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/kra_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_margin="@dimen/_7sdp"
+                    android:background="@drawable/sell"
+                    android:hint="KRA Pin"
+                    android:inputType="textCapSentences"
+                    android:padding="@dimen/_16sdp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="@color/textColor" />
+
+
+                <EditText
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_margin="@dimen/_7sdp"
+                    android:background="@drawable/sell"
+                    android:hint="Location Address"
+                    android:inputType="textCapSentences"
+                    android:padding="@dimen/_16sdp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="@color/textColor" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:src="@android:drawable/ic_input_add"
+                    app:elevation="6dp"
+                    app:pressedTranslationZ="12dp" />
+
+                <!--<view
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@android:color/black" />-->
+            </LinearLayout>
+
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_gravity="center"
+                android:text="Materials"
+                android:textAlignment="center"
+                android:textColor="@color/textColor"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp"
+                    android:scrollbars="vertical" />
+
 
                 <Button
-                    android:id="@+id/previous"
-                    android:layout_width="0dp"
+                    android:id="@+id/submit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/next"
-                    android:layout_alignBottom="@+id/next"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_gravity="start"
-                    android:layout_margin="7dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:text="Previous"
+                    android:layout_alignBottom="@+id/recycler_view"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/proceed_button"
+                    android:fontFamily="@font/opensans_bold"
+                    android:text="Submit"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF" />
-
-                <Button
-                    android:id="@+id/company_next"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="end"
-                    android:layout_margin="7dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:text="View Sites"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
 
-            </LinearLayout>
+            </RelativeLayout>
+
 
         </LinearLayout>
     </ScrollView>

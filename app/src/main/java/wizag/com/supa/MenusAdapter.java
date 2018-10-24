@@ -102,10 +102,10 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                 holder.menu_image.setBackgroundResource(R.drawable.menu_profile);
                 holder.menu_image.setImageResource(R.drawable.profile);
                 break;
-            case "Locations":
+           /* case "Locations":
                 holder.menu_image.setBackgroundResource(R.drawable.menu_check_in);
                 holder.menu_image.setImageResource(R.drawable.locations_image);
-                break;
+                break;*/
             case "Supply":
                 holder.menu_image.setBackgroundResource(R.drawable.menu_supply);
                 holder.menu_image.setImageResource(R.drawable.supply_icon);
@@ -114,10 +114,10 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                 holder.menu_image.setBackgroundResource(R.drawable.menu_trips);
                 holder.menu_image.setImageResource(R.drawable.truck_icon);
                 break;
-            case "Payments":
+            /*case "Payments":
                 holder.menu_image.setBackgroundResource(R.drawable.menu_payments);
                 holder.menu_image.setImageResource(R.drawable.payments_image);
-                break;
+                break;*/
             case "Orders":
                 holder.menu_image.setBackgroundResource(R.drawable.menu_orders);
                 holder.menu_image.setImageResource(R.drawable.orders_image);
@@ -135,9 +135,9 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         SharedPreferences sharedPreferences = context.getSharedPreferences("profile", MODE_PRIVATE);
                         String driver_code_buy = sharedPreferences.getString("driver_code", null);
                         if (sharedPreferences != null) {
-                            if (driver_code_buy.equalsIgnoreCase("XDRI") || driver_code_buy.equalsIgnoreCase("XTON")) {
+                            if (driver_code_buy.equalsIgnoreCase("XDRI") || driver_code_buy.equalsIgnoreCase("XTON")||driver_code_buy==null) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                                builder1.setTitle("Access Denied!");
+//                                builder1.setTitle("Access Denied!");
                                 builder1.setMessage("Login as a Client to proceed");
                                 builder1.setCancelable(true);
 
@@ -170,9 +170,9 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         SharedPreferences sharedPreferences_sell = context.getSharedPreferences("profile", MODE_PRIVATE);
                         String driver_code_sell = sharedPreferences_sell.getString("driver_code", null);
                         if (sharedPreferences_sell != null) {
-                            if (driver_code_sell.equalsIgnoreCase("XIND") || driver_code_sell.equalsIgnoreCase("XCOR")) {
+                            if (driver_code_sell.equalsIgnoreCase("XIND") || driver_code_sell.equalsIgnoreCase("XCOR")||driver_code_sell==null) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                                builder1.setTitle("Access Denied!");
+//                                builder1.setTitle("Access Denied!");
                                 builder1.setMessage("Login as a Driver or Truck Owner to proceed");
                                 builder1.setCancelable(true);
 
@@ -227,17 +227,17 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
 
 
                         break;
-                    case "Locations":
-                        /*Intent check_in = new Intent(context, MapsActivity.class);
-                        context.startActivity(check_in);*/
-                        break;
+                  /*  case "Locations":
+                        *//*Intent check_in = new Intent(context, MapsActivity.class);
+                        context.startActivity(check_in);*//*
+                        break;*/
                     case "Supply":
                         SharedPreferences prefs = context.getSharedPreferences("profile", MODE_PRIVATE);
                         String driver_code_supply = prefs.getString("driver_code", null);
                         if (prefs != null) {
-                            if (driver_code_supply.equalsIgnoreCase("XCOR") || driver_code_supply.equalsIgnoreCase("XIND")) {
+                            if (driver_code_supply.equalsIgnoreCase("XCOR") || driver_code_supply.equalsIgnoreCase("XIND")||driver_code_supply==null) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                                builder1.setTitle("Access Denied!");
+//                                builder1.setTitle("Access Denied!");
                                 builder1.setMessage("Login as a Driver or Truck Owner to proceed");
                                 builder1.setCancelable(true);
 
@@ -271,9 +271,9 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         SharedPreferences prefs_trip = context.getSharedPreferences("profile", MODE_PRIVATE);
                         String driver_code_trip = prefs_trip.getString("driver_code", null);
                         if (prefs_trip != null) {
-                            if (driver_code_trip.equalsIgnoreCase("XCOR") || driver_code_trip.equalsIgnoreCase("XIND")) {
+                            if (driver_code_trip.equalsIgnoreCase("XCOR") || driver_code_trip.equalsIgnoreCase("XIND")||driver_code_trip==null) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                                builder1.setTitle("Access Denied!");
+//                                builder1.setTitle("Access Denied!");
                                 builder1.setMessage("Login as a Driver or Truck Owner to proceed");
                                 builder1.setCancelable(true);
 
@@ -302,17 +302,17 @@ public class MenusAdapter extends RecyclerView.Adapter<MenusAdapter.ViewHolder> 
                         }
 
                         break;
-                    case "Payments":
-                        /*Intent payments = new Intent(context, PaymentActivity.class);
-                        context.startActivity(payments);*/
-                        break;
+                  /*  case "Payments":
+                        *//*Intent payments = new Intent(context, PaymentActivity.class);
+                        context.startActivity(payments);*//*
+                        break;*/
                     case "Orders":
                         SharedPreferences prefs_orders = context.getSharedPreferences("profile", MODE_PRIVATE);
                         String driver_code_orders = prefs_orders.getString("driver_code", null);
                         if (prefs_orders != null) {
-                            if (driver_code_orders.equalsIgnoreCase("XCOR") || driver_code_orders.equalsIgnoreCase("XIND")) {
+                            if (driver_code_orders.equalsIgnoreCase("XCOR") || driver_code_orders.equalsIgnoreCase("XIND")||driver_code_orders==null) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                                builder1.setTitle("Access Denied!");
+//                                builder1.setTitle("Access Denied!");
                                 builder1.setMessage("Login as a Driver or Truck Owner to proceed");
                                 builder1.setCancelable(true);
 

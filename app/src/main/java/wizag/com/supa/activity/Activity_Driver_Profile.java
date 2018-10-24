@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,20 +24,24 @@ public class Activity_Driver_Profile extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_profile);
 
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code = sp.getString("driver_code", null);
         String driver_fname = sp.getString("driver_fname", null);
         String driver_lname = sp.getString("driver_lname", null);
         String driver_email = sp.getString("driver_email", null);
-        String driver_phone = sp.getString("phone", null);
+        String driver_phone = sp.getString("driver_phone", null);
         String driver_id_no = sp.getString("driver_id_no", null);
         String driver_plate_no = sp.getString("driver_plate_no", null);
         String driver_description = sp.getString("driver_description", null);
-        String driver_log_book = sp.getString("logbook", null);
-        String driver_make = sp.getString("make", null);
-        String driver_model = sp.getString("model", null);
-        String driver_year = sp.getString("year", null);
-
+        String driver_log_book = sp.getString("driver_logbook", null);
+        String driver_make = sp.getString("driver_make", null);
+        String driver_model = sp.getString("driver_model", null);
+        String driver_year = sp.getString("driver_year", null);
         /*initialize views*/
 
         phone = findViewById(R.id.phone);

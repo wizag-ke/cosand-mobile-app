@@ -21,6 +21,7 @@ public class Supplier_Adapter extends RecyclerView.Adapter<Supplier_Adapter.MyVi
     ItemClickListener itemClickListener;
 
     Context context;
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView material_id;
@@ -33,15 +34,15 @@ public class Supplier_Adapter extends RecyclerView.Adapter<Supplier_Adapter.MyVi
             super(itemView);
             this.material_id = (TextView) itemView.findViewById(R.id.material_id);
             this.material_detail_id = (TextView) itemView.findViewById(R.id.material_detail_id);
-            this.material_class_id =  itemView.findViewById(R.id.material_class_id);
-            this.material_unit_id =  itemView.findViewById(R.id.material_unit_id);
-            this.unit_price =  itemView.findViewById(R.id.unit_price);
+            this.material_class_id = itemView.findViewById(R.id.material_class_id);
+            this.material_unit_id = itemView.findViewById(R.id.material_unit_id);
+            this.unit_price = itemView.findViewById(R.id.unit_price);
         }
     }
 
     public Supplier_Adapter(List<Model_Supplier> data, Context context) {
         this.dataSet = data;
-        this.context=context;
+        this.context = context;
     }
 
     @Override
@@ -73,10 +74,10 @@ public class Supplier_Adapter extends RecyclerView.Adapter<Supplier_Adapter.MyVi
         unit_price.setText(dataSet.get(listPosition).getUnit_price());
 */
         material_id.setText(supplier.getMaterial_name());
-        material_detail_id.setText(supplier.getDetail_name());
+        material_detail_id.setText(supplier.getDetails_name());
         material_class_id.setText(supplier.getClass_name());
-        material_unit_id.setText(supplier.getUnit_name());
-        unit_price.setText(supplier.getUnit_cost());
+        material_unit_id.setText(supplier.getUnits_name());
+        unit_price.setText(supplier.getCost());
 
     }
 
@@ -84,4 +85,6 @@ public class Supplier_Adapter extends RecyclerView.Adapter<Supplier_Adapter.MyVi
     public int getItemCount() {
         return dataSet.size();
     }
+
+
 }

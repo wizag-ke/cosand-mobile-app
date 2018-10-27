@@ -150,6 +150,48 @@
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:text="Email :"
+                android:textAlignment="viewStart"
+                android:textColor="@color/textColor"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/co_email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:focusable="false"
+                android:padding="8dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/textColor" />
+
+
+            <LinearLayout
+                android:id="@+id/image_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cert_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_150sdp"
+
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:padding="@dimen/_16sdp" />
+
+            </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

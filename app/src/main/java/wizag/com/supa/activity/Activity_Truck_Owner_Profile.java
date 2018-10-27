@@ -1,9 +1,12 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -65,6 +68,38 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+        String driver_code = sp.getString("driver_code", null);
+
+        if (!driver_code.equalsIgnoreCase("XTON")) {
+
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setMessage("Create Truck Owner account to continue");
+            builder1.setCancelable(true);
+
+            builder1.setPositiveButton(
+                    "Proceed",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                            finish();
+                        }
+                    });
+
+            builder1.setNegativeButton(
+                    "Not now",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
+
+
         trucksList = new ArrayList<>();
         adapter_trucks = new Adapter_Trucks(this, trucksList);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -77,7 +112,6 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         recyclerView.setAdapter(adapter_trucks);
 
 
-        SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String truck_owner_fname = sp.getString("truck_owner_fname", null);
         String truck_owner_lname = sp.getString("truck_owner_lname", null);
         String truck_owner_email = sp.getString("truck_owner_email", null);

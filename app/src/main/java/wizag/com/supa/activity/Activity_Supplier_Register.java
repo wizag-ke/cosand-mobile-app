@@ -70,6 +70,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
     Button submit;
     EditText kra_pin, location;
     String kra_pin_txt, location_txt;
+    String unit_cost_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +118,12 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                 location_txt = location.getText().toString();
 
 
-
             }
         });
 
         showMaterialsDialog();
+
+
     }
 
     public void showMaterialsDialog() {
@@ -136,6 +138,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         material_class = dialogView.findViewById(R.id.material_class);
         material_units = dialogView.findViewById(R.id.material_units);
         unit_cost = dialogView.findViewById(R.id.unit_cost);
+        unit_cost_txt = unit_cost.getText().toString();
 
         LoadMaterialTypeSpinner();
         /*get spinner type id*/
@@ -147,8 +150,6 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                     id_service = dataClicked.getInt("id");
 
                     getMaterial();
-//                    Material.clear();
-
 
                     Toast.makeText(Activity_Supplier_Register.this, id_service, Toast.LENGTH_SHORT).show();
 
@@ -169,12 +170,16 @@ public class Activity_Supplier_Register extends AppCompatActivity {
 
         material_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
                 try {
-                    JSONObject dataClicked = materials.getJSONObject(i);
+                    JSONObject dataClicked = materials.getJSONObject(position);
                     id_material = dataClicked.getInt("id");
 
+//                    Model_Supplier itemSelected = (Model_Supplier) adapterView.getItemAtPosition(position);
+//                    Toast.makeText(getApplicationContext(), id_material, Toast.LENGTH_SHORT).show();
+
+                    Material.clear();
 
                     getMaterialDetails();
                     DetailsName.clear();
@@ -270,16 +275,17 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         dialogBuilder.setTitle("Supplier Details");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                /*save materials to a List*/
-                Model_Supplier supplier = new Model_Supplier();
-                supplier.setClass_name(class_name);
-                supplier.setDetail_name(details_name);
-                supplier.setUnit_name(units_name);
-                supplier.setType_name(type_name);
-                supplier.setMaterial_name(material_name);
-                supplier.setUnit_cost(unit_cost.getText().toString());
 
-                list.add(supplier);
+                list.add(new Model_Supplier(
+                        id_material,
+                        id_detail,
+                        id_class,
+                        id_unit,
+                        material_name,
+                        details_name,
+                        class_name,
+                        units_name,
+                        unit_cost_txt));
                 adapter.notifyDataSetChanged();
 
 

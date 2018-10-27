@@ -159,7 +159,7 @@
                 android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/rounded2"
                 android:padding="@dimen/_2sdp"
-                android:text="View Corporate's company details "
+                android:text="View Corporate's Company details "
                 android:textColor="@android:color/white" />
 
         </LinearLayout>

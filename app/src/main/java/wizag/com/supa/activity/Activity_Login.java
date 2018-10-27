@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.ArraySet;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,12 +28,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import junit.runner.Version;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import retrofit2.Call;
@@ -233,13 +237,11 @@ public class Activity_Login extends AppCompatActivity {
                         //  String token = prefs.getString("access_token", ACCESS_TOKEN);
 
                         session.createLoginSession(username, password, access_token);
-                        /*getDriverProfile();
-                        getIndividualProfile();
-                        getCorporateProfile();
-                        getTruckOwner();*/
+
 
                         getIndividualProfile();
                         getDriverProfile();
+                        getCorporateProfile();
 
 
                         startActivity(new Intent(getApplicationContext(), Activity_Home.class));
@@ -315,7 +317,7 @@ public class Activity_Login extends AppCompatActivity {
         return errorMsg;
     }
 
-    private void getDriverProfile() {
+    public void getDriverProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -329,7 +331,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+//                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -341,7 +343,19 @@ public class Activity_Login extends AppCompatActivity {
 
 
                         JSONArray roles = user.getJSONArray("roles");
-                        for (int i = 0; i < roles.length(); i++) {
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+                        editor.putString("driver_fname", fname);
+                        editor.putString("driver_lname", lname);
+                        editor.putString("driver_email", email);
+                        editor.putString("driver_phone", phone);
+                        editor.putString("driver_id_no", id_no);
+                        editor.putString("driver_roles", roles.toString());
+                        editor.apply();
+
+
+                        /*for (int i = 0; i < roles.length(); i++) {
 
                             JSONObject roles_object = roles.getJSONObject(i);
                             String code = roles_object.getString("code");
@@ -361,11 +375,11 @@ public class Activity_Login extends AppCompatActivity {
                             SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
 
-                            editor.putString("driver_fname",fname);
-                            editor.putString("driver_lname",lname);
-                            editor.putString("driver_email",email);
-                            editor.putString("driver_phone",phone);
-                            editor.putString("driver_id_no",id_no);
+                            editor.putString("driver_fname", fname);
+                            editor.putString("driver_lname", lname);
+                            editor.putString("driver_email", email);
+                            editor.putString("driver_phone", phone);
+                            editor.putString("driver_id_no", id_no);
                             editor.putString("driver_code", code);
                             editor.putString("driver_plate_no", plate_no);
                             editor.putString("driver_description", description);
@@ -376,7 +390,7 @@ public class Activity_Login extends AppCompatActivity {
                             editor.apply();
 
                         }
-
+*/
 
                     }
 
@@ -440,7 +454,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+//                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -452,7 +466,19 @@ public class Activity_Login extends AppCompatActivity {
                         String id_no = user.getString("id_no");
 
                         JSONArray roles = user.getJSONArray("roles");
-                        for (int i = 0; i < roles.length(); i++) {
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("individual_fname", fname);
+                        editor.putString("individual_lname", lname);
+                        editor.putString("individual_email", email);
+                        editor.putString("phone", phone);
+                        editor.putString("individual_id_no", id_no);
+                        editor.putString("individual_roles", roles.toString());
+                        editor.apply();
+
+
+
+                        /*for (int i = 0; i < roles.length(); i++) {
 
                             JSONObject roles_object = roles.getJSONObject(i);
                             String code = roles_object.getString("code");
@@ -469,7 +495,7 @@ public class Activity_Login extends AppCompatActivity {
                             editor.putString("driver_code", code);
                             editor.apply();
 
-                        }
+                        }*/
 
 
                     }
@@ -547,34 +573,24 @@ public class Activity_Login extends AppCompatActivity {
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                        JSONObject role = user.getJSONObject("role");
-                        String code = role.getString("code");
-
-                        JSONObject company = user.getJSONObject("company");
-                        String company_name = company.getString("company");
-                        String kra_pin = company.getString("kra_pin");
-                        String cert_no = company.getString("certificate_number");
-                        String company_phone = company.getString("phone");
-                        String location = company.getString("location");
-
-
+                        JSONArray roles = user.getJSONArray("roles");
                         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
-
-
                         editor.putString("corporate_fname", fname);
                         editor.putString("corporate_lname", lname);
                         editor.putString("corporate_email", email);
-                        editor.putString("phone", phone);
+                        editor.putString("corporate_phone", phone);
                         editor.putString("corporate_id_no", id_no);
-                        editor.putString("driver_code", code);
+
+                        editor.putString("roles", roles.toString());
+                        /*editor.putStringSet("driver_code", codeofclient);
                         editor.putString("company_name", company_name);
                         editor.putString("company_kra_pin", kra_pin);
-                        editor.putString("company_cert_no", cert_no);
-                        editor.putString("company_phone", company_phone);
+                        editor.putString("company_cert_no", certificate_number);
+                        editor.putString("company_certificate_file", certificate_file);
                         editor.putString("company_location", location);
+                        editor.putString("company_email", company_email);*/
                         editor.apply();
-
 
                     }
 

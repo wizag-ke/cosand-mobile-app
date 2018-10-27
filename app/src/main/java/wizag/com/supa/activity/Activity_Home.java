@@ -55,6 +55,7 @@ public class Activity_Home extends AppCompatActivity {
         checkUserRole();
 
 
+
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         token = user.get("access_token");
@@ -69,6 +70,8 @@ public class Activity_Home extends AppCompatActivity {
         /*get user code*/
         SharedPreferences sharedPreferences_sell = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code_sell = sharedPreferences_sell.getString("driver_code", null);
+
+        Toast.makeText(context, driver_code_sell, Toast.LENGTH_LONG).show();
 
 
         buy.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +113,7 @@ public class Activity_Home extends AppCompatActivity {
         sell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!driver_code_sell.equalsIgnoreCase("XDRI") || !driver_code_sell.equalsIgnoreCase("XTON")) {
+                /*if (!driver_code_sell.equalsIgnoreCase("XDRI") || !driver_code_sell.equalsIgnoreCase("XTON")) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 //                                builder1.setTitle("Access Denied!");
                     builder1.setMessage("Create a Driver or Truck Owner account to continue");
@@ -138,7 +141,9 @@ public class Activity_Home extends AppCompatActivity {
                 } else {
 
                     startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-                }
+                }*/
+
+                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
             }
         });
 

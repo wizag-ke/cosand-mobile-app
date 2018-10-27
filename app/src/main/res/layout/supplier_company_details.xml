@@ -44,7 +44,6 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_170sdp"
-                android:background="#D2D2D2"
                 android:orientation="vertical">
 
                 <EditText
@@ -74,6 +73,11 @@
                     android:textAlignment="textStart"
                     android:textColorHint="@color/textColor" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
@@ -82,11 +86,7 @@
                     android:src="@android:drawable/ic_input_add"
                     app:elevation="6dp"
                     app:pressedTranslationZ="12dp" />
-
-                <!--<view
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@android:color/black" />-->
+                </LinearLayout>
             </LinearLayout>
 
 

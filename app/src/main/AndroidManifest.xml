@@ -60,7 +60,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Sell" />
         </activity>
-        <activity android:name=".activity.Activity_Wallet" />
+        <activity android:name=".activity.Activity_Wallet" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activity.Activity_Wallet" />
+
+        </activity>
+
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".CheckInActivity" />
         <activity android:name=".TripsActivity" />

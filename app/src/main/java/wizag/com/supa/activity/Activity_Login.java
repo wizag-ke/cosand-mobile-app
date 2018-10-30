@@ -351,46 +351,8 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("driver_email", email);
                         editor.putString("driver_phone", phone);
                         editor.putString("driver_id_no", id_no);
-                        editor.putString("driver_roles", roles.toString());
+                        editor.putString("user_type", roles.toString());
                         editor.apply();
-
-
-                        /*for (int i = 0; i < roles.length(); i++) {
-
-                            JSONObject roles_object = roles.getJSONObject(i);
-                            String code = roles_object.getString("code");
-
-
-                            JSONObject details = roles_object.getJSONObject("details");
-                            JSONObject truck = details.getJSONObject("truck");
-                            String plate_no = truck.getString("plate_no");
-                            JSONObject tonnage = truck.getJSONObject("tonnage");
-                            String description = tonnage.getString("description");
-
-                            String log_book = truck.getString("log_book");
-                            String make = truck.getString("make");
-                            String model = truck.getString("model");
-                            String year = truck.getString("year");
-
-                            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-
-                            editor.putString("driver_fname", fname);
-                            editor.putString("driver_lname", lname);
-                            editor.putString("driver_email", email);
-                            editor.putString("driver_phone", phone);
-                            editor.putString("driver_id_no", id_no);
-                            editor.putString("driver_code", code);
-                            editor.putString("driver_plate_no", plate_no);
-                            editor.putString("driver_description", description);
-                            editor.putString("driver_logbook", log_book);
-                            editor.putString("driver_make", make);
-                            editor.putString("driver_model", model);
-                            editor.putString("driver_year", year);
-                            editor.apply();
-
-                        }
-*/
 
                     }
 
@@ -473,29 +435,8 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("individual_email", email);
                         editor.putString("phone", phone);
                         editor.putString("individual_id_no", id_no);
-                        editor.putString("individual_roles", roles.toString());
+                        editor.putString("user_type", roles.toString());
                         editor.apply();
-
-
-
-                        /*for (int i = 0; i < roles.length(); i++) {
-
-                            JSONObject roles_object = roles.getJSONObject(i);
-                            String code = roles_object.getString("code");
-
-                            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-
-
-                            editor.putString("individual_fname", fname);
-                            editor.putString("individual_lname", lname);
-                            editor.putString("individual_email", email);
-                            editor.putString("phone", phone);
-                            editor.putString("individual_id_no", id_no);
-                            editor.putString("driver_code", code);
-                            editor.apply();
-
-                        }*/
 
 
                     }
@@ -582,14 +523,7 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("corporate_phone", phone);
                         editor.putString("corporate_id_no", id_no);
 
-                        editor.putString("roles", roles.toString());
-                        /*editor.putStringSet("driver_code", codeofclient);
-                        editor.putString("company_name", company_name);
-                        editor.putString("company_kra_pin", kra_pin);
-                        editor.putString("company_cert_no", certificate_number);
-                        editor.putString("company_certificate_file", certificate_file);
-                        editor.putString("company_location", location);
-                        editor.putString("company_email", company_email);*/
+                        editor.putString("user_type", roles.toString());
                         editor.apply();
 
                     }

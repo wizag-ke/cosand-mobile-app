@@ -2,6 +2,7 @@ package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -58,6 +60,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
     ArrayList<String> UnitsName;
     ArrayList<String> ClassName;
     List<Model_Supplier> list = new ArrayList<>();
+    String supplier;
     int id_service;
     int id_class;
     int id_unit;
@@ -71,7 +74,9 @@ public class Activity_Supplier_Register extends AppCompatActivity {
     EditText kra_pin, location;
     String kra_pin_txt, location_txt;
     String unit_cost_txt;
-
+    String selected_material, selected_unit, selected_class, selected_detail;
+    String supplier_Driver_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
+    JSONArray supplier_materials;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,18 +102,12 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         adapter = new Supplier_Adapter(list, this);
         recyclerView.setAdapter(adapter);
 
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(Activity_Supplier_Register.this, "Hello there", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                showMaterialsDialog();
+                showMaterialsDialog();
             }
         });
         submit.setOnClickListener(new View.OnClickListener() {
@@ -117,11 +116,17 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                 kra_pin_txt = kra_pin.getText().toString();
                 location_txt = location.getText().toString();
 
+                JSONArray jsonArray = new JSONArray();
+                for (int i=0; i < list.size(); i++) {
+                     supplier_materials=  jsonArray.put(list.get(i).getJSONObject());
+                }
+
+                registerSupplier();
 
             }
         });
 
-        showMaterialsDialog();
+//        showMaterialsDialog();
 
 
     }
@@ -138,7 +143,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         material_class = dialogView.findViewById(R.id.material_class);
         material_units = dialogView.findViewById(R.id.material_units);
         unit_cost = dialogView.findViewById(R.id.unit_cost);
-        unit_cost_txt = unit_cost.getText().toString();
+
 
         LoadMaterialTypeSpinner();
         /*get spinner type id*/
@@ -149,7 +154,10 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                     JSONObject dataClicked = materialTypes.getJSONObject(i);
                     id_service = dataClicked.getInt("id");
 
+
                     getMaterial();
+//                    Material.clear();
+
 
                     Toast.makeText(Activity_Supplier_Register.this, id_service, Toast.LENGTH_SHORT).show();
 
@@ -179,16 +187,16 @@ public class Activity_Supplier_Register extends AppCompatActivity {
 //                    Model_Supplier itemSelected = (Model_Supplier) adapterView.getItemAtPosition(position);
 //                    Toast.makeText(getApplicationContext(), id_material, Toast.LENGTH_SHORT).show();
 
-                    Material.clear();
+                    selected_material = material_id.getSelectedItem().toString();
 
                     getMaterialDetails();
-                    DetailsName.clear();
+//                    DetailsName.clear();
 
                     getMaterialClasses();
-                    ClassName.clear();
+//                    ClassName.clear();
 
                     getMaterialUnits();
-                    UnitsName.clear();
+//                    UnitsName.clear();
 
 
                 } catch (Exception e) {
@@ -210,6 +218,9 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                 try {
                     JSONObject dataClicked = details_array.getJSONObject(i);
                     id_detail = dataClicked.getInt("id");
+
+                    selected_detail = material_details.getSelectedItem().toString();
+
 
 //                    getMaterialClasses();
 
@@ -233,6 +244,9 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                 try {
                     JSONObject dataClicked = class_array.getJSONObject(i);
                     id_class = dataClicked.getInt("id");
+
+                    selected_class = material_class.getSelectedItem().toString();
+
 //                    getMaterialUnits();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -253,6 +267,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                 try {
                     JSONObject dataClicked = units_array.getJSONObject(i);
                     id_unit = dataClicked.getInt("id");
+                    selected_unit = material_units.getSelectedItem().toString();
 
 
                 } catch (Exception e) {
@@ -275,16 +290,18 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         dialogBuilder.setTitle("Supplier Details");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                unit_cost_txt = unit_cost.getText().toString();
+
 
                 list.add(new Model_Supplier(
                         id_material,
                         id_detail,
                         id_class,
                         id_unit,
-                        material_name,
-                        details_name,
-                        class_name,
-                        units_name,
+                        selected_material,
+                        selected_detail,
+                        selected_class,
+                        selected_unit,
                         unit_cost_txt));
                 adapter.notifyDataSetChanged();
 
@@ -298,6 +315,10 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         });
         AlertDialog b = dialogBuilder.create();
         b.show();
+
+
+
+
     }
 
     private void LoadMaterialTypeSpinner() {
@@ -780,6 +801,103 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
 
+
+    }
+
+    private void registerSupplier() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Supplier_Register.this);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Signing in...");
+        progressDialog.show();
+        //getText
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, supplier_Driver_url, new Response.Listener<String>() {
+
+
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(response);
+
+                    String message = obj.getString("message");
+                    String status = obj.getString("status");
+//                            JSONObject data = new JSONObject("data");
+                    if (status.equalsIgnoreCase("success")) {
+                        Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                        finish();
+                    } else if (status.equalsIgnoreCase("error")) {
+
+                        Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_SHORT).show();
+
+
+                    }
+
+                    JSONArray jsonArray = obj.getJSONArray("data");
+                    if (jsonArray != null) {
+                        for (int k = 0; k < jsonArray.length(); k++) {
+                            String data_message = jsonArray.getString(k);
+
+                            if (status.equalsIgnoreCase("fail")) {
+                                Toast.makeText(Activity_Supplier_Register.this, data_message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(Activity_Supplier_Register.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        error.printStackTrace();
+                        Toast.makeText(Activity_Supplier_Register.this, "An error occurred" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+        ) {
+
+            @Override
+            protected HashMap<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("kra_pin", kra_pin_txt);
+                params.put("location", location_txt);
+                params.put("materials", String.valueOf(supplier_materials));
+                params.put("role_id", "XSUP");
+//                params.put("licence_file", "adwerty");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+
+        };
+
+
+        queue.add(stringRequest);
 
     }
 

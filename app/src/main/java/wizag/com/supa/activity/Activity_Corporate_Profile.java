@@ -60,7 +60,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
         corporate_id_no = sp.getString("corporate_id_no", null);;
 
         try {
-            roles = new JSONArray(sp.getString("roles", null));
+            roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
             roles = new JSONArray();
@@ -74,7 +74,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
         for (int i = 0; i < roles.length(); i++) {
             try {
                 JSONObject role = roles.getJSONObject(i);
-                if (role.getString("code").equalsIgnoreCase("XCOR")) {
+                if (role.getString("code").contains("XCOR")) {
                     available = true;
 
                     JSONObject company = role.getJSONObject("details").getJSONObject("company");

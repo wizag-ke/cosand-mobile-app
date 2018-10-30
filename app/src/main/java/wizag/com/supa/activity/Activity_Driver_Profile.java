@@ -54,7 +54,7 @@ public class Activity_Driver_Profile extends AppCompatActivity implements View.O
         driver_year = sp.getString("driver_year", null);
 
         try {
-            roles = new JSONArray(sp.getString("driver_roles", null));
+            roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
             roles = new JSONArray();
@@ -69,7 +69,7 @@ public class Activity_Driver_Profile extends AppCompatActivity implements View.O
 
             try {
                 JSONObject role = roles.getJSONObject(i);
-                if(role.getString("code").equalsIgnoreCase("XDRI")){
+                if(role.getString("code").contains("XDRI")){
                     available = true;
                     JSONObject truck = role.getJSONObject("details").getJSONObject("truck");
                     driver_plate_no = truck.getString("plate_no");

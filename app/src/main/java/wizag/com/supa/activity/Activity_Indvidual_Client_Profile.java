@@ -45,7 +45,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
         individual_id_no = sp.getString("individual_id_no", null);
 
         try {
-            roles = new JSONArray(sp.getString("individual_roles", null));
+            roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
         for(int i = 0; i<roles.length();i++){
             try {
                 JSONObject role = roles.getJSONObject(i);
-                if(role.getString("code").equalsIgnoreCase("XIND")){
+                if(role.getString("code").contains("XIND")){
                     available = true;
                     break;
                 }

@@ -67,12 +67,6 @@ public class Supplier_Adapter extends RecyclerView.Adapter<Supplier_Adapter.MyVi
         TextView unit_price = holder.unit_price;
 
 
-        /*material_id.setText(dataSet.get(listPosition).getMaterial_id());
-        material_detail_id.setText(dataSet.get(listPosition).getDetail_id());
-        material_class_id.setText(dataSet.get(listPosition).getClass_id());
-        material_unit_id.setText(dataSet.get(listPosition).getUnit_id());
-        unit_price.setText(dataSet.get(listPosition).getUnit_price());
-*/
         material_id.setText(supplier.getMaterial_name());
         material_detail_id.setText(supplier.getDetails_name());
         material_class_id.setText(supplier.getClass_name());

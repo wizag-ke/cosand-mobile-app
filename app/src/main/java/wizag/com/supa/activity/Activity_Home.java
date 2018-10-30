@@ -69,16 +69,16 @@ public class Activity_Home extends AppCompatActivity {
 
         /*get user code*/
         SharedPreferences sharedPreferences_sell = getSharedPreferences("profile", MODE_PRIVATE);
-        String driver_code_sell = sharedPreferences_sell.getString("driver_code", null);
+        String driver_code_sell = sharedPreferences_sell.getString("user_type", null);
 
-        Toast.makeText(context, driver_code_sell, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, driver_code_sell, Toast.LENGTH_LONG).show();
 
 
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (!driver_code_sell.equalsIgnoreCase("XIND") || !driver_code_sell.equalsIgnoreCase("XCOR")) {
+                if (!driver_code_sell.contains("XIND") || !driver_code_sell.contains("XCOR")) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 //                                builder1.setTitle("Access Denied!");
                     builder1.setMessage("Create an Individual or Client account to continue");
@@ -113,7 +113,7 @@ public class Activity_Home extends AppCompatActivity {
         sell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*if (!driver_code_sell.equalsIgnoreCase("XDRI") || !driver_code_sell.equalsIgnoreCase("XTON")) {
+                if (!driver_code_sell.contains("XDRI") || !driver_code_sell.contains("XTON")) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 //                                builder1.setTitle("Access Denied!");
                     builder1.setMessage("Create a Driver or Truck Owner account to continue");
@@ -141,7 +141,7 @@ public class Activity_Home extends AppCompatActivity {
                 } else {
 
                     startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-                }*/
+                }
 
                 startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
             }
@@ -186,22 +186,22 @@ public class Activity_Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-                String driver_code = sp.getString("driver_code", null);
+                String driver_code = sp.getString("user_type", null);
 
                 if (sp != null) {
-                    if (driver_code.equalsIgnoreCase("XDRI")) {
+                    if (driver_code.contains("XDRI")) {
                         Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
                         startActivity(driver_profile);
-                    } else if (driver_code.equalsIgnoreCase("XIND")) {
+                    } else if (driver_code.contains("XIND")) {
                         Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
                         startActivity(ind_profile);
-                    } else if (driver_code.equalsIgnoreCase("XCOR")) {
+                    } else if (driver_code.contains("XCOR")) {
                         Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
                         startActivity(cor_profile);
-                    } else if (driver_code.equalsIgnoreCase("XTON")) {
+                    } else if (driver_code.contains("XTON")) {
                         Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
                         startActivity(truck_profile);
-                    } else if (driver_code.equalsIgnoreCase("XSUP")) {
+                    } else if (driver_code.contains("XSUP")) {
                         Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
                         startActivity(truck_profile);
                     }

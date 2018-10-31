@@ -242,8 +242,8 @@ public class Activity_Login extends AppCompatActivity {
                         getIndividualProfile();
                         getDriverProfile();
                         getCorporateProfile();
-
-
+                        getTruckOwner();
+                        getSupplierProfile();
                         startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                         finish();
 
@@ -433,7 +433,7 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("individual_fname", fname);
                         editor.putString("individual_lname", lname);
                         editor.putString("individual_email", email);
-                        editor.putString("phone", phone);
+                        editor.putString("individual_phone", phone);
                         editor.putString("individual_id_no", id_no);
                         editor.putString("user_type", roles.toString());
                         editor.apply();
@@ -522,7 +522,6 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("corporate_email", email);
                         editor.putString("corporate_phone", phone);
                         editor.putString("corporate_id_no", id_no);
-
                         editor.putString("user_type", roles.toString());
                         editor.apply();
 
@@ -600,30 +599,16 @@ public class Activity_Login extends AppCompatActivity {
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                        JSONObject role = user.getJSONObject("role");
-                        String code = role.getString("code");
-
-                        JSONObject company = user.getJSONObject("company");
-                        String company_name = company.getString("company");
-                        String company_location = company.getString("location");
-                        String company_kra_pin = company.getString("kra_pin");
-                        String company_phone = company.getString("phone");
-
-
+                        JSONObject role = user.getJSONObject("roles");
                         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
-
 
                         editor.putString("truck_owner_fname", fname);
                         editor.putString("truck_owner_lname", lname);
                         editor.putString("truck_owner_email", email);
-                        editor.putString("phone", phone);
+                        editor.putString("truck_owner_phone", phone);
                         editor.putString("truck_owner_id_no", id_no);
-                        editor.putString("driver_code", code);
-                        editor.putString("truck_owner_company_name", company_name);
-                        editor.putString("truck_owner_company_location", company_location);
-                        editor.putString("truck_owner_company_kra_pin", company_kra_pin);
-                        editor.putString("truck_owner_company_phone", company_phone);
+                        editor.putString("user_type", role.toString());
                         editor.apply();
 
 
@@ -676,12 +661,14 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-    private void checkUserRole() {
+    private void getSupplierProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -693,21 +680,24 @@ public class Activity_Login extends AppCompatActivity {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
 
-                        role_array = user.getJSONArray("roles");
-                        for (int i = 0; i < role_array.length(); i++) {
-                            JSONObject object = role_array.getJSONObject(i);
-                            String role = object.getString("code");
+                        String fname = user.getString("fname");
+                        String lname = user.getString("lname");
+                        String email = user.getString("email");
+                        String phone = user.getString("phone");
+                        String id_no = user.getString("id_no");
 
-                            if (role.isEmpty()) {
-                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                finish();
+                        JSONObject role = user.getJSONObject("roles");
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
 
-                            } else {
-                                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-                                finish();
-                            }
+                        editor.putString("supplier_owner_fname", fname);
+                        editor.putString("supplier_owner_lname", lname);
+                        editor.putString("supplier_owner_email", email);
+                        editor.putString("supplier_phone", phone);
+                        editor.putString("supplier_owner_id_no", id_no);
+                        editor.putString("user_type", role.toString());
+                        editor.apply();
 
-                        }
 
                     }
 
@@ -728,10 +718,15 @@ public class Activity_Login extends AppCompatActivity {
 
         }) {
 
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                String bearer = "Bearer ".concat(token);
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
@@ -749,5 +744,7 @@ public class Activity_Login extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+
+
     }
 }

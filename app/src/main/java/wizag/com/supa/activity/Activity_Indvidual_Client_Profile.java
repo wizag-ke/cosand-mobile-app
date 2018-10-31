@@ -41,7 +41,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
         individual_fname = sp.getString("individual_fname", null);
         individual_lname = sp.getString("individual_lname", null);
         individual_email = sp.getString("individual_email", null);
-        individual_phone = sp.getString("phone", null);
+        individual_phone = sp.getString("individual_phone", null);
         individual_id_no = sp.getString("individual_id_no", null);
 
         try {

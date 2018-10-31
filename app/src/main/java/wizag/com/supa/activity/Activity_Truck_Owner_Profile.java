@@ -69,7 +69,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
 
 
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-        String driver_code = sp.getString("driver_code", null);
+        String driver_code = sp.getString("user_type", null);
 
         if (!driver_code.equalsIgnoreCase("XTON")) {
 
@@ -147,12 +147,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             }
         });
 
-       /* previous_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                flipper.showPrevious();
-            }
-        });*/
+
 
         fname.setText(truck_owner_fname);
         lname.setText(truck_owner_lname);

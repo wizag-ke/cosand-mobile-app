@@ -47,7 +47,7 @@
             android:layout_margin="@dimen/_7sdp"
             android:background="@drawable/sell"
             android:hint="Axle Count"
-            android:inputType="textCapSentences"
+            android:inputType="number"
             android:padding="@dimen/_16sdp"
             android:textAlignment="textStart"
             android:textColorHint="@color/textColor" />
@@ -60,7 +60,7 @@
             android:layout_margin="@dimen/_7sdp"
             android:background="@drawable/sell"
             android:hint="Plate Number"
-            android:inputType="textCapSentences"
+            android:inputType="textCapCharacters"
             android:padding="@dimen/_16sdp"
             android:textAlignment="textStart"
             android:textColorHint="@color/textColor" />

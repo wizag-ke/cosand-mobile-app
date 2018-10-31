@@ -119,12 +119,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
             AlertDialog alert11 = builder1.create();
             alert11.show();
         }
-
-
-
-
-
-        /*on changing role, eg to driver, open driver profile activity then the results will be populated */
+  /*on changing role, eg to driver, open driver profile activity then the results will be populated */
 
         flipper = findViewById(R.id.flipper);
         lname = findViewById(R.id.lname);

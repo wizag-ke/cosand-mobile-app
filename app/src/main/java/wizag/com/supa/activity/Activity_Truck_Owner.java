@@ -235,7 +235,7 @@ public class Activity_Truck_Owner extends AppCompatActivity {
                         finish();
                     } else if (status.equalsIgnoreCase("error")) {
 
-                        Toast.makeText(Activity_Truck_Owner.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Truck_Owner.this, message, Toast.LENGTH_LONG).show();
 
 
                     }

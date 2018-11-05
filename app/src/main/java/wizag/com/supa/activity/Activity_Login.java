@@ -331,7 +331,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-//                    pDialog.dismiss();
+////                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -365,7 +365,7 @@ public class Activity_Login extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//               pDialog.dismiss();
+////               pDialog.dismiss();
 //                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -416,7 +416,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-//                    pDialog.dismiss();
+////                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -450,7 +450,7 @@ public class Activity_Login extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+//                pDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "An Error Occurred while loading Individual client profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -503,7 +503,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+//                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -536,7 +536,7 @@ public class Activity_Login extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//               pDialog.dismiss();
+////               pDialog.dismiss();
 //                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -579,7 +579,7 @@ public class Activity_Login extends AppCompatActivity {
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+//        pDialog.show();
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
@@ -588,7 +588,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+//                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -607,8 +607,8 @@ public class Activity_Login extends AppCompatActivity {
                         editor.putString("truck_owner_lname", lname);
                         editor.putString("truck_owner_email", email);
                         editor.putString("truck_owner_phone", phone);
-                        editor.putString("truck_owner_id_no", id_no);
                         editor.putString("user_type", role.toString());
+                        editor.putString("truck_owner_id_no", id_no);
                         editor.apply();
 
 
@@ -623,7 +623,7 @@ public class Activity_Login extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//               pDialog.dismiss();
+////               pDialog.dismiss();
 //                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -675,7 +675,7 @@ public class Activity_Login extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+//                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject user = data.getJSONObject("user");
@@ -710,7 +710,7 @@ public class Activity_Login extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//               pDialog.dismiss();
+////               pDialog.dismiss();
 //                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }

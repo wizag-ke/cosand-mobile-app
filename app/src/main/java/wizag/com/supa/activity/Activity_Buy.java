@@ -78,12 +78,14 @@ import wizag.com.supa.SessionManager;
 import wizag.com.supa.activity.Activity_Search_Places;
 import wizag.com.supa.models.Model_Buy;
 import wizag.com.supa.models.Model_Supplier;
+import wizag.com.supa.models.Model_Truck_Owner;
 
 
 public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     Spinner spinner_service_id, material_item_id, material_detail_id, material_class_id, material_unit_id;
     EditText quantity_text;
     Button proceed_buy;
+    String quantity;
     SessionManager sessionManager;
     JSONArray materialTypes, materials, details_array, class_array, units_array;
     ArrayList<String> Type;
@@ -881,7 +883,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
         switch (view.getId()) {
             case R.id.proceed_location:
-                String quantity = quantity_text.getText().toString();
+                 quantity = quantity_text.getText().toString();
                 if (quantity.isEmpty()) {
                     Toast.makeText(this, "Enter Quantity to proceed", Toast.LENGTH_SHORT).show();
                 } else {
@@ -890,6 +892,14 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 break;
             case R.id.submit:
                 /*submit to db*/
+
+                list.add(new Model_Buy(
+                        id_material,
+                        id_unit,
+                        id_class,
+                        id_detail,
+                        quantity));
+
 
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < list.size(); i++) {

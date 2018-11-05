@@ -188,6 +188,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_35sdp"
             android:layout_margin="@dimen/_7sdp"
+            android:padding="@dimen/_7sdp"
             android:background="@drawable/sell"
             android:textColor="@color/textColor" />
 

@@ -324,7 +324,7 @@ public class Activity_Sell extends AppCompatActivity {
                     snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
                     snackbar.show();
                 }
-                
+
                 else {
                     loadRequest();
                 }

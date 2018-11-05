@@ -182,7 +182,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 //                            JSONObject data = new JSONObject("data");
                     if (status.equalsIgnoreCase("success")) {
                         Toast.makeText(Activity_Register.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                         finish();
                     } else if (status.equalsIgnoreCase("error")) {
 

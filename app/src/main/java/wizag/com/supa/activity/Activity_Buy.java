@@ -1,10 +1,15 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -15,17 +20,22 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -36,7 +46,19 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.koushikdutta.async.callback.ConnectCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,400 +66,282 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import wizag.com.supa.GPSLocation;
+import wizag.com.supa.Geofencing;
 import wizag.com.supa.MySingleton;
+import wizag.com.supa.PlaceContract;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 import wizag.com.supa.activity.Activity_Search_Places;
+import wizag.com.supa.models.Model_Buy;
+import wizag.com.supa.models.Model_Supplier;
 
 
-public class Activity_Buy extends AppCompatActivity {
-    Spinner spinner, buy_spinner_size, buy_spinner_quality, buy_spinner_category;
-    String URL = "http://sduka.wizag.biz/api/material";
-    String POST_MATERIAL_URL = "http://sduka.wizag.biz/api/order-request";
-    String POST_FCM = "http://sduka.wizag.biz/api/fcm-token";
-    private static final String SHARED_PREF_NAME = "mysharedpref";
-    LinearLayout buy_layout;
-    ArrayList<String> CountryName;
+public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+    Spinner spinner_service_id, material_item_id, material_detail_id, material_class_id, material_unit_id;
+    EditText quantity_text;
+    Button proceed_buy;
     SessionManager sessionManager;
-    String token;
-    Button proceed;
-    GPSLocation gps;
-
-    ArrayList<String> CategoryName;
-    ArrayList<String> QualityName;
-    ArrayList<String> SizeName;
-    ArrayList<String> PriceName;
-
-
-    HashMap<String, String> map_values;
-    HashMap<String, String> quality_values;
-    HashMap<String, String> size_values;
-    HashMap<String, String> category_values;
-
-    String id_material;
-    String id_quality;
-    String id_size;
-    String id_category;
-
-    EditText quantity;
-    String location;
-
-    ProgressDialog progressDialog;
-    String quantity_txt;
-    private DrawerLayout mDrawerLayout;
-    String firebaseToken;
+    JSONArray materialTypes, materials, details_array, class_array, units_array;
+    ArrayList<String> Type;
+    ArrayList<String> Material;
+    ArrayList<String> DetailsName;
+    ArrayList<String> ClassName;
+    ArrayList<String> UnitsName;
+    int id_service, id_material, id_detail, id_class, id_unit;
+    private GoogleApiClient mClient;
+    private Geofencing mGeofencing;
+    public static final String TAG = Activity_Search_Places.class.getSimpleName();
+    private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
+    private static final int PLACE_PICKER_REQUEST = 1;
+    String name, address;
+    Double latitude, longitude;
+    private boolean mIsEnabled;
+    Button proceed_location, submit, previous;
+    ViewFlipper flipper;
+    EditText location_description;
+    TextView location_name;
+    List<Model_Buy> list = new ArrayList<>();
+    JSONArray buy_materials;
+    String OrderRequest = "http://sduka.wizag.biz/api/v1/orders/new";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
-        CountryName = new ArrayList<>();
 
-        firebaseToken = FirebaseInstanceId.getInstance().getToken();
-        Toast.makeText(getApplicationContext(), firebaseToken, Toast.LENGTH_SHORT).show();
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        /*post  fcm token*/
-        postFCM();
+        spinner_service_id = findViewById(R.id.spinner_service_id);
+        material_item_id = findViewById(R.id.material_item_id);
+        material_detail_id = findViewById(R.id.material_detail_id);
+        material_class_id = findViewById(R.id.material_class_id);
+        material_unit_id = findViewById(R.id.material_unit_id);
 
+        location_description = findViewById(R.id.location_description);
+        location_name = findViewById(R.id.location_name);
 
-        progressDialog = new ProgressDialog(getApplicationContext());
-
-        spinner = (Spinner) findViewById(R.id.buy_spinner);
-        buy_spinner_size = (Spinner) findViewById(R.id.buy_spinner_size);
-        buy_spinner_quality = (Spinner) findViewById(R.id.buy_spinner_quality);
-        buy_spinner_category = (Spinner) findViewById(R.id.buy_spinner_category);
-
-        map_values = new HashMap<String, String>();
-        quality_values = new HashMap<String, String>();
-        size_values = new HashMap<String, String>();
-        category_values = new HashMap<String, String>();
-
-
-        quantity = (EditText) findViewById(R.id.buy_quantity);
-
-        CategoryName = new ArrayList<>();
-        QualityName = new ArrayList<>();
-        SizeName = new ArrayList<>();
-        PriceName = new ArrayList<>();
-
-
-        buy_layout = (LinearLayout) findViewById(R.id.buy_layout);
-        proceed = (Button) findViewById(R.id.proceed_buy);
-        sessionManager = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = sessionManager.getUserDetails();
-        token = user.get("access_token");
-        //Toast.makeText(this, "Data" + token, Toast.LENGTH_SHORT).show();
-        gps = new GPSLocation(this);
-        if (gps.canGetLocation()) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            // Toast.makeText(this, "data\n"+longitude, Toast.LENGTH_SHORT).show();
-            location = latitude + "," + longitude;
-            // editor.putString("key_name", location);
-            //String coordinates = latitude+ ","+longitude;
-            //  Toast.makeText(gps, "data\n\n"+latitude, Toast.LENGTH_SHORT).show();
-        } else {
-            gps.showSettingsAlert();
-        }
-
-        try {
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-
-
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner.getSelectedItem().toString();
-                id_material = map_values.get(value);
-
-                //Toast.makeText(getApplicationContext(), ""+id_material, Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-        buy_spinner_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = buy_spinner_size.getSelectedItem().toString();
-                id_size = size_values.get(value);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        buy_spinner_quality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = buy_spinner_quality.getSelectedItem().toString();
-                id_quality = quality_values.get(value);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        buy_spinner_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = buy_spinner_category.getSelectedItem().toString();
-                id_category = category_values.get(value);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-        proceed.setOnClickListener(new View.OnClickListener() {
+        flipper = findViewById(R.id.flipper);
+        proceed_location = findViewById(R.id.proceed_location);
+        submit = findViewById(R.id.submit);
+        submit.setOnClickListener(this);
+        previous = findViewById(R.id.previous);
+        previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
+                flipper.showPrevious();
+            }
+        });
+        proceed_location.setOnClickListener(this);
+
+        Type = new ArrayList<>();
+        Material = new ArrayList<>();
+        DetailsName = new ArrayList<>();
+        ClassName = new ArrayList<>();
+        UnitsName = new ArrayList<>();
+
+        Switch onOffSwitch = (Switch) findViewById(R.id.enable_switch);
+        mIsEnabled = getPreferences(MODE_PRIVATE).getBoolean(getString(R.string.setting_enabled), false);
+        onOffSwitch.setChecked(mIsEnabled);
+        onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                editor.putBoolean(getString(R.string.setting_enabled), isChecked);
+                mIsEnabled = isChecked;
+                editor.commit();
+                if (isChecked) mGeofencing.registerAllGeofences();
+                else mGeofencing.unRegisterAllGeofences();
+            }
+
+        });
+
+        mClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        mGeofencing = new Geofencing(this, mClient);
 
 
-                editor.putString("material_id", id_material);
-                editor.putString("quality_id", id_quality);
-                editor.putString("size_id", id_size);
-                editor.apply();
+        getServiceType();
+
+        quantity_text = findViewById(R.id.quantity_text);
 
 
-                Intent intent = new Intent(getApplicationContext(), Activity_Search_Places.class);
-                intent.putExtra("material_id", id_material);
-                intent.putExtra("quality_id", id_quality);
-                intent.putExtra("size_id", id_size);
-                startActivity(intent);
+        spinner_service_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = spinner_service_id.getSelectedItem().toString();
+//                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject dataClicked = materialTypes.getJSONObject(i);
+                    id_service = dataClicked.getInt("id");
+
+                    getMaterial();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+//                    Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
 
-        loadSpinnerData(URL);
+
+        material_item_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = material_item_id.getSelectedItem().toString();
+//                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject dataClicked = materials.getJSONObject(i);
+                    id_material = dataClicked.getInt("id");
+//                    getMaterialDetails();
+                    Toast.makeText(getApplicationContext(), "" + id_material, Toast.LENGTH_SHORT).show();
+
+//                    Material.clear();
+                    getMaterialDetails();
+                    DetailsName.clear();
+                    getMaterialClasses();
+                    ClassName.clear();
+                    getMaterialUnits();
+                    UnitsName.clear();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+//                    Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        material_detail_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                try {
+                    JSONObject dataClicked = details_array.getJSONObject(i);
+                    id_detail = dataClicked.getInt("id");
+
+//                    getMaterialClasses();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        material_class_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                try {
+                    JSONObject dataClicked = class_array.getJSONObject(i);
+                    id_class = dataClicked.getInt("id");
+//                    getMaterialUnits();
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        material_unit_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                try {
+                    JSONObject dataClicked = units_array.getJSONObject(i);
+                    id_unit = dataClicked.getInt("id");
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
     }
 
-    private void postFCM() {
 
-        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
-        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_FCM,
-                new com.android.volley.Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-                            pDialog.dismiss();
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            String success_message = data.getString("message");
-                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
-                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
-
-                            Toast.makeText(getApplicationContext(), success_message, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
-                    }
-                }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-
-                Snackbar.make(buy_layout, "Request could not be placed", Snackbar.LENGTH_LONG).show();
-                pDialog.dismiss();
-            }
-        }) {
-            //adding parameters to the request
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", firebaseToken);
-
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                String bearer = "Bearer ".concat(token);
-                Map<String, String> headersSys = super.getHeaders();
-                Map<String, String> headers = new HashMap<String, String>();
-                headersSys.remove("Authorization");
-                headers.put("Authorization", bearer);
-                headers.putAll(headersSys);
-                return headers;
-            }
-        };
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-
-    private void loadSpinnerData(String url) {
+    private void getServiceType() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
         pDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.hide();
+                    pDialog.dismiss();
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
-                        JSONArray materials = data.getJSONArray("materials");
+                        materialTypes = data.getJSONArray("materialTypes");
 
-                        if (materials != null) {
-                            for (int i = 0; i < materials.length(); i++) {
+                        for (int p = 0; p < materialTypes.length(); p++) {
+                            JSONObject materials_object = materialTypes.getJSONObject(p);
 
-                                JSONObject material_items = materials.getJSONObject(i);
-                                String material_name = material_items.getString("name");
-                                String material_id = material_items.getString("id");
-                                map_values.put(material_name, material_id);
 
-                                // Toast.makeText(getApplicationContext(), ""+map_values, Toast.LENGTH_SHORT).show();
+                            String name = materials_object.getString("name");
 
-                                if (material_items != null) {
-                                    if (CountryName.contains(materials.getJSONObject(i).getString("name"))) {
+                            if (materialTypes != null) {
 
-                                    } else {
+                                if (Type.contains(name)) {
 
-                                        CountryName.add(materials.getJSONObject(i).getString("name"));
 
-                                    }
+                                } else {
 
+                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+                                    Type.add(name);
+//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
 
                                 }
-
-                                //categories
-                                /*loop through categories*/
-
-                                JSONArray category = material_items.getJSONArray("category");
-                                for (int k = 0; k < category.length(); k++) {
-
-                                    JSONObject category_items = category.getJSONObject(k);
-                                    String category_name = category_items.getString("name");
-                                    String category_id = category_items.getString("id");
-                                    category_values.put(category_name, category_id);
-                                    /*loop thro quality*/
-
-
-                                    JSONArray quality = category_items.getJSONArray("quality");
-                                    for (int l = 0; l < quality.length(); l++) {
-                                        JSONObject quality_object = quality.getJSONObject(l);
-                                        String quality_name = quality_object.getString("value");
-                                        String quality_id = quality_object.getString("id");
-                                        quality_values.put(quality_name, quality_id);
-                                        /*loop thro size*/
-                                        JSONObject size_items = quality.getJSONObject(l);
-                                        JSONArray size = size_items.getJSONArray("size");
-
-                                        for (int m = 0; m < size.length(); m++) {
-                                            JSONObject size_objects = size.getJSONObject(m);
-                                            String size_name = size_objects.getString("size");
-                                            String size_id = size_objects.getString("id");
-                                            size_values.put(size_name, size_id);
-
-                                            if (size != null) {
-
-                                                if (SizeName.contains(size.getJSONObject(m).getString("size"))) {
-
-
-                                                } else {
-
-                                                    SizeName.add(size.getJSONObject(m).getString("size"));
-                                                    // Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
-
-
-                                                }
-
-                                            }
-                                            buy_spinner_size.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, SizeName));
-
-                                        }
-
-
-                                        if (quality != null) {
-
-                                            if (QualityName.contains(quality.getJSONObject(l).getString("value"))) {
-
-
-                                            } else {
-
-                                                QualityName.add(quality.getJSONObject(l).getString("value"));
-                                                // Toast.makeText(getApplicationContext(), "data\n" + quality.getJSONObject(l).getString("value"), Toast.LENGTH_SHORT).show();
-
-
-                                            }
-
-                                        }
-                                        buy_spinner_quality.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, QualityName));
-
-                                    }
-
-
-                                    if (category != null) {
-                                        if (CategoryName.contains(category.getJSONObject(k).getString("name"))) {
-
-
-                                        } else {
-
-                                            CategoryName.add(category.getJSONObject(k).getString("name"));
-                                            //Toast.makeText(getApplicationContext(), "category\n" + category.getJSONObject(k).getString("name"), Toast.LENGTH_SHORT).show();
-
-
-                                        }
-
-
-                                    }
-                                    buy_spinner_category.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, CategoryName));
-
-
-                                }
-
 
                             }
+
                         }
 
 
                     }
+                    spinner_service_id.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, Type));
 
-
-                    spinner.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, CountryName));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -447,16 +351,23 @@ public class Activity_Buy extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                Toast.makeText(getApplicationContext(), "An Error Occurred", Toast.LENGTH_SHORT).show();
-                pDialog.hide();
+                pDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
             }
 
 
         }) {
+
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                String bearer = "Bearer ".concat(token);
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
@@ -464,8 +375,9 @@ public class Activity_Buy extends AppCompatActivity {
                 headers.putAll(headersSys);
                 return headers;
             }
-
         };
+
+
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
 
@@ -477,14 +389,527 @@ public class Activity_Buy extends AppCompatActivity {
 
     }
 
-    public void loadRequest() {
+    /*Selecting Material type*/
+    private void getMaterial() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        materials = data.getJSONArray("materials");
+
+                        for (int n = 0; n < materials.length(); n++) {
+                            JSONObject materials_object = materials.getJSONObject(n);
+
+                            String material_id = materials_object.getString("id");
+                            String name = materials_object.getString("name");
+
+
+                            if (materials != null) {
+
+                                if (Material.contains(name)) {
+
+
+                                } else {
+
+                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+                                    Material.add(name);
+//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
+
+                                }
+
+                            }
+
+                        }
+
+
+                    }
+                    material_item_id.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, Material));
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                pDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    /*get material details*/
+    private void getMaterialDetails() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject details_obj = data.getJSONObject("materialItem");
+                        details_array = details_obj.getJSONArray("materialDetails");
+
+
+                        for (int p = 0; p < details_array.length(); p++) {
+                            JSONObject materials_object = details_array.getJSONObject(p);
+                            String detail_id = materials_object.getString("id");
+                            String name = materials_object.getString("name");
+
+
+                            if (details_array != null) {
+
+                                if (DetailsName.contains(name)) {
+
+
+                                } else {
+
+                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+                                    DetailsName.add(name);
+//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
+
+                                }
+
+                            }
+
+
+                        }
+
+
+                    }
+                    material_detail_id.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, DetailsName));
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                pDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    /*get material classes*/
+    private void getMaterialClasses() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject classes_obj = data.getJSONObject("materialItem");
+                        class_array = classes_obj.getJSONArray("materialClasses");
+
+
+                        for (int m = 0; m < class_array.length(); m++) {
+                            JSONObject materials_object = class_array.getJSONObject(m);
+                            String classes_id = materials_object.getString("id");
+                            String name = materials_object.getString("name");
+
+
+                            if (class_array != null) {
+
+                                if (ClassName.contains(name)) {
+
+
+                                } else {
+
+                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+                                    ClassName.add(name);
+//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
+
+                                }
+
+                            }
+
+
+                        }
+
+
+                    }
+                    material_class_id.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, ClassName));
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                pDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    /*get material units*/
+    private void getMaterialUnits() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject units_obj = data.getJSONObject("materialItem");
+                        units_array = units_obj.getJSONArray("materialUnits");
+
+
+                        for (int q = 0; q < units_array.length(); q++) {
+                            JSONObject materials_object = units_array.getJSONObject(q);
+                            String detail_id = materials_object.getString("id");
+                            String name = materials_object.getString("name");
+
+                            if (units_array != null) {
+
+                                if (UnitsName.contains(name)) {
+
+
+                                } else {
+
+                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
+                                    UnitsName.add(name);
+//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
+
+                                }
+
+                            }
+
+
+                        }
+
+
+                    }
+                    material_unit_id.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, UnitsName));
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                pDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle connectionHint) {
+        refreshPlacesData();
+        Log.i(TAG, "API Client Connection Successful!");
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "API Client Connection Suspended!");
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
+        Log.e(TAG, "API Client Connection Failed!");
+    }
+
+    public void refreshPlacesData() {
+        Uri uri = PlaceContract.PlaceEntry.CONTENT_URI;
+        Cursor data = getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                null);
+
+        if (data == null || data.getCount() == 0) return;
+        List<String> guids = new ArrayList<String>();
+        while (data.moveToNext()) {
+            guids.add(data.getString(data.getColumnIndex(PlaceContract.PlaceEntry.COLUMN_PLACE_ID)));
+        }
+        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
+                guids.toArray(new String[guids.size()]));
+        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+            @Override
+            public void onResult(@NonNull PlaceBuffer places) {
+                // mAdapter.swapPlaces(places);
+                mGeofencing.updateGeofencesList(places);
+                if (mIsEnabled) mGeofencing.registerAllGeofences();
+            }
+        });
+    }
+
+
+    public void onAddPlaceButtonClicked(View view) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            Intent i = builder.build(this);
+            startActivityForResult(i, PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.e(TAG, String.format("GooglePlayServices Not Available [%s]", e.getMessage()));
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.e(TAG, String.format("GooglePlayServices Not Available [%s]", e.getMessage()));
+        } catch (Exception e) {
+            Log.e(TAG, String.format("PlacePicker Exception: %s", e.getMessage()));
+        }
+    }
+
+
+    /***
+     * Called when the Place Picker Activity returns back with a selected place (or after canceling)
+     *
+     * @param requestCode The request code passed when calling startActivityForResult
+     * @param resultCode  The result code specified by the second activityfrecyc
+     * @param data        The Intent that carries the result data.
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
+            Place place = PlacePicker.getPlace(this, data);
+            latitude = place.getLatLng().latitude;
+            longitude = place.getLatLng().longitude;
+
+//           name =   getAddress(this, latitude, longitude);
+            name = place.getName().toString();
+            address = String.valueOf(latitude) + "," + String.valueOf(longitude);
+
+            location_name.setText(name);
+            if (place == null) {
+                Log.i(TAG, "No place selected");
+                return;
+            }
+
+            String placeID = place.getId();
+            //Toast.makeText(this, "data"+placeID, Toast.LENGTH_LONG).show();
+
+            // Insert a new place into DB
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(PlaceContract.PlaceEntry.COLUMN_PLACE_ID, placeID);
+            getContentResolver().insert(PlaceContract.PlaceEntry.CONTENT_URI, contentValues);
+
+
+            refreshPlacesData();
+        }
+    }
+
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.proceed_location:
+                String quantity = quantity_text.getText().toString();
+                if (quantity.isEmpty()) {
+                    Toast.makeText(this, "Enter Quantity to proceed", Toast.LENGTH_SHORT).show();
+                } else {
+                    flipper.showNext();
+                }
+                break;
+            case R.id.submit:
+                /*submit to db*/
+
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < list.size(); i++) {
+                    buy_materials = jsonArray.put(list.get(i).getJSONObject());
+                }
+
+                orderRequest();
+
+
+        }
+    }
+
+
+    private void orderRequest() {
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_MATERIAL_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, OrderRequest,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -492,13 +917,13 @@ public class Activity_Buy extends AppCompatActivity {
 
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            String success_message = data.getString("message");
+                            String message = jsonObject.getString("message");
+
                             // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), "New request created successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), Activity_Search_Places.class));
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -509,9 +934,8 @@ public class Activity_Buy extends AppCompatActivity {
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
-
-                Snackbar.make(buy_layout, "Request could not be placed", Snackbar.LENGTH_LONG).show();
+                error.printStackTrace();
+                Toast.makeText(Activity_Buy.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
             }
         }) {
@@ -519,20 +943,22 @@ public class Activity_Buy extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("material_id", "1");
-                params.put("quality_id", "1");
-                params.put("quantity", "12");
-                params.put("size_id", "1");
-                params.put("location", "Nairobi");
-                //params.put("code", "blst786");
-                //  params.put("")
+                params.put("client_location", address);
+                params.put("client_location_name", name);
+                params.put("client_location_details", location_description.getText().toString());
+                params.put("order_details", String.valueOf(buy_materials));
+
                 return params;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                String bearer = "Bearer ".concat(token);
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
@@ -540,23 +966,11 @@ public class Activity_Buy extends AppCompatActivity {
                 headers.putAll(headersSys);
                 return headers;
             }
+
+
         };
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-
-
-            // case blocks for other MenuItems (if any)
-        }
-        return false;
     }
 
 }

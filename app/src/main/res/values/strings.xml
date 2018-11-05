@@ -104,8 +104,6 @@
     <string-array name="supplier_arrays">
 
         <item>--Select Supplier--</item>
-        <item>--Supplier 1--</item>
-        <item>--Supplier 2--</item>
     </string-array>
 
     <string name="building_prompt">Building Material</string>

@@ -33,9 +33,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="skip" />
+                                      <entry key="outputName" value="skip_white" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="fac815" />
+                                      <entry key="themeColor" value="ffffff" />
                                     </map>
                                   </option>
                                 </PersistentState>

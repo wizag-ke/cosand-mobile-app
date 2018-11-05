@@ -168,6 +168,7 @@ public class Activity_Search_Places extends AppCompatActivity implements
                 existing_name = data.getName();
                 existing_cordinates = data.getCordinates();
 
+
                 dialogBuilder.setTitle("Confirm Action");
                 dialogBuilder.setMessage("Would you like to add selected location?");
                 dialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -320,9 +321,12 @@ public class Activity_Search_Places extends AppCompatActivity implements
              latitude = place.getLatLng().latitude;
              longitude = place.getLatLng().longitude;
 
-           name =   getAddress(this, latitude, longitude);
-//            name = place.getAddress().toString();
+//           name =   getAddress(this, latitude, longitude);
+            name = place.getName().toString();
             address = String.valueOf(latitude) + "," + String.valueOf(longitude);
+
+            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, address, Toast.LENGTH_SHORT).show();
 
             SharedPreferences sp = getSharedPreferences(SHARED_PREF_CORDINATES, MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();

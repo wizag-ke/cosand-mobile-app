@@ -57,6 +57,9 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
     List<Trucks> trucksList;
     Adapter_Trucks adapter_trucks;
     RecyclerView recyclerView;
+    JSONArray roles;
+    String truck_kra_pin, truck_sacco, truck_sacco_member;
+    String plate_no, axle_count, make, model, tonnage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +72,87 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
 
 
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+        String truck_owner_fname = sp.getString("truck_owner_fname", null);
+        String truck_owner_lname = sp.getString("truck_owner_lname", null);
+        String truck_owner_email = sp.getString("truck_owner_email", null);
+        String truck_owner_phone = sp.getString("truck_owner_phone", null);
+        String truck_owner_id_no = sp.getString("truck_owner_id_no", null);
         String driver_code = sp.getString("user_type", null);
+
+        try {
+            roles = new JSONArray(sp.getString("user_type", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            roles = new JSONArray();
+        }
+        if (roles.length() < 1) {
+            Toast.makeText(this, "You got no roles", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        boolean available = false;
+        for (int i = 0; i < roles.length(); i++) {
+
+            try {
+                JSONObject role = roles.getJSONObject(i);
+                if (role.getString("code").contains("XTON")) {
+                    available = true;
+                    JSONObject truck = role.getJSONObject("details").getJSONObject("company");
+                    JSONObject details = role.getJSONObject("details");
+                    JSONObject company = role.getJSONObject("company");
+
+                    truck_sacco = company.getString("sacco");
+                    truck_sacco_member = company.getString("sacco_member");
+                    truck_kra_pin = company.getString("kra_pin");
+
+
+                    JSONArray trucks = details.getJSONArray("trucks");
+                    for (int k = 0; k < trucks.length(); k++) {
+                        JSONObject trucks_object = trucks.getJSONObject(k);
+                        model = trucks_object.getString("model");
+                        make = trucks_object.getString("make");
+                        plate_no = trucks_object.getString("plate_no");
+                        axle_count = trucks_object.getString("axle_count");
+
+                        JSONObject tonnage_obj = trucks_object.getJSONObject("tonnage");
+                        tonnage = tonnage_obj.getString("description");
+
+
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!available) {
+
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setMessage("Create Truck Owner account to continue");
+            builder1.setCancelable(true);
+
+            builder1.setPositiveButton(
+                    "Proceed",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                            finish();
+                        }
+                    });
+
+            builder1.setNegativeButton(
+                    "Not now",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
+
 
         if (!driver_code.equalsIgnoreCase("XTON")) {
 
@@ -112,16 +195,6 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         recyclerView.setAdapter(adapter_trucks);
 
 
-        String truck_owner_fname = sp.getString("truck_owner_fname", null);
-        String truck_owner_lname = sp.getString("truck_owner_lname", null);
-        String truck_owner_email = sp.getString("truck_owner_email", null);
-        String truck_owner_phone = sp.getString("phone", null);
-        String truck_owner_id_no = sp.getString("truck_owner_id_no", null);
-        String truck_owner_company_name = sp.getString("truck_owner_company_name", null);
-        String truck_owner_company_location = sp.getString("truck_owner_company_location", null);
-        String truck_owner_company_kra_pin = sp.getString("truck_owner_company_kra_pin", null);
-        String truck_owner_company_phone = sp.getString("truck_owner_company_phone", null);
-
         flipper = findViewById(R.id.flipper);
         fname = findViewById(R.id.fname);
         lname = findViewById(R.id.lname);
@@ -148,16 +221,12 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         });
 
 
-
         fname.setText(truck_owner_fname);
         lname.setText(truck_owner_lname);
         email.setText(truck_owner_email);
         mobile_no.setText(truck_owner_phone);
         id_no.setText(truck_owner_id_no);
-        location.setText(truck_owner_company_location);
-        company_name.setText(truck_owner_company_name);
-        kra_pin.setText(truck_owner_company_kra_pin);
-        company_mobile_no.setText(truck_owner_company_phone);
+
 
         getTruckOwner();
 
@@ -209,7 +278,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
                             */
 
                             Trucks hero = new Trucks("KCN 112P",
-                                   "2012",
+                                    "2012",
                                     "Isuzu",
                                     "FH",
                                     "20 Tonnes");
@@ -217,13 +286,9 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
 
                             Trucks hero1 = new Trucks("KBN 132P",
                                     "2007",
-                                   "Isuzu",
+                                    "Isuzu",
                                     "NPR",
                                     "12 Tonnes");
-
-
-
-
 
 
                             //adding the hero to herolist

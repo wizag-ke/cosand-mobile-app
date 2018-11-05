@@ -55,7 +55,6 @@ public class Activity_Home extends AppCompatActivity {
         checkUserRole();
 
 
-
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         token = user.get("access_token");
@@ -77,73 +76,20 @@ public class Activity_Home extends AppCompatActivity {
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_Buy.class));
 
-                if (!driver_code_sell.contains("XIND") || !driver_code_sell.contains("XCOR")) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-//                                builder1.setTitle("Access Denied!");
-                    builder1.setMessage("Create an Individual or Client account to continue");
-                    builder1.setCancelable(true);
 
-                    builder1.setPositiveButton(
-                            "Proceed",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                    finish();
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "Not now",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                } else {
-
-                    startActivity(new Intent(getApplicationContext(), Activity_Buy.class));
-                }
             }
         });
+
 
         sell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!driver_code_sell.contains("XDRI") || !driver_code_sell.contains("XTON")) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-//                                builder1.setTitle("Access Denied!");
-                    builder1.setMessage("Create a Driver or Truck Owner account to continue");
-                    builder1.setCancelable(true);
 
-                    builder1.setPositiveButton(
-                            "Proceed",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                    finish();
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "Not now",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                } else {
-
-                    startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-                }
 
                 startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
+
             }
         });
 

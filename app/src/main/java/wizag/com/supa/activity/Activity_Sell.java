@@ -323,7 +323,9 @@ public class Activity_Sell extends AppCompatActivity {
                     View snackbar_view = snackbar.getView();
                     snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
                     snackbar.show();
-                } else {
+                }
+                
+                else {
                     loadRequest();
                 }
 
@@ -360,7 +362,7 @@ public class Activity_Sell extends AppCompatActivity {
                             JSONObject suppliers_object = suppliers_array.getJSONObject(z);
 
                             String material_id = suppliers_object.getString("id");
-                            String name = suppliers_object.getString("company");
+                            String name = suppliers_object.getString("name");
 
 
                             if (suppliers_array != null) {
@@ -741,10 +743,6 @@ public class Activity_Sell extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             String message = jsonObject.getString("message");
-
-                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
-                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
-
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
@@ -758,7 +756,7 @@ public class Activity_Sell extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-
+                error.getMessage();
                 Snackbar.make(sell_layout, "Request could not be placed" + error.getMessage(), Snackbar.LENGTH_LONG).show();
                 pDialog.dismiss();
             }
@@ -774,8 +772,6 @@ public class Activity_Sell extends AppCompatActivity {
                 params.put("material_unit", String.valueOf(id_unit));
                 params.put("supplier_id", String.valueOf(id_supplier));
                 params.put("driver_location", location);
-                //params.put("code", "blst786");
-                //  params.put("")
                 return params;
             }
 
@@ -837,13 +833,6 @@ public class Activity_Sell extends AppCompatActivity {
                                 }
 
                             }
-
-
-                          /*  Intent intent = new Intent();
-                            intent.putExtra("type_id", type_id);
-                            startActivity(intent);
-                            finish();*/
-
 
                         }
 

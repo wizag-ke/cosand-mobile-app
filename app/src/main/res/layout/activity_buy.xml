@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/buy_layout"
-
+            android:id="@+id/sell_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#ffffff"
             android:orientation="vertical">
-
 
             <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,15 +27,67 @@
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
                 <TextView
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="New Order"
-                    android:textColor="@android:color/black"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Load Registration"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/_22sdp" />
 
             </android.support.v7.widget.Toolbar>
 
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/complete_details"
+                android:layout_margin="10dp"
+                android:background="@drawable/sell"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_5sdp">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/bariol_regular"
+                    android:text="Service"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#B8BECC" />
+
+                <Spinner
+                    android:id="@+id/spinner_service_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="10"
+
+                    android:entries="@array/service_arrays"
+                    android:fontFamily="@font/bariol_bold"
+                    android:prompt="@string/service_prompt"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/complete_details"
+                android:background="#B8BECC" />
 
             <LinearLayout
 
@@ -41,9 +97,11 @@
                 android:layout_below="@id/complete_details"
                 android:layout_margin="10dp"
                 android:background="@drawable/sell"
+                android:gravity="center_vertical"
                 android:padding="@dimen/_5sdp">
 
                 <TextView
+                    android:id="@+id/spinnerText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -60,7 +118,7 @@
                     android:background="#B8BECC" />
 
                 <Spinner
-                    android:id="@+id/buy_spinner"
+                    android:id="@+id/material_item_id"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
@@ -68,6 +126,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="10"
+
                     android:entries="@array/material_arrays"
                     android:fontFamily="@font/bariol_bold"
                     android:prompt="@string/material_prompt"
@@ -81,8 +140,9 @@
                 android:id="@+id/linear_quality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/linear_material"
                 android:layout_margin="10dp"
-                android:layout_marginTop="@dimen/_20sdp"
+
                 android:background="@drawable/sell"
                 android:padding="@dimen/_5sdp">
 
@@ -94,7 +154,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bariol_regular"
-                    android:text="Quality"
+                    android:text="Details"
                     android:textSize="20sp" />
 
                 <View
@@ -103,7 +163,7 @@
                     android:background="#B8BECC" />
 
                 <Spinner
-                    android:id="@+id/buy_spinner_quality"
+                    android:id="@+id/material_detail_id"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
@@ -114,6 +174,7 @@
                     android:entries="@array/details_arrays"
                     android:fontFamily="@font/bariol_bold"
                     android:prompt="@string/details_prompt"
+                    android:text="X2"
                     android:textColor="#000000"
                     android:textSize="20sp">
 
@@ -124,9 +185,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/linear_quality"
+                android:layout_below="@id/linear_material"
                 android:layout_margin="10dp"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:background="@drawable/sell"
                 android:padding="@dimen/_5sdp">
 
@@ -138,7 +198,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bariol_regular"
-                    android:text="Size"
+                    android:text="Classes"
                     android:textSize="20sp" />
 
                 <View
@@ -147,7 +207,7 @@
                     android:background="#B8BECC" />
 
                 <Spinner
-                    android:id="@+id/buy_spinner_size"
+                    android:id="@+id/material_class_id"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
@@ -155,9 +215,10 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="2"
-                    android:entries="@array/size_arrays"
+                    android:entries="@array/classes_arrays"
                     android:fontFamily="@font/bariol_bold"
-                    android:prompt="@string/size_prompt"
+                    android:prompt="@string/classes_prompt"
+                    android:text="20T"
                     android:textColor="#000000"
                     android:textSize="20sp">
 
@@ -165,13 +226,11 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/linear_quality"
+                android:layout_below="@id/linear_material"
                 android:layout_margin="10dp"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:background="@drawable/sell"
                 android:padding="@dimen/_5sdp">
 
@@ -183,7 +242,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bariol_regular"
-                    android:text="Category"
+                    android:text="Units"
                     android:textSize="20sp" />
 
                 <View
@@ -192,7 +251,7 @@
                     android:background="#B8BECC" />
 
                 <Spinner
-                    android:id="@+id/buy_spinner_category"
+                    android:id="@+id/material_unit_id"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
@@ -200,47 +259,53 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="2"
-                    android:entries="@array/category_arrays"
+                    android:entries="@array/units_arrays"
                     android:fontFamily="@font/bariol_bold"
-                    android:prompt="@string/category_prompt"
+                    android:prompt="@string/units_prompt"
+                    android:text="20T"
                     android:textColor="#000000"
                     android:textSize="20sp">
 
                 </Spinner>
 
             </LinearLayout>
+
 
             <EditText
-                android:id="@+id/buy_quantity"
+                android:id="@+id/quantity_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@drawable/sell"
-                android:hint="enter Quantity"
+                android:hint="Enter Quantity"
                 android:inputType="number"
-                android:padding="@dimen/_10sdp"
-                android:visibility="gone" />
+                android:padding="@dimen/_10sdp" />
 
 
             <Button
-                android:id="@+id/proceed_buy"
+                android:id="@+id/proceed_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/proceed_button"
                 android:fontFamily="@font/bariol_bold"
-                android:gravity="center"
-                android:padding="@dimen/_10sdp"
-
-                android:text="Proceed to location"
+                android:text="Location Details"
+                android:drawableEnd="@drawable/skip_white"
                 android:textAllCaps="false"
-                android:textColor="@android:color/black"
-
-
+                android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:drawableRight="@drawable/skip_white" />
 
 
         </LinearLayout>
     </ScrollView>
+
+    <include layout="@layout/activity_search_places"></include>
+
+</ViewFlipper>
+
+

@@ -74,7 +74,7 @@ public class Model_Supplier {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("material_id",id_material );
+            obj.put("material_item_id",id_material );
             obj.put("material_detail_id", id_detail);
             obj.put("material_class_id", id_class);
             obj.put("material_unit_id", id_unit);

@@ -109,11 +109,61 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     List<Model_Buy> list = new ArrayList<>();
     JSONArray buy_materials;
     String OrderRequest = "http://sduka.wizag.biz/api/v1/orders/new";
+    String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+
+        /*get roles*/
+       /* SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+        String driver_code = sp.getString("user_type", null);
+
+        try {
+            JSONArray user_role = new JSONArray(driver_code);
+            for (int m = 0; m < user_role.length(); m++) {
+
+                JSONObject user_role_object = user_role.getJSONObject(m);
+                code = user_role_object.getString("code");
+
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (sp != null) {
+            if (!code.contains("XIND") || code.contains("XCOR")) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                builder1.setMessage("Create Corporate or Individual Client account to continue");
+                builder1.setCancelable(false);
+
+                builder1.setPositiveButton(
+                        "Proceed",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                finish();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "Not now",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                finish();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+
+            }
+        }*/
+
 
         spinner_service_id = findViewById(R.id.spinner_service_id);
         material_item_id = findViewById(R.id.material_item_id);
@@ -883,7 +933,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
         switch (view.getId()) {
             case R.id.proceed_location:
-                 quantity = quantity_text.getText().toString();
+                quantity = quantity_text.getText().toString();
                 if (quantity.isEmpty()) {
                     Toast.makeText(this, "Enter Quantity to proceed", Toast.LENGTH_SHORT).show();
                 } else {
@@ -932,7 +982,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                             // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
                             //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
                         } catch (JSONException e) {

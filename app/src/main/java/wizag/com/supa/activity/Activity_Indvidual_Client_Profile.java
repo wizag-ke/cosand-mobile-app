@@ -74,7 +74,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Create Individual Client account to continue");
-            builder1.setCancelable(true);
+            builder1.setCancelable(false);
 
             builder1.setPositiveButton(
                     "Proceed",

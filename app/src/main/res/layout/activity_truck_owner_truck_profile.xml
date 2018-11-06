@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:orientation="vertical">
 
@@ -26,39 +27,35 @@
             android:textStyle="bold" />
     </android.support.v7.widget.Toolbar>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/relative"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/_16sdp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:scrollbars="vertical" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/submit"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
+        <Button
+            android:id="@+id/previous_trucks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/colorPrimary"
+            android:text="Previous"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
 
-        <!--  <Button
-              android:id="@+id/previous_list"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/_45sdp"
-              android:layout_gravity="bottom"
-              android:layout_marginBottom="@dimen/_7sdp"
-              android:layout_marginLeft="@dimen/_10sdp"
-              android:layout_marginRight="@dimen/_10sdp"
-              android:layout_alignBottom="@+id/relative"
-              android:layout_marginTop="@dimen/_30sdp"
-              android:background="@drawable/rounded2"
-              android:padding="@dimen/_2sdp"
-              android:text="Previous"
-              android:textColor="@android:color/white" />-->
+    </android.support.constraint.ConstraintLayout>
 
-    </RelativeLayout>
 
 
 </LinearLayout>

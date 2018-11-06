@@ -1,13 +1,16 @@
 package wizag.com.supa.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -135,7 +138,7 @@ public class Activity_Login extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Activity_Login.this, Activity_Register.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
 
@@ -599,7 +602,7 @@ public class Activity_Login extends AppCompatActivity {
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                        JSONObject role = user.getJSONObject("roles");
+                        JSONArray role = user.getJSONArray("roles");
                         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
 
@@ -686,15 +689,15 @@ public class Activity_Login extends AppCompatActivity {
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                        JSONObject role = user.getJSONObject("roles");
+                       JSONArray role = user.getJSONArray("roles");
                         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
 
-                        editor.putString("supplier_owner_fname", fname);
-                        editor.putString("supplier_owner_lname", lname);
-                        editor.putString("supplier_owner_email", email);
+                        editor.putString("supplier_fname", fname);
+                        editor.putString("supplier_lname", lname);
+                        editor.putString("supplier_email", email);
                         editor.putString("supplier_phone", phone);
-                        editor.putString("supplier_owner_id_no", id_no);
+                        editor.putString("supplier_id_no", id_no);
                         editor.putString("user_type", role.toString());
                         editor.apply();
 
@@ -747,4 +750,28 @@ public class Activity_Login extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setTitle("info");
+        builder.setMessage("Do you want to exit from the App?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.show();
+
+    }
+
+
 }

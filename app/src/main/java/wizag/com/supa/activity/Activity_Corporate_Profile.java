@@ -96,7 +96,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Create Corporate Client account to continue");
-            builder1.setCancelable(true);
+            builder1.setCancelable(false);
 
             builder1.setPositiveButton(
                     "Proceed",

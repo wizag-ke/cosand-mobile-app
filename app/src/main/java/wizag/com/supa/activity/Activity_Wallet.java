@@ -177,54 +177,6 @@ public class Activity_Wallet extends AppCompatActivity {
     }
 
 
-    public void FilterDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.filter_layout, null);
-        dialogBuilder.setView(dialogView);
-
-        from = dialogView.findViewById(R.id.from);
-        to = dialogView.findViewById(R.id.to);
-        from.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FromDate();
-            }
-        });
-
-        to.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ToDate();
-            }
-        });
-
-
-//        Toast.makeText(Activity_Wallet.this, prefs_phone, Toast.LENGTH_SHORT).show();
-
-        dialogBuilder.setTitle("Select Dates");
-        dialogBuilder.setCancelable(false);
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                from_txt = from.getText().toString();
-                to_txt = to.getText().toString();
-
-                if (from_txt.isEmpty()) {
-                    Toast.makeText(Activity_Wallet.this, "Enter start date", Toast.LENGTH_SHORT).show();
-                } else if (to_txt.isEmpty()) {
-                    Toast.makeText(Activity_Wallet.this, "Enter end date", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                }
-
-            }
-        });
-
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-    }
 
     public void FromDate() {
         final Calendar mcurrentDate = Calendar.getInstance();

@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/flipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,33 +32,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_28sdp"
-                    android:text="Supplier's Details"
+                    android:text="Company Details"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/_15sdp"
                     android:textStyle="bold" />
             </android.support.v7.widget.Toolbar>
 
-
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/_25sdp"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="First name :"
+                android:text="Company Name :"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColor"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/fname"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
+                android:inputType="textCapSentences"
                 android:padding="8dp"
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
@@ -66,19 +67,20 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Last name :"
+                android:text="Kra Pin :"
+
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColor"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/lname"
+                android:id="@+id/kra_pin"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
+                android:inputType="textCapCharacters"
                 android:padding="8dp"
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
@@ -88,84 +90,65 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_25sdp"
-                android:text="ID no :"
+                android:inputType="textCapCharacters"
+                android:text="Location :"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColor"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/id_no"
+                android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
+
                 android:padding="8dp"
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
 
-            <TextView
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Email :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
+                android:layout_marginTop="30dp">
 
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
+                <Button
+                    android:id="@+id/previous"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/next"
+                    android:layout_alignBottom="@+id/next"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="start"
+                    android:layout_margin="7dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:text="Previous"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Mobile no :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
+                <Button
+                    android:id="@+id/next_supplier_company"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="end"
+                    android:layout_margin="7dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:text="View Materials"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF" />
 
-            <EditText
-                android:id="@+id/mobile_no"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
 
-            <Button
-                android:id="@+id/next"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_30sdp"
-                android:background="@drawable/rounded2"
-                android:padding="@dimen/_2sdp"
-                android:text="View Company details "
-                android:textColor="@android:color/white" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
-
-    <include layout="@layout/layout_supplier_company"></include>
-
-    <include layout="@layout/layout_supplier_material_list"></include>
-
 </ViewFlipper>

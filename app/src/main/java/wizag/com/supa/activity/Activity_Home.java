@@ -41,7 +41,7 @@ public class Activity_Home extends AppCompatActivity {
     SessionManager session;
     String token, role;
     Context context;
-
+    String code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,20 +134,34 @@ public class Activity_Home extends AppCompatActivity {
                 SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
                 String driver_code = sp.getString("user_type", null);
 
+                try {
+                    JSONArray user_role = new JSONArray(driver_code);
+                    for(int m=0;m<user_role.length();m++){
+
+                        JSONObject user_role_object = user_role.getJSONObject(m);
+                         code = user_role_object.getString("code");
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 if (sp != null) {
-                    if (driver_code.contains("XDRI")) {
+                    if (code.contains("XDRI")) {
                         Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
                         startActivity(driver_profile);
-                    } else if (driver_code.contains("XIND")) {
+                    } else if (code.contains("XIND")) {
                         Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
                         startActivity(ind_profile);
-                    } else if (driver_code.contains("XCOR")) {
+                    } else if (code.contains("XCOR")) {
                         Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
                         startActivity(cor_profile);
-                    } else if (driver_code.contains("XTON")) {
+                    } else if (code.contains("XTON")) {
                         Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
                         startActivity(truck_profile);
-                    } else if (driver_code.contains("XSUP")) {
+                    } else if (code.contains("XSUP")) {
                         Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
                         startActivity(truck_profile);
                     }

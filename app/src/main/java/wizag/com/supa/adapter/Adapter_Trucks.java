@@ -1,71 +1,82 @@
 package wizag.com.supa.adapter;
 
+
 import android.content.Context;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import wizag.com.supa.R;
-import wizag.com.supa.models.Trucks;
+import wizag.com.supa.models.Model_Trucks;
+import wizag.com.supa.utils.ItemClickListener;
 
-/**
- * Created by Ravi Tamada on 18/05/16.
- */
 public class Adapter_Trucks extends RecyclerView.Adapter<Adapter_Trucks.MyViewHolder> {
 
-    private Context mContext;
-    private List<Trucks> truckList;
+    private List<Model_Trucks> dataSet;
+      Context context;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView plate_no, year, model, make, tonnage;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public MyViewHolder(View view) {
-            super(view);
-            plate_no = (TextView) view.findViewById(R.id.plate_no);
-            year = (TextView) view.findViewById(R.id.year);
-            model = (TextView) view.findViewById(R.id.model);
-            make = (TextView) view.findViewById(R.id.make);
-            tonnage = (TextView) view.findViewById(R.id.tonnage);
+        TextView make;
+        TextView model;
+        TextView axle_count;
+        TextView plate_no;
+        TextView tonnage;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            this.make =  itemView.findViewById(R.id.make);
+            this.model =  itemView.findViewById(R.id.model);
+            this.axle_count = itemView.findViewById(R.id.axle_count);
+            this.plate_no = itemView.findViewById(R.id.owner_plate_no);
+            this.tonnage = itemView.findViewById(R.id.tonnage);
         }
     }
 
-
-    public Adapter_Trucks(Context mContext, List<Trucks> truckList) {
-        this.mContext = mContext;
-        this.truckList = truckList;
+    public Adapter_Trucks(List<Model_Trucks> data, Context context) {
+        this.dataSet = data;
+        this.context = context;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.owner_trucks_model, parent, false);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                           int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layout_truck_owner, parent, false);
 
-        return new MyViewHolder(itemView);
+        MyViewHolder myViewHolder = new MyViewHolder(view);
+        return myViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Trucks truck = truckList.get(position);
-        holder.plate_no.setText(truck.getPlate_no());
-        holder.make.setText(truck.getMake());
-        holder.model.setText(truck.getModel());
-        holder.tonnage.setText(truck.getTonnage());
-        holder.year.setText(truck.getYear());
-    }
+    public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
+        final Model_Trucks trucks = dataSet.get(listPosition);
 
+
+        TextView make = holder.make;
+        TextView model = holder.model;
+        TextView axle_count = holder.axle_count;
+        TextView plate_no = holder.plate_no;
+        TextView tonnage = holder.tonnage;
+
+
+        make.setText(trucks.getMake());
+        model.setText(trucks.getModel());
+        axle_count.setText(trucks.getAxle_count());
+        plate_no.setText(trucks.getPlate_no());
+        tonnage.setText(trucks.getTonnage_id());
+
+    }
 
     @Override
     public int getItemCount() {
-        return truckList.size();
+        return dataSet.size();
     }
+
+
 }

@@ -60,10 +60,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Sell" />
         </activity>
-        <activity android:name=".activity.Activity_Wallet" >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activity.Activity_Wallet" />
+        <activity android:name=".activity.Activity_Wallet">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Wallet" />
 
         </activity>
 
@@ -95,7 +95,9 @@
             android:label="@string/title_activity__location" />
         <activity android:name=".TestActivity" />
         <activity android:name=".activity.Activity_Search_Places" />
-        <activity android:name=".activity.Activity_Register" />
+        <activity
+            android:name=".activity.Activity_Register"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activity.Activity_Quotation" />
 
         <service android:name=".services.MyFirebaseInstanceIdService">
@@ -141,10 +143,10 @@
         <activity android:name=".activity.FontAwesome" />
         <activity
             android:name=".activity.Activity_Truck_Owner"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activity.Activity_Truck_Owner"/>
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Truck_Owner" />
         </activity>
 
 
@@ -198,17 +200,17 @@
                 android:value=".activity.Activity_Truck_Owner_Profile" />
         </activity>
 
-        <activity android:name=".activity.Activity_Supplier_Profile" >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activity.Activity_Supplier_Profile" />
+        <activity android:name=".activity.Activity_Supplier_Profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Supplier_Profile" />
 
         </activity>
 
         <activity android:name=".activity.Activity_Supplier_Register">
-             <meta-data
-                 android:name="android.support.PARENT_ACTIVITY"
-                 android:value=".activity.Activity_Supplier_Register" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Supplier_Register" />
         </activity>
 
         <activity android:name=".activity.Activity_Home"></activity>

@@ -104,11 +104,61 @@ public class Activity_Sell extends AppCompatActivity {
     int id_supplier;
     int id_service;
     AlertDialog alertDialog = null;
+    String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sell);
+
+        /*get roles*/
+      /*  SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+        String driver_code = sp.getString("user_type", null);
+
+        try {
+            JSONArray user_role = new JSONArray(driver_code);
+            for (int m = 0; m < user_role.length(); m++) {
+
+                JSONObject user_role_object = user_role.getJSONObject(m);
+                code = user_role_object.getString("code");
+
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (sp != null) {
+            if (!code.contains("XDRI") || code.contains("XTON")) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                builder1.setMessage("Create Driver or Truck Owner account to continue");
+                builder1.setCancelable(false);
+
+                builder1.setPositiveButton(
+                        "Proceed",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                finish();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "Not now",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                finish();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+
+            }
+        }*/
+
 
 //        LoadMaterialTypeSpinner();
         getServiceType();
@@ -185,7 +235,7 @@ public class Activity_Sell extends AppCompatActivity {
                     JSONObject dataClicked = materials.getJSONObject(i);
                     id_material = dataClicked.getInt("id");
 //                    getMaterialDetails();
-                    Toast.makeText(getApplicationContext(), "" + id_material, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "" + id_material, Toast.LENGTH_SHORT).show();
 
 //                    Material.clear();
 
@@ -323,9 +373,7 @@ public class Activity_Sell extends AppCompatActivity {
                     View snackbar_view = snackbar.getView();
                     snackbar_view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
                     snackbar.show();
-                }
-
-                else {
+                } else {
                     loadRequest();
                 }
 

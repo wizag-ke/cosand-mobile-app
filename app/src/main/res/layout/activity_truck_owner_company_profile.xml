@@ -45,19 +45,18 @@
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_25sdp"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:text="Company name :"
+                android:text="Sacco Name :"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColor"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/company_name"
+                android:id="@+id/sacco_name"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
                 android:padding="8dp"
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
@@ -67,19 +66,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Location :"
+                android:text="Sacco Number :"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColor"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/location"
+                android:id="@+id/sacco_number"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
                 android:padding="8dp"
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
@@ -101,32 +99,12 @@
                 android:layout_gravity="start"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
+
                 android:padding="8dp"
                 android:textAlignment="textStart"
                 android:textColorHint="@color/textColor" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_25sdp"
-                android:text="Mobile no :"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textColor"
-                android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/truck_owner_co_mobile_no"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:focusable="false"
-                android:padding="8dp"
-                android:textAlignment="textStart"
-                android:textColorHint="@color/textColor" />
 
             <LinearLayout
                 android:layout_width="match_parent"

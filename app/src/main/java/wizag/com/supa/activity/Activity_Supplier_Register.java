@@ -827,6 +827,11 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                     String status = obj.getString("status");
 //                            JSONObject data = new JSONObject("data");
                     if (status.equalsIgnoreCase("success")) {
+
+                        /*message for verification*/
+                        
+
+
                         Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                         finish();

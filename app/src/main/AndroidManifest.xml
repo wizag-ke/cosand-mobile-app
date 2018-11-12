@@ -64,9 +64,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Wallet" />
-
         </activity>
-
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".CheckInActivity" />
         <activity android:name=".TripsActivity" />
@@ -137,9 +135,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Supplier_Register" />
-
         </activity>
-
         <activity android:name=".activity.FontAwesome" />
         <activity
             android:name=".activity.Activity_Truck_Owner"
@@ -148,17 +144,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Truck_Owner" />
         </activity>
-
-
         <activity
             android:name=".activity.Activity_Individual_Client"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Individual_Client" />
-
         </activity>
-
         <activity
             android:name=".activity.Activity_Corporate_Client"
             android:windowSoftInputMode="stateHidden|adjustResize">
@@ -166,8 +158,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Corporate_Client" />
         </activity>
-
-
         <activity
             android:name=".activity.Activity_Driver_Profile"
             android:windowSoftInputMode="stateHidden|adjustResize">
@@ -175,45 +165,42 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Driver_Profile" />
         </activity>
-
         <activity
             android:name=".activity.Activity_Indvidual_Client_Profile"
             android:windowSoftInputMode="stateHidden|adjustResize">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Indvidual_Client_Profile" />
-
         </activity>
-
-
         <activity android:name=".activity.TestActivity" />
         <activity android:name=".activity.Activity_Corporate_Profile">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Corporate_Profile" />
         </activity>
-
         <activity android:name=".activity.Activity_Truck_Owner_Profile">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Truck_Owner_Profile" />
         </activity>
-
         <activity android:name=".activity.Activity_Supplier_Profile">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Supplier_Profile" />
-
         </activity>
-
         <activity android:name=".activity.Activity_Supplier_Register">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Supplier_Register" />
         </activity>
-
-        <activity android:name=".activity.Activity_Home"></activity>
+        <activity android:name=".activity.Activity_Home" />
+        <activity
+            android:name=".activity.Activity_Buy_Quotation"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Buy_Quotation" />
+        </activity>
     </application>
 
 </manifest>

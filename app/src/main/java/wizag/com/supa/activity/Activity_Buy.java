@@ -116,6 +116,11 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
 
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         /*get roles*/
        /* SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code = sp.getString("user_type", null);
@@ -944,6 +949,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 /*submit to db*/
 
                 list.add(new Model_Buy(
+                        id_service,
                         id_material,
                         id_unit,
                         id_class,
@@ -978,12 +984,15 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             String message = jsonObject.getString("message");
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String order_id = data.getString("order_id");
 
-                            // Snackbar.make(sell_layout, "New Request Created Successfully" , Snackbar.LENGTH_LONG).show();
-                            //Snackbar.make(sell_layout, "New request created successfully", Snackbar.LENGTH_LONG).show();
-
+//                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_LONG).show();
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                            Intent intent = new Intent(getApplicationContext(),Activity_Buy_Quotation.class);
+                            intent.putExtra("order_id", order_id);
+                            startActivity(intent);
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1034,3 +1043,4 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     }
 
 }
+

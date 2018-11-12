@@ -39,9 +39,10 @@ public class Activity_Home extends AppCompatActivity {
     CardView buy, sell, wallet, profile, supply, owner;
     JSONArray role_array;
     SessionManager session;
-    String token, role;
+    String token, user_role;
     Context context;
-    String code;
+    JSONArray roles;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,11 @@ public class Activity_Home extends AppCompatActivity {
         context = this;
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+
+        /*check for internet connection*/
+
+
 
         /*kill shot!*/
         checkUserRole();
@@ -135,37 +141,35 @@ public class Activity_Home extends AppCompatActivity {
                 String driver_code = sp.getString("user_type", null);
 
                 try {
-                    JSONArray user_role = new JSONArray(driver_code);
-                    for(int m=0;m<user_role.length();m++){
-
-                        JSONObject user_role_object = user_role.getJSONObject(m);
-                         code = user_role_object.getString("code");
-
-
-                    }
+                    roles = new JSONArray(sp.getString("user_type", null));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    roles = new JSONArray();
                 }
 
-                if (sp != null) {
-                    if (code.contains("XDRI")) {
-                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
-                        startActivity(driver_profile);
-                    } else if (code.contains("XIND")) {
-                        Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
-                        startActivity(ind_profile);
-                    } else if (code.contains("XCOR")) {
-                        Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
-                        startActivity(cor_profile);
-                    } else if (code.contains("XTON")) {
-                        Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
-                        startActivity(truck_profile);
-                    } else if (code.contains("XSUP")) {
-                        Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
-                        startActivity(truck_profile);
-                    }
-                }
+                        if (user_role.equalsIgnoreCase("XDRI")) {
+                            Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
+                            startActivity(driver_profile);
+                        } else if (user_role.equalsIgnoreCase("XIND")) {
+                            Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
+                            startActivity(ind_profile);
+                        } else if (user_role.equalsIgnoreCase("XCOR")) {
+                            Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
+                            startActivity(cor_profile);
+                        } else if (user_role.equalsIgnoreCase("XTON")) {
+                            Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
+                            startActivity(truck_profile);
+                        } else if (user_role.equalsIgnoreCase("XSUP")) {
+                            Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
+                            startActivity(truck_profile);
+                        }
+
+
+
+
+
+
 
             }
         });
@@ -233,9 +237,12 @@ public class Activity_Home extends AppCompatActivity {
                         role_array = user.getJSONArray("roles");
                         for (int i = 0; i < role_array.length(); i++) {
                             JSONObject object = role_array.getJSONObject(i);
-                            role = object.getString("code");
+                            user_role = object.getString("code");
 
-                            if (role.isEmpty()) {
+                            Toast.makeText(context, user_role, Toast.LENGTH_SHORT).show();
+
+
+                            if (user_role.isEmpty()) {
                                 startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
                                 finish();
 

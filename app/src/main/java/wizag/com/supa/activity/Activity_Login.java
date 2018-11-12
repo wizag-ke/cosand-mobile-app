@@ -320,7 +320,7 @@ public class Activity_Login extends AppCompatActivity {
         return errorMsg;
     }
 
-    public void getDriverProfile() {
+     void getDriverProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -405,7 +405,7 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-    private void getIndividualProfile() {
+     void getIndividualProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -492,7 +492,7 @@ public class Activity_Login extends AppCompatActivity {
     }
 
 
-    private void getCorporateProfile() {
+     void getCorporateProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -577,7 +577,7 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-    private void getTruckOwner() {
+     void getTruckOwner() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -664,7 +664,7 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-    private void getSupplierProfile() {
+     void getSupplierProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");

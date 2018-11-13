@@ -1,13 +1,22 @@
 package wizag.com.supa.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 
 import android.support.v7.app.ActionBar;
@@ -38,6 +47,16 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.directions.route.RoutingListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -56,9 +75,14 @@ import wizag.com.supa.GPSLocation;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
+import wizag.com.supa.services.LocationMonitoringService;
 
-public class Activity_Sell extends AppCompatActivity {
+public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
     TextView time, date;
+    String value_cord;
     Spinner spinner_sell_material, spinner_sell_units, spinner_sell_details, spinner_sell_supplier, spinner_sell_class;
     EditText linear_supplier;
     LinearLayout sell_layout;
@@ -68,7 +92,8 @@ public class Activity_Sell extends AppCompatActivity {
     Spinner material_type;
 
     String POST_MATERIAL = "http://sduka.wizag.biz/api/v1/orders/load-request";
-
+    String PostLocation = "http://sduka.wizag.biz/api/v1/orders/load-request/25/location";
+    Double value_lat, value_long;
     ArrayList<String> SellName;
     ArrayList<String> Supplier;
     ArrayList<String> CategoryName;
@@ -96,6 +121,7 @@ public class Activity_Sell extends AppCompatActivity {
     Map<String, String> Service_values;
     Map<String, String> Material_values;
 
+    String request_id;
 
     int id_material;
     int id_class;
@@ -106,10 +132,20 @@ public class Activity_Sell extends AppCompatActivity {
     AlertDialog alertDialog = null;
     String code;
 
+    GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
+    LocationRequest mLocationRequest;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private boolean mAlreadyStartedService = false;
+    private static final String SHARED_PREF_LOCATION_NAME = "location";
+    private ArrayList<LatLng> points;
+    private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sell);
+        points = new ArrayList<LatLng>();
 
         /*get roles*/
       /*  SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
@@ -225,6 +261,30 @@ public class Activity_Sell extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        /*get location update service*/
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        String latitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LATITUDE);
+                        String longitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LONGITUDE);
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_LOCATION_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+
+                        editor.putString("latitude", latitude);
+                        editor.putString("longitude", longitude);
+                        editor.apply();
+
+
+                        // Toast.makeText(context, "Data" + longitude + latitude, Toast.LENGTH_SHORT).show();
+                    }
+                }, new IntentFilter(LocationMonitoringService.ACTION_LOCATION_BROADCAST)
+        );
+
+        /*send location updates*/
+//        postLocationUpdates();
 
         spinner_sell_material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -263,7 +323,7 @@ public class Activity_Sell extends AppCompatActivity {
         spinner_sell_details.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner_sell_details.getSelectedItem().toString();
+//                String value = spinner_sell_details.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = details_array.getJSONObject(i);
@@ -308,7 +368,7 @@ public class Activity_Sell extends AppCompatActivity {
         spinner_sell_units.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner_sell_units.getSelectedItem().toString();
+//                String value = spinner_sell_units.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = units_array.getJSONObject(i);
@@ -375,6 +435,7 @@ public class Activity_Sell extends AppCompatActivity {
                     snackbar.show();
                 } else {
                     loadRequest();
+
                 }
 
 
@@ -791,7 +852,11 @@ public class Activity_Sell extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             String message = jsonObject.getString("message");
+                            JSONObject data =  jsonObject.getJSONObject("data");
+                            request_id = data.getString("loadRequestId");
+
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            postLocationUpdates();
                             startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
                         } catch (JSONException e) {
@@ -826,6 +891,9 @@ public class Activity_Sell extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
+                SessionManager sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String token = user.get("access_token");
                 String bearer = "Bearer ".concat(token);
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
@@ -1101,6 +1169,132 @@ public class Activity_Sell extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_LOCATION_NAME, MODE_PRIVATE);
+        value_lat = Double.valueOf(sp.getString("latitude", null));
+        value_long = Double.valueOf(sp.getString("longitude", null));
+        value_cord = value_lat + "," + value_long;
+        Toast.makeText(getApplicationContext(), value_cord, Toast.LENGTH_SHORT).show();
+
+
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        //Initialize Google Play Services
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+//                mMap.setMyLocationEnabled(true);
+            }
+        } else {
+            buildGoogleApiClient();
+//            mMap.setMyLocationEnabled(true);
+        }
+
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private void postLocationUpdates() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Sell.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/load-request/" + request_id + "/location",
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                error.printStackTrace();
+                Snackbar.make(sell_layout, "Failed updating location" + error.getMessage(), Snackbar.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("location", value_cord);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
 
 }
 

@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -85,6 +86,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     Spinner spinner_service_id, material_item_id, material_detail_id, material_class_id, material_unit_id;
     EditText quantity_text;
     Button proceed_buy;
+    AlertDialog alertDialog = null;
     String quantity;
     SessionManager sessionManager;
     JSONArray materialTypes, materials, details_array, class_array, units_array;
@@ -109,12 +111,20 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     List<Model_Buy> list = new ArrayList<>();
     JSONArray buy_materials;
     String OrderRequest = "http://sduka.wizag.biz/api/v1/orders/new";
+    String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
     String code;
+    TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm;
+    String service_name, material_name, details_name, class_name, unit_name;
+    String firebase_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+
+        firebase_token = FirebaseInstanceId.getInstance().getToken();
+        postFirebaseToken();
+
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -233,13 +243,14 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         spinner_service_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner_service_id.getSelectedItem().toString();
+                service_name = spinner_service_id.getSelectedItem().toString();
 //                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject dataClicked = materialTypes.getJSONObject(i);
                     id_service = dataClicked.getInt("id");
 
                     getMaterial();
+                    Material.clear();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -257,15 +268,12 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         material_item_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = material_item_id.getSelectedItem().toString();
+                material_name = material_item_id.getSelectedItem().toString();
 //                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject dataClicked = materials.getJSONObject(i);
                     id_material = dataClicked.getInt("id");
-//                    getMaterialDetails();
-                    Toast.makeText(getApplicationContext(), "" + id_material, Toast.LENGTH_SHORT).show();
 
-//                    Material.clear();
                     getMaterialDetails();
                     DetailsName.clear();
                     getMaterialClasses();
@@ -289,6 +297,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         material_detail_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                details_name = material_detail_id.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = details_array.getJSONObject(i);
@@ -313,9 +322,14 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+                class_name = material_class_id.getSelectedItem().toString();
+                Log.d("empty_json", class_name);
+                ClassName.clear();
                 try {
                     JSONObject dataClicked = class_array.getJSONObject(i);
                     id_class = dataClicked.getInt("id");
+                    Toast.makeText(getApplicationContext(), "" + id_class, Toast.LENGTH_SHORT).show();
+
 //                    getMaterialUnits();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -332,6 +346,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         material_unit_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                unit_name = material_unit_id.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = units_array.getJSONObject(i);
@@ -654,6 +669,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
                     JSONObject jsonObject = new JSONObject(response);
                     pDialog.dismiss();
+
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject classes_obj = data.getJSONObject("materialItem");
@@ -664,6 +680,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                             JSONObject materials_object = class_array.getJSONObject(m);
                             String classes_id = materials_object.getString("id");
                             String name = materials_object.getString("name");
+
+//                            Toast.makeText(Activity_Buy.this, name, Toast.LENGTH_SHORT).show();
 
 
                             if (class_array != null) {
@@ -686,6 +704,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
 
                     }
+
+
                     material_class_id.setAdapter(new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.simple_spinner_dropdown_item, ClassName));
 
 
@@ -962,7 +982,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                     buy_materials = jsonArray.put(list.get(i).getJSONObject());
                 }
 
-                orderRequest();
+                confirmQuote();
 
 
         }
@@ -989,7 +1009,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
 //                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_LONG).show();
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getApplicationContext(),Activity_Buy_Quotation.class);
+                            Intent intent = new Intent(getApplicationContext(), Activity_Buy_Quotation.class);
                             intent.putExtra("order_id", order_id);
                             startActivity(intent);
 
@@ -1037,6 +1057,124 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             }
 
 
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    /*Service selection*/
+    private void confirmQuote() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
+        builder.setCancelable(false);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.layout_confirm_order_registration, null);
+
+        service = dialogView.findViewById(R.id.service);
+        material = dialogView.findViewById(R.id.material);
+        detail = dialogView.findViewById(R.id.detail);
+        material_class = dialogView.findViewById(R.id.material_class);
+        unit = dialogView.findViewById(R.id.unit);
+        quantity_confirm = dialogView.findViewById(R.id.quantity);
+        location_confirm = dialogView.findViewById(R.id.location);
+
+        final Button cancel = dialogView.findViewById(R.id.cancel);
+        final Button proceed = dialogView.findViewById(R.id.proceed);
+
+//        set text
+
+        service.setText(service_name);
+        material.setText(material_name);
+        detail.setText(details_name);
+        material_class.setText(class_name);
+        unit.setText(unit_name);
+
+        quantity_confirm.setText(quantity);
+        location_confirm.setText(name);
+
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                /*call order request*/
+                orderRequest();
+
+            }
+
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+
+        alertDialog.show();
+    }
+
+    private void postFirebaseToken() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, PostToken,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                error.getMessage();
+                Toast.makeText(Activity_Buy.this, "Error sending instance token", Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", firebase_token);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SessionManager sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String token = user.get("access_token");
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
         };
 // Add the request to the RequestQueue.
         queue.add(stringRequest);

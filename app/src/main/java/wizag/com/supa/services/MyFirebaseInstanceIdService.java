@@ -7,7 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
- * Created by Abhi on 12 Nov 2017 012.
+ * Created by Narse Okello Oloo on 12 Nov 1930.
  */
 
 public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {

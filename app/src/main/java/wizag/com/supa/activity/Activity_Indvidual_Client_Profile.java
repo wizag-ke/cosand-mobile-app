@@ -168,24 +168,26 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
                     switch (which) {
                         case 0:
 
-                            login = new Activity_Login();
                             getCorporateProfile();
-
+                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Corporate_Profile.class));
                             break;
 
                         case 1:
                             getTruckOwner();
+                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class));
                             break;
 
                         case 2:
                             getDriverProfile();
+                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Driver_Profile.class));
                             break;
 
                         case 3:
                             getSupplierProfile();
+                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Supplier_Profile.class));
                             break;
 
@@ -271,7 +273,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                SessionManager    session = new SessionManager(getApplicationContext());
+                SessionManager session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
                 String accessToken = user.get("access_token");
 
@@ -443,7 +445,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                SessionManager  session = new SessionManager(getApplicationContext());
+                SessionManager session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
                 String accessToken = user.get("access_token");
 
@@ -530,7 +532,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                SessionManager  session = new SessionManager(getApplicationContext());
+                SessionManager session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
                 String accessToken = user.get("access_token");
 

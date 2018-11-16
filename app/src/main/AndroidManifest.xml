@@ -18,6 +18,7 @@
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
+        android:name=".helper.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -201,6 +202,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Buy_Quotation" />
         </activity>
+        <activity android:name=".activity.Activity_Confirm_Notification_Order">
+            <intent-filter>
+                <action android:name=".activity.Activity_Confirm_Notification_Order" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.Activity_Test_Notification" />
+        <activity android:name=".activity.Activity_View_Order_summary">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_View_Order_summary" />
+        </activity>
+        <activity android:name=".activity.Activity_List_Orders"></activity>
     </application>
 
 </manifest>

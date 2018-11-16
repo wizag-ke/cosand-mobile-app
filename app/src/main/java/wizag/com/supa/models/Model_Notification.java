@@ -3,6 +3,7 @@ package wizag.com.supa.models;
 public class Model_Notification {
     private String title;
     private String message;
+    private String order_id;
     private String iconUrl;
     private String action;
     private String actionDestination;
@@ -21,6 +22,14 @@ public class Model_Notification {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(String order_id) {
+        this.order_id = order_id;
     }
 
     public String getIconUrl() {

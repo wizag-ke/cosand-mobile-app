@@ -982,7 +982,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                     buy_materials = jsonArray.put(list.get(i).getJSONObject());
                 }
 
-                confirmQuote();
+//                confirmQuote();
+                orderRequest();
 
 
         }

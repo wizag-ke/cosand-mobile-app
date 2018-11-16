@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="@dimen/_16sdp"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".activity.Activity_Test_Notification">
+
+    <EditText
+        android:id="@+id/edit_text_title"
+        android:hint="Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <EditText
+        android:layout_marginTop="@dimen/_20sdp"
+        android:id="@+id/edit_text_message"
+        android:hint="Message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_marginTop="@dimen/_20sdp"
+        android:text="send on channel 1"
+        android:onClick="sendOnChannel1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_marginTop="@dimen/_20sdp"
+        android:text="send on channel 2"
+        android:onClick="sendOnChannel2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

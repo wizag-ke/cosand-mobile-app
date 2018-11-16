@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import wizag.com.supa.activity.Activity_Confirm_Notification_Order;
+import wizag.com.supa.activity.Activity_Home;
 import wizag.com.supa.models.Model_Notification;
 
 public class NotificationUtils {
@@ -35,8 +37,8 @@ public class NotificationUtils {
     public NotificationUtils(Context mContext) {
         this.mContext = mContext;
         //Populate activity map
-        activityMap.put("Activity_Test_Location", TestActivity.class);
-        activityMap.put("SecondActivity", SecondActivity.class);
+//        activityMap.put("Activity_Home", Activity_Home.class);
+        activityMap.put("Activity_Confirm_Notification_Order", Activity_Confirm_Notification_Order.class);
     }
 
     /**
@@ -48,6 +50,7 @@ public class NotificationUtils {
     public void displayNotification(Model_Notification notificationVO, Intent resultIntent) {
         {
             String message = notificationVO.getMessage();
+            String order_id = notificationVO.getOrder_id();
             String title = notificationVO.getTitle();
             String iconUrl = notificationVO.getIconUrl();
             String action = notificationVO.getAction();
@@ -61,11 +64,14 @@ public class NotificationUtils {
             PendingIntent resultPendingIntent;
 
             if (URL.equals(action)) {
-                Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(destination));
 
+                Intent notificationIntent = new Intent(mContext, Activity_Confirm_Notification_Order.class);
+                notificationIntent.putExtra("order_id", order_id);
                 resultPendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+
+
             } else if (ACTIVITY.equals(action) && activityMap.containsKey(destination)) {
-                resultIntent = new Intent(mContext, activityMap.get(destination));
+                resultIntent = new Intent(mContext, Activity_Confirm_Notification_Order.class);
 
                 resultPendingIntent =
                         PendingIntent.getActivity(

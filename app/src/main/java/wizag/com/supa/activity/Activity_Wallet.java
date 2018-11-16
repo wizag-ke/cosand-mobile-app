@@ -64,7 +64,7 @@ public class Activity_Wallet extends AppCompatActivity {
     private List<Model_Transaction> listTransactions;
     Adapter_Transaction adapter_transaction;
     String date, balance_txt;
-
+    private static final String SHARED_PREF_NAME = "wallet";
     String from_txt, to_txt;
     EditText from, to;
 
@@ -448,6 +448,11 @@ public class Activity_Wallet extends AppCompatActivity {
                         balance_txt = data.getString("balance");
 
                         balance.setText(balance_txt);
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("balance", balance_txt);
+                        editor.apply();
 //                        balance.addTextChangedListener(new Currency_Format(balance));
 //                          Toast.makeText(Activity_Wallet.this, balance_txt, Toast.LENGTH_SHORT).show();
 

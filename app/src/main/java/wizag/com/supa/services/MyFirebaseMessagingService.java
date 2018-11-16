@@ -10,12 +10,17 @@ import java.util.Map;
 
 import wizag.com.supa.NotificationUtils;
 import wizag.com.supa.TestActivity;
+import wizag.com.supa.activity.Activity_Confirm_Notification_Order;
+import wizag.com.supa.activity.Activity_Home;
+import wizag.com.supa.helper.MyApplication;
 import wizag.com.supa.models.Model_Notification;
+
+import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgingService";
     private static final String TITLE = "title";
-    private static final String EMPTY = "";
+    private static final String ORDER_ID = "order_id";
     private static final String MESSAGE = "message";
     private static final String IMAGE = "image";
     private static final String ACTION = "action";
@@ -29,13 +34,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            Map<String, String> data = remoteMessage.getData();
-            handleData(data);
+//            MyApplication.isActivityVisible();
+//            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+//            Map<String, String> data = remoteMessage.getData();
+//            handleData(data);
 
         } else if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            handleNotification(remoteMessage.getNotification());
+//            MyApplication.isActivityVisible();
+//            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+//            handleNotification(remoteMessage.getNotification());
         }// Check if message contains a notification payload.
 
     }
@@ -43,34 +50,31 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleNotification(RemoteMessage.Notification RemoteMsgNotification) {
         String message = RemoteMsgNotification.getBody();
         String title = RemoteMsgNotification.getTitle();
+        Log.d("innitial message",message);
         Model_Notification notificationVO = new Model_Notification();
         notificationVO.setTitle(title);
         notificationVO.setMessage(message);
 
-        Intent resultIntent = new Intent(getApplicationContext(), TestActivity.class);
+        Intent resultIntent = new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class);
         NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
         notificationUtils.displayNotification(notificationVO, resultIntent);
         notificationUtils.playNotificationSound();
+
     }
 
     private void handleData(Map<String, String> data) {
-        String title = data.get(TITLE);
-        String message = data.get(MESSAGE);
-        String iconUrl = data.get(IMAGE);
-        String action = data.get(ACTION);
-        String actionDestination = data.get(ACTION_DESTINATION);
+        String order_id = data.get(ORDER_ID);
+        String action =  data.get("actionDestination");
         Model_Notification notificationVO = new Model_Notification();
-        notificationVO.setTitle(title);
-        notificationVO.setMessage(message);
-        notificationVO.setIconUrl(iconUrl);
-        notificationVO.setAction(action);
-        notificationVO.setActionDestination(actionDestination);
-
-        Intent resultIntent = new Intent(getApplicationContext(), TestActivity.class);
-
+        notificationVO.setOrder_id(order_id);
+        notificationVO.setActionDestination(action);
+        Intent resultIntent = new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class);
         NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
         notificationUtils.displayNotification(notificationVO, resultIntent);
         notificationUtils.playNotificationSound();
+
+        startActivity(resultIntent);
+
 
     }
 }

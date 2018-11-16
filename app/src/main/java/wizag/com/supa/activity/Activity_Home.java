@@ -53,6 +53,7 @@ public class Activity_Home extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
 
+
         /*check for internet connection*/
 
 
@@ -148,27 +149,22 @@ public class Activity_Home extends AppCompatActivity {
                     roles = new JSONArray();
                 }
 
-                        if (user_role.equalsIgnoreCase("XDRI")) {
-                            Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
-                            startActivity(driver_profile);
-                        } else if (user_role.equalsIgnoreCase("XIND")) {
-                            Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
-                            startActivity(ind_profile);
-                        } else if (user_role.equalsIgnoreCase("XCOR")) {
-                            Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
-                            startActivity(cor_profile);
-                        } else if (user_role.equalsIgnoreCase("XTON")) {
-                            Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
-                            startActivity(truck_profile);
-                        } else if (user_role.equalsIgnoreCase("XSUP")) {
-                            Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
-                            startActivity(truck_profile);
-                        }
-
-
-
-
-
+                if (user_role.equalsIgnoreCase("XDRI")) {
+                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
+                    startActivity(driver_profile);
+                } else if (user_role.equalsIgnoreCase("XIND")) {
+                    Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
+                    startActivity(ind_profile);
+                } else if (user_role.equalsIgnoreCase("XCOR")) {
+                    Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
+                    startActivity(cor_profile);
+                } else if (user_role.equalsIgnoreCase("XTON")) {
+                    Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
+                    startActivity(truck_profile);
+                } else if (user_role.equalsIgnoreCase("XSUP")) {
+                    Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
+                    startActivity(truck_profile);
+                }
 
 
             }

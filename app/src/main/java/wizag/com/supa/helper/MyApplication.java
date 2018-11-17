@@ -3,6 +3,7 @@ package wizag.com.supa.helper;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.graphics.Color;
 import android.os.Build;
 
 public class MyApplication extends Application {
@@ -17,22 +18,21 @@ public class MyApplication extends Application {
 
     private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel1 = new NotificationChannel(CHANNEL_1_ID,
-                    "channel_1",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel1.setDescription("This is Channel 1");
-
-            NotificationChannel channel2 = new NotificationChannel(CHANNEL_1_ID,
-                    "channel_2",
-                    NotificationManager.IMPORTANCE_LOW
-            );
-            channel2.setDescription("This is Channel 2");
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel1);
-            manager.createNotificationChannel(channel2);
-
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            String id = "order_id";
+            // The user-visible name of the channel.
+            CharSequence name = "Order";
+            // The user-visible description of the channel.
+            String description = "Order Registration Notification";
+            int importance = NotificationManager.IMPORTANCE_MAX;
+            NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH);
+            // Configure the notification channel.
+            mChannel.setDescription(description);
+            mChannel.enableLights(true);
+            // Sets the notification light color for notifications posted to this
+            // channel, if the device supports this feature.
+            mChannel.setLightColor(Color.RED);
+            notificationManager.createNotificationChannel(mChannel);
         }
 
     }

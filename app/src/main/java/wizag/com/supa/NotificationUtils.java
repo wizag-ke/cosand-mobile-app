@@ -160,10 +160,23 @@ public class NotificationUtils {
      */
     public void playNotificationSound() {
         try {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext, "id_product");
+
             Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                     + "://" + mContext.getPackageName() + "/raw/notification");
-            Ringtone r = RingtoneManager.getRingtone(mContext, alarmSound);
-            r.play();
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+                if (alarmSound != null) {
+                    // Changing Default mode of notification
+                    notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+
+
+                    Ringtone r = RingtoneManager.getRingtone(mContext, alarmSound);
+                    r.play();
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

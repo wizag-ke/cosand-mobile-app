@@ -42,6 +42,7 @@ public class Activity_Home extends AppCompatActivity {
     String token, user_role;
     Context context;
     JSONArray roles;
+    String order_id_txt, order_id_confirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +53,22 @@ public class Activity_Home extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+        SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
+        if (sp != null) {
+            order_id_txt = sp.getString("order_id", null);
+        }
 
+        SharedPreferences sp_confirm = getSharedPreferences("confirm_notification", MODE_PRIVATE);
+        if (sp != null) {
+            order_id_confirm = sp_confirm.getString("order_id", null);
+        }
 
-        /*check for internet connection*/
+        if (order_id_confirm != null && order_id_txt != null) {
+            if (order_id_confirm.equalsIgnoreCase(order_id_txt)) {
+                startActivity(new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class));
+                finish();
+            }
+        }
 
 
 
@@ -218,7 +232,7 @@ public class Activity_Home extends AppCompatActivity {
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+//        pDialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

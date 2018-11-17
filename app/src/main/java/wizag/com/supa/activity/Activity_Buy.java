@@ -116,6 +116,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm;
     String service_name, material_name, details_name, class_name, unit_name;
     String firebase_token;
+    private static final String SHARED_PREF_NAME = "confirm_notification";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1007,6 +1008,12 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                             String message = jsonObject.getString("message");
                             JSONObject data = jsonObject.getJSONObject("data");
                             String order_id = data.getString("order_id");
+
+                            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("order_id", order_id);
+                            editor.apply();
+                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_SHORT).show();
 
 //                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_LONG).show();
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();

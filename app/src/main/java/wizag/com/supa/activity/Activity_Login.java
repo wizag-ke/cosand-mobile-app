@@ -241,6 +241,11 @@ public class Activity_Login extends AppCompatActivity {
 
                         session.createLoginSession(username, password, access_token);
 
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("password", password);
+                        editor.apply();
+
 
                         getIndividualProfile();
                         getDriverProfile();

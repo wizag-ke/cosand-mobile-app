@@ -1,6 +1,7 @@
 package wizag.com.supa.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -15,10 +16,10 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_order);
+        SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
 
-        Intent intent = getIntent();
-        String id = intent.getStringExtra("order_id");
-        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
+        String corporate_fname = sp.getString("order_id", null);
+        Toast.makeText(this, corporate_fname, Toast.LENGTH_SHORT).show();
 
     }
 

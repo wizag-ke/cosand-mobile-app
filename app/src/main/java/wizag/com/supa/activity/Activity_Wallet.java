@@ -1,9 +1,11 @@
 package wizag.com.supa.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 
 import android.support.v7.app.AlertDialog;
@@ -14,11 +16,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +59,7 @@ import wizag.com.supa.models.Model_Transaction;
 
 public class Activity_Wallet extends AppCompatActivity {
     TextView balance;
-    Button deposit, withdraw;
+    Button deposit, withdraw, cancel;
     String LoadWalletUrl = "http://sduka.wizag.biz/api/v1/wallet/load";
     String LoadTransactions = "http://sduka.wizag.biz/api/v1/wallet/summary";
     SessionManager sessionManager;
@@ -67,13 +72,15 @@ public class Activity_Wallet extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "wallet";
     String from_txt, to_txt;
     EditText from, to;
+    AlertDialog alertDialog = null;
+    EditText password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
 
-
+        AuthWallet();
         SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code_orders = prefs_orders.getString("driver_code", null);
         prefs_phone = prefs_orders.getString("phone", null);
@@ -96,7 +103,6 @@ public class Activity_Wallet extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
 
         sessionManager = new SessionManager(getApplicationContext());
@@ -175,7 +181,6 @@ public class Activity_Wallet extends AppCompatActivity {
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
-
 
 
     public void FromDate() {
@@ -505,5 +510,105 @@ public class Activity_Wallet extends AppCompatActivity {
 
     }
 
+
+    private void AuthWallet() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Wallet.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.wallet_login, null);
+        password = dialogView.findViewById(R.id.password);
+
+        final Button proceed = dialogView.findViewById(R.id.proceed);
+
+        builder.setCancelable(false);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                //allow access to the wallet after validating password
+                SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+                String password_txt = sp.getString("password", null);
+                if (password_txt.equalsIgnoreCase(password.getText().toString())) {
+                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+                    finish();
+
+                } else {
+                    WrongPassword();
+                }
+
+
+            }
+
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+
+        alertDialog.show();
+    }
+
+
+    public void WrongPassword() {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        // Set Custom Title
+        TextView title = new TextView(this);
+        // Title Properties
+        title.setText("Info");
+        title.setPadding(20, 20, 20, 20);   // Set Position
+        title.setGravity(Gravity.CENTER);
+
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+        alertDialog.setCustomTitle(title);
+
+        // Set Message
+        TextView msg = new TextView(this);
+        // Message Properties
+        msg.setText("You have Entered a Wrong Password");
+        msg.setGravity(Gravity.CENTER_HORIZONTAL);
+        msg.setTextColor(Color.BLACK);
+        msg.setTextSize(18);
+        alertDialog.setView(msg);
+
+
+        // Set Button
+        // you can more buttons
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+
+            }
+        });
+
+
+        new Dialog(getApplicationContext());
+        alertDialog.show();
+
+        // Set Properties for OK Button
+        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        okBT.setPadding(50, 10, 10, 10);   // Set Position
+        okBT.setTextColor(Color.BLUE);
+        okBT.setLayoutParams(neutralBtnLP);
+
+        final Button cancelBT = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams negBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        negBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        cancelBT.setTextColor(Color.RED);
+        cancelBT.setLayoutParams(negBtnLP);
+    }
 
 }

@@ -121,6 +121,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     String service_name, material_name, details_name, class_name, unit_name;
     String firebase_token;
     private static final String SHARED_PREF_NAME = "confirm_notification";
+    LinearLayout buy_role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,10 +129,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_buy);
         /*check network connectivity*/
         isNetworkConnectionAvailable();
-
-
-
-
+        ChooseRole();
 
         firebase_token = FirebaseInstanceId.getInstance().getToken();
         postFirebaseToken();
@@ -143,7 +141,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
 
         /*get roles*/
-       /* SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code = sp.getString("user_type", null);
 
         try {
@@ -152,6 +150,9 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
                 JSONObject user_role_object = user_role.getJSONObject(m);
                 code = user_role_object.getString("code");
+
+
+                Toast.makeText(this, code, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -188,7 +189,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 alert11.show();
 
             }
-        }*/
+        }
 
 
         spinner_service_id = findViewById(R.id.spinner_service_id);
@@ -1228,6 +1229,53 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             }
         });
         AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void ChooseRole() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
+        builder.setTitle("Choose Role to continue");
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.layout_select_buy_role, null);
+        buy_role = dialogView.findViewById(R.id.buy_role);
+
+        /*load roles from sharedprefs into dynamic textviews*/
+        for (int i = 0; i < code.length(); i++) {
+            TextView myText = new TextView(this);
+            myText.setText(code);
+            buy_role.addView(myText);
+        }
+
+
+        final Button cancel = dialogView.findViewById(R.id.cancel);
+        final Button proceed = dialogView.findViewById(R.id.proceed);
+
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                /*validate and start main activity*/
+
+
+            }
+
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+
         alertDialog.show();
     }
 }

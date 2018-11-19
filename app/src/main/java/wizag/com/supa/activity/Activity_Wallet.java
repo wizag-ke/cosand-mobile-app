@@ -80,7 +80,7 @@ public class Activity_Wallet extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
 
-        AuthWallet();
+//        AuthWallet();
         SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code_orders = prefs_orders.getString("driver_code", null);
         prefs_phone = prefs_orders.getString("phone", null);

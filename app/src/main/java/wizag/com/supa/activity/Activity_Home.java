@@ -53,22 +53,24 @@ public class Activity_Home extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
+      /*  SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
         if (sp != null) {
-            order_id_txt = sp.getString("order_id", null);
+            order_id_txt = sp.getString("35", null);
         }
 
         SharedPreferences sp_confirm = getSharedPreferences("confirm_notification", MODE_PRIVATE);
-        if (sp != null) {
-            order_id_confirm = sp_confirm.getString("order_id", null);
+        if (sp_confirm != null) {
+            order_id_confirm = sp_confirm.getString("35", null);
         }
 
         if (order_id_confirm != null && order_id_txt != null) {
-            if (order_id_confirm.equalsIgnoreCase(order_id_txt)) {
+            if (order_id_txt.equalsIgnoreCase(order_id_confirm)) {
+                sp_confirm.edit().remove("order_id").commit();
                 startActivity(new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class));
                 finish();
+
             }
-        }
+        }*/
 
 
 

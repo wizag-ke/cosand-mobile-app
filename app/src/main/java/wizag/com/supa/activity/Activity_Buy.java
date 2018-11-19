@@ -2,11 +2,14 @@ package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -80,6 +83,7 @@ import wizag.com.supa.activity.Activity_Search_Places;
 import wizag.com.supa.models.Model_Buy;
 import wizag.com.supa.models.Model_Supplier;
 import wizag.com.supa.models.Model_Truck_Owner;
+import wizag.com.supa.utils.Constants;
 
 
 public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -122,6 +126,12 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+        /*check network connectivity*/
+        isNetworkConnectionAvailable();
+
+
+
+
 
         firebase_token = FirebaseInstanceId.getInstance().getToken();
         postFirebaseToken();
@@ -579,8 +589,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                         details_array = details_obj.getJSONArray("materialDetails");
 
 
-                        for (int p = 0; p < details_array.length(); p++) {
-                            JSONObject materials_object = details_array.getJSONObject(p);
+                        for (int s = 0; s < details_array.length(); s++) {
+                            JSONObject materials_object = details_array.getJSONObject(s);
                             String detail_id = materials_object.getString("id");
                             String name = materials_object.getString("name");
 
@@ -1188,5 +1198,37 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         queue.add(stringRequest);
     }
 
+
+    public boolean isNetworkConnectionAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        if (isConnected) {
+            Log.d("Network", "Connected");
+            return true;
+        } else {
+            checkNetworkConnection();
+            Log.d("Network", "Not Connected");
+            return false;
+        }
+    }
+
+    public void checkNetworkConnection() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setMessage("Please turn on internet connection to continue");
+        builder.setCancelable(false);
+        builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }
 

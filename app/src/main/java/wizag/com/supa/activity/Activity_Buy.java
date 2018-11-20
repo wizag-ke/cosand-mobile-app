@@ -129,7 +129,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_buy);
         /*check network connectivity*/
         isNetworkConnectionAvailable();
-        ChooseRole();
+
 
         firebase_token = FirebaseInstanceId.getInstance().getToken();
         postFirebaseToken();
@@ -151,7 +151,10 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 JSONObject user_role_object = user_role.getJSONObject(m);
                 code = user_role_object.getString("code");
 
+                String [] code_array= {code};
+                
 
+                ChooseRole();
                 Toast.makeText(this, code, Toast.LENGTH_SHORT).show();
 
 
@@ -161,7 +164,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
 
-        if (sp != null) {
+       /* if (sp != null) {
             if (!code.contains("XIND") || code.contains("XCOR")) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                 builder1.setMessage("Create Corporate or Individual Client account to continue");
@@ -189,7 +192,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 alert11.show();
 
             }
-        }
+        }*/
 
 
         spinner_service_id = findViewById(R.id.spinner_service_id);
@@ -1241,42 +1244,48 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         buy_role = dialogView.findViewById(R.id.buy_role);
 
         /*load roles from sharedprefs into dynamic textviews*/
-        for (int i = 0; i < code.length(); i++) {
-            TextView myText = new TextView(this);
-            myText.setText(code);
-            buy_role.addView(myText);
-        }
+        if (code != null) {
+            for (int z = 0; z < code.length(); z++) {
+                TextView myText = new TextView(this);
+                myText.setText(code);
+                if (code.contains(myText.getText().toString())) {
 
-
-        final Button cancel = dialogView.findViewById(R.id.cancel);
-        final Button proceed = dialogView.findViewById(R.id.proceed);
-
-
-        builder.setView(dialogView);
-        builder.setCancelable(false);
-
-
-        proceed.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                /*validate and start main activity*/
-
-
+                } else {
+                    buy_role.addView(myText);
+                }
             }
 
-        });
+            final Button cancel = dialogView.findViewById(R.id.cancel);
+            final Button proceed = dialogView.findViewById(R.id.proceed);
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+            builder.setView(dialogView);
+            builder.setCancelable(false);
+
+
+            proceed.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    /*validate and start main activity*/
+
+
+                }
+
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 //                finish();
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog = builder.create();
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog = builder.create();
 
-        alertDialog.show();
+            alertDialog.show();
+        }
     }
+
 }
 

@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +45,8 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
     String unit_cost_txt, order_quantity_txt, total_cost_txt;
     String wallet_balance;
     String makePaymentUrl = "http://sduka.wizag.biz/api/v1/wallet/pay-order";
+    String pay_code;
+    String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +179,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Message
         TextView msg = new TextView(this);
         // Message Properties
-        msg.setText("Confirm Payment of Ksh"+ total_cost_txt);
+        msg.setText("Confirm Payment of Ksh" + total_cost_txt);
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
         msg.setTextColor(Color.BLACK);
         msg.setTextSize(18);
@@ -185,14 +188,14 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
 
         // Set Button
         // you can more buttons
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Call payment api and pass order_id
                 makePayment();
             }
         });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"CANCEL", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Perform Action on Button
             }
@@ -202,7 +205,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         alertDialog.show();
 
         // Set Properties for OK Button
-        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE   );
+        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
         neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
         okBT.setPadding(50, 10, 10, 10);   // Set Position
@@ -230,29 +233,55 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
 
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
-                            String message = jsonObject.getString("message");
+                            message = jsonObject.getString("message");
+                            String status = jsonObject.getString("status");
+                            if (status.equalsIgnoreCase("success")) {
+                                Toast.makeText(Activity_Buy_Quotation.this, message, Toast.LENGTH_SHORT).show();
 
-//                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getApplicationContext(), Activity_View_Order_summary.class);
-                            intent.putExtra("order_id",order_id);
-                            startActivity(intent);
+                                Intent intent = new Intent(getApplicationContext(), Activity_View_Order_summary.class);
+                                intent.putExtra("order_id", order_id);
+                                startActivity(intent);
 
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } else if (status.equalsIgnoreCase("fail")) {
+
+                                Toast.makeText(Activity_Buy_Quotation.this, message, Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            if (status.equalsIgnoreCase("error")) {
+                                pay_code = data.getString("code");
+                                if (pay_code.equalsIgnoreCase("50"))
+
+                                {
+                                    validateWalletAmount();
+//                                    Toast.makeText(Activity_Buy_Quotation.this, message, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
                         }
+
+
+
 
                         //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
                     }
-                }, new com.android.volley.Response.ErrorListener() {
+                }, new com.android.volley.Response.ErrorListener()
+
+        {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 Toast.makeText(Activity_Buy_Quotation.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
             }
-        }) {
+        })
+
+        {
             //adding parameters to the request
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -265,7 +294,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-               SessionManager sessionManager = new SessionManager(getApplicationContext());
+                SessionManager sessionManager = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = sessionManager.getUserDetails();
                 String accessToken = user.get("access_token");
 
@@ -283,4 +312,67 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+    public void validateWalletAmount() {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        // Set Custom Title
+        TextView title = new TextView(this);
+        // Title Properties
+        title.setText("info");
+        title.setPadding(20, 20, 20, 20);   // Set Position
+        title.setGravity(Gravity.CENTER);
+
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+        alertDialog.setCustomTitle(title);
+
+        // Set Message
+        TextView msg = new TextView(this);
+        // Message Properties
+        msg.setText(message + "\n Continue to Wallet");
+        msg.setGravity(Gravity.CENTER_HORIZONTAL);
+        msg.setTextColor(Color.BLACK);
+        msg.setTextSize(18);
+        alertDialog.setView(msg);
+
+
+        // Set Button
+        // you can more buttons
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // open wallet
+                startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+
+            }
+        });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Perform Action on Button
+                alertDialog.dismiss();
+            }
+        });
+
+        new Dialog(getApplicationContext());
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+        // Set Properties for OK Button
+        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        okBT.setPadding(50, 10, 10, 10);   // Set Position
+        okBT.setTextColor(Color.BLUE);
+        okBT.setLayoutParams(neutralBtnLP);
+
+        final Button cancelBT = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams negBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        negBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        cancelBT.setTextColor(Color.RED);
+        cancelBT.setLayoutParams(negBtnLP);
+    }
+
+
 }

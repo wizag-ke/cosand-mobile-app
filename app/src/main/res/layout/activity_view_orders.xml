@@ -178,7 +178,7 @@
                         android:layout_weight="0.5"
                         android:padding="@dimen/_7sdp"
                         android:text="Class"
-                        android:textAlignment="center"
+
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -216,7 +216,7 @@
                         android:layout_weight="0.5"
                         android:padding="@dimen/_7sdp"
                         android:text="Quantity"
-                        android:textAlignment="center"
+
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -252,7 +252,7 @@
                         android:layout_weight="0.5"
                         android:padding="@dimen/_7sdp"
                         android:text="Unit"
-                        android:textAlignment="center"
+
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -287,7 +287,7 @@
                         android:layout_weight="0.5"
                         android:padding="@dimen/_7sdp"
                         android:text="Location"
-                        android:textAlignment="center"
+                       
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />

@@ -331,7 +331,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Message
         TextView msg = new TextView(this);
         // Message Properties
-        msg.setText(message + "\n Continue to Wallet");
+        msg.setText(message + "\n Top up your Wallet");
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
         msg.setTextColor(Color.BLACK);
         msg.setTextSize(18);
@@ -340,10 +340,14 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
 
         // Set Button
         // you can more buttons
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Top up", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // open wallet
-                startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+//                startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+                /*to be removed*/
+                Intent intent = new Intent(getApplicationContext(), Activity_View_Order_summary.class);
+                intent.putExtra("order_id", order_id);
+                startActivity(intent);
 
             }
         });

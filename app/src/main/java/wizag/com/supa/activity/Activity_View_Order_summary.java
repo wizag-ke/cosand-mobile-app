@@ -2,6 +2,7 @@ package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +46,13 @@ public class Activity_View_Order_summary extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            order_id = extras.getString("order_id");
+            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+
+        }
+
 
         service = findViewById(R.id.service);
         material = findViewById(R.id.material);
@@ -62,13 +70,7 @@ public class Activity_View_Order_summary extends AppCompatActivity {
             }
         });
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            order_id = extras.getString("order_id");
-//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
 
-
-        }
 
         getOrderSummary();
 

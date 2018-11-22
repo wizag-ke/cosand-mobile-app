@@ -130,6 +130,7 @@
         <activity android:name=".activity.MapsActivity" />
         <activity android:name=".activity.Activity_Material_Types" />
         <activity android:name=".activity.Activity_Register_Dashboard" />
+        <activity android:name=".activity.ActivityLoginWallet" />
         <activity
             android:name=".activity.Activity_Driver_Register"
             android:windowSoftInputMode="stateHidden|adjustResize">

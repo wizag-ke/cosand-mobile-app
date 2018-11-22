@@ -126,35 +126,36 @@ public class Activity_Home extends AppCompatActivity {
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (driver_code_sell.isEmpty()) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-//                                builder1.setTitle("Access Denied!");
-                    builder1.setMessage("Create a User Account to continue");
-                    builder1.setCancelable(true);
-
-                    builder1.setPositiveButton(
-                            "Proceed",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                    finish();
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "Not now",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                } else {
-
-                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
-                }
+                startActivity(new Intent(getApplicationContext(), ActivityLoginWallet.class));
+//                if (driver_code_sell.isEmpty()) {
+//                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+////   dont uncomment here                             builder1.setTitle("Access Denied!");
+//                    builder1.setMessage("Create a User Account to continue");
+//                    builder1.setCancelable(true);
+//
+//                    builder1.setPositiveButton(
+//                            "Proceed",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+//                                    finish();
+//                                }
+//                            });
+//
+//                    builder1.setNegativeButton(
+//                            "Not now",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    dialog.cancel();
+//                                }
+//                            });
+//
+//                    AlertDialog alert11 = builder1.create();
+//                    alert11.show();
+//                } else {
+//
+//                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+//                }
             }
         });
 
@@ -311,5 +312,9 @@ public class Activity_Home extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+    }
+    public void loginToAccessWallet(View view)
+    {
+
     }
 }

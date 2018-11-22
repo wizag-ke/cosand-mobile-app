@@ -126,6 +126,7 @@ public class Activity_Home extends AppCompatActivity {
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(new Intent(getApplicationContext(), ActivityLoginWallet.class));
 //                if (driver_code_sell.isEmpty()) {
 //                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);

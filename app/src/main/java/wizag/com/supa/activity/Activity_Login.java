@@ -252,7 +252,9 @@ public class Activity_Login extends AppCompatActivity {
                         getCorporateProfile();
                         getTruckOwner();
                         getSupplierProfile();
-                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                        Intent intent=new Intent(getApplicationContext(), Activity_Home.class);
+                        intent.putExtra("USERNAME", username);
+                        startActivity(intent);
                         finish();
 
                     }

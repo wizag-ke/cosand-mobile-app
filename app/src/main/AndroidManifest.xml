@@ -214,6 +214,7 @@
                 android:value=".activity.Activity_Confirm_Notification_Order" />
         </activity>
         <activity android:name=".activity.Activity_Test_Notification" />
+
         <activity android:name=".activity.Activity_View_Order_summary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -222,9 +223,14 @@
         <activity android:name=".activity.Activity_List_Orders">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.Activity_Confirm_Notification_Order" />
+                android:value=".activity.Activity_List_Orders" />
         </activity>
-        <activity android:name=".activity.Activity_Questionaire"></activity>
+        <activity android:name=".activity.Activity_Questionaire">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_Questionaire" />
+        </activity>
+
     </application>
 
 </manifest>

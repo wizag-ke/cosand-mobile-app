@@ -32,11 +32,20 @@ public class Activity_List_Orders extends AppCompatActivity {
     EditText otp;
     String validateOTPURL = "http://sduka.wizag.biz/api/v1/orders/23/complete";
     String message;
+    String order_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_orders);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            order_id = extras.getString("order_id");
+//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+
+
+        }
     }
 
     public void Arrival(View view) {
@@ -94,7 +103,7 @@ public class Activity_List_Orders extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, validateOTPURL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/" + order_id + "/complete",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -108,6 +117,7 @@ public class Activity_List_Orders extends AppCompatActivity {
                                 Toast.makeText(Activity_List_Orders.this, message, Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);
+                                intent.putExtra("order_id", order_id);
                                 startActivity(intent);
 
 

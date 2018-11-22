@@ -65,7 +65,8 @@ public class Activity_View_Order_summary extends AppCompatActivity {
         view_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
+                Intent intent = new Intent(getApplicationContext(),Activity_List_Orders.class);
+                intent.putExtra("order_id",order_id);
                 finish();
             }
         });

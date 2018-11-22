@@ -101,7 +101,6 @@ public class Activity_Home extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), Activity_Buy.class));
 
-
             }
         });
 

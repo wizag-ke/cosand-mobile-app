@@ -110,7 +110,7 @@ public class Activity_Wallet extends AppCompatActivity {
         token = user.get("access_token");
 
 
-        balance = (TextView) findViewById(R.id.balance);
+        balance = findViewById(R.id.balance);
         balance.setFilters(new InputFilter[]{new CurrencyFormat()});
 
         deposit = (Button) findViewById(R.id.deposit);

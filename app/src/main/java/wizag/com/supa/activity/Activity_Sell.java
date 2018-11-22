@@ -1297,6 +1297,3 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
     }
 
 }
-
-
-

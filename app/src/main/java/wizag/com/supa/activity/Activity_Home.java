@@ -116,6 +116,13 @@ public class Activity_Home extends AppCompatActivity {
             }
         });
 
+        supply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
+            }
+        });
+
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

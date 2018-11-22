@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -116,12 +117,13 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     JSONArray buy_materials;
     String OrderRequest = "http://sduka.wizag.biz/api/v1/orders/new";
     String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
-    String code;
+    String code, code_buy;
     TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm;
     String service_name, material_name, details_name, class_name, unit_name;
     String firebase_token;
     private static final String SHARED_PREF_NAME = "confirm_notification";
     LinearLayout buy_role;
+    String buy_code = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,23 +148,26 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
         try {
             JSONArray user_role = new JSONArray(driver_code);
-            for (int m = 0; m < user_role.length(); m++) {
+            for (int l = 0; l < user_role.length(); l++) {
 
-                JSONObject user_role_object = user_role.getJSONObject(m);
+                JSONObject user_role_object = user_role.getJSONObject(l);
                 code = user_role_object.getString("code");
-
-                String [] code_array= {code};
-                
-
-                ChooseRole();
-                Toast.makeText(this, code, Toast.LENGTH_SHORT).show();
+                code_buy = user_role_object.getString("name");
+              /*  ArrayList<String> code_txt = new ArrayList<>();
+                code_txt.add(code);*/
 
 
             }
 
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        selectRole();
+
+
+
 
        /* if (sp != null) {
             if (!code.contains("XIND") || code.contains("XCOR")) {
@@ -258,7 +263,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         spinner_service_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                service_name = spinner_service_id.getSelectedItem().toString();
+
 //                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject dataClicked = materialTypes.getJSONObject(i);
@@ -283,8 +288,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         material_item_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                material_name = material_item_id.getSelectedItem().toString();
-//                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
+//                  Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject dataClicked = materials.getJSONObject(i);
                     id_material = dataClicked.getInt("id");
@@ -312,7 +316,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         material_detail_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                details_name = material_detail_id.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = details_array.getJSONObject(i);
@@ -337,13 +340,13 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                class_name = material_class_id.getSelectedItem().toString();
-                Log.d("empty_json", class_name);
-                ClassName.clear();
+
+//                Log.d("empty_json", class_name);
+//                ClassName.clear();
                 try {
                     JSONObject dataClicked = class_array.getJSONObject(i);
                     id_class = dataClicked.getInt("id");
-                    Toast.makeText(getApplicationContext(), "" + id_class, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "" + id_class, Toast.LENGTH_SHORT).show();
 
 //                    getMaterialUnits();
                 } catch (Exception e) {
@@ -361,7 +364,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         material_unit_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                unit_name = material_unit_id.getSelectedItem().toString();
+
 
                 try {
                     JSONObject dataClicked = units_array.getJSONObject(i);
@@ -1027,7 +1030,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                             SharedPreferences.Editor editor = sp.edit();
                             editor.putString("order_id", order_id);
                             editor.apply();
-                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_SHORT).show();
 
 //                            Toast.makeText(Activity_Buy.this, order_id, Toast.LENGTH_LONG).show();
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -1058,6 +1061,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 params.put("client_location_name", name);
                 params.put("client_location_details", location_description.getText().toString());
                 params.put("order_details", String.valueOf(buy_materials));
+                params.put("client_type", buy_code);
+
 
                 return params;
             }
@@ -1235,57 +1240,61 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         alertDialog.show();
     }
 
-    private void ChooseRole() {
+    private void selectRole() {
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(Activity_Buy.this);
+        builderSingle.setIcon(R.drawable.info);
+        builderSingle.setTitle("Select Role");
+        if (!code.isEmpty()) {
+            String[] code_names = new String[]{code_buy};
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
-        builder.setTitle("Choose Role to continue");
-        LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.layout_select_buy_role, null);
-        buy_role = dialogView.findViewById(R.id.buy_role);
+            int size = code_names.length;
+            for (int x = 0; x < size; x++) {
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.select_dialog_singlechoice);
+                arrayAdapter.add(code_names[x]);
 
-        /*load roles from sharedprefs into dynamic textviews*/
-        if (code != null) {
-            for (int z = 0; z < code.length(); z++) {
-                TextView myText = new TextView(this);
-                myText.setText(code);
-                if (code.contains(myText.getText().toString())) {
 
-                } else {
-                    buy_role.addView(myText);
-                }
+                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        switch (strName) {
+                            case "INDIVIDUAL_CLIENT":
+                                buy_code = "XIND";
+                                break;
+
+                            case "CORPORATE_CLIENT":
+                                buy_code = "XCOR";
+                                break;
+
+                            case "DRIVER":
+                                buy_code = "XDRI";
+
+                                break;
+
+                            case "TRUCK_OWNER":
+                                buy_code = "XTON";
+                                break;
+
+                            case "SUPPLIER":
+
+                                buy_code = "XSUP";
+                                break;
+
+
+                        }
+
+                    }
+                });
+                builderSingle.show();
             }
-
-            final Button cancel = dialogView.findViewById(R.id.cancel);
-            final Button proceed = dialogView.findViewById(R.id.proceed);
-
-
-            builder.setView(dialogView);
-            builder.setCancelable(false);
-
-
-            proceed.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    /*validate and start main activity*/
-
-
-                }
-
-            });
-
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                finish();
-                    alertDialog.dismiss();
-                }
-            });
-            alertDialog = builder.create();
-
-            alertDialog.show();
         }
     }
-
 }
 

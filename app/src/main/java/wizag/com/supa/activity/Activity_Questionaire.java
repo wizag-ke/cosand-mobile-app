@@ -45,8 +45,7 @@ public class Activity_Questionaire extends AppCompatActivity {
     ArrayList<String> Type;
     LinearLayout layout;
     String qn_response = "";
-    String postQns = "http://sduka.wizag.biz/api/v1/sites/2/feedback";
-    String order_id;
+    String order_id, site_id;
     String qn_id;
     Button submit;
     String resp, text_response;
@@ -61,13 +60,6 @@ public class Activity_Questionaire extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            order_id = extras.getString("order_id");
-            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
-
-        }
 
         layout = findViewById(R.id.qns);
 
@@ -262,13 +254,17 @@ public class Activity_Questionaire extends AppCompatActivity {
 
 
     public void QnResponse() {
+        SharedPreferences sp = getSharedPreferences("order", MODE_PRIVATE);
+        site_id = sp.getString("site_id", null);
+        order_id = sp.getString("order_id", null);
 
+        Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Questionaire.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/sites/" + 56 + "/feedback",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/sites/" + site_id + "/feedback",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -318,9 +314,10 @@ public class Activity_Questionaire extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
+
                 params.put("question_id", qn_id);
                 params.put("answer", qn_response);
-                params.put("order_id", "2");
+                params.put("order_id", order_id);
                 return params;
             }
 

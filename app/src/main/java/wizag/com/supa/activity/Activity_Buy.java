@@ -1,16 +1,19 @@
 package wizag.com.supa.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -57,7 +60,12 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
@@ -85,6 +93,9 @@ import wizag.com.supa.models.Model_Buy;
 import wizag.com.supa.models.Model_Supplier;
 import wizag.com.supa.models.Model_Truck_Owner;
 import wizag.com.supa.utils.Constants;
+
+import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
+import static wizag.com.supa.activity.Activity_Location.MY_PERMISSIONS_REQUEST_LOCATION;
 
 
 public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -124,6 +135,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     private static final String SHARED_PREF_NAME = "confirm_notification";
     LinearLayout buy_role;
     String buy_code = "";
+    JSONObject user_role_object;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +144,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_buy);
         /*check network connectivity*/
         isNetworkConnectionAvailable();
+//        displayLocationSettingsRequest(this);
 
 
         firebase_token = FirebaseInstanceId.getInstance().getToken();
@@ -150,11 +164,43 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             JSONArray user_role = new JSONArray(driver_code);
             for (int l = 0; l < user_role.length(); l++) {
 
-                JSONObject user_role_object = user_role.getJSONObject(l);
+                user_role_object = user_role.getJSONObject(l);
                 code = user_role_object.getString("code");
                 code_buy = user_role_object.getString("name");
-              /*  ArrayList<String> code_txt = new ArrayList<>();
-                code_txt.add(code);*/
+
+               /* String[] matches = new String[]{code};
+                for (String s : matches) {
+                    if (s.contains("XDRI") || s.contains("XCOR")) {
+                        selectRole();
+                    } else {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                        builder1.setMessage("Create Corporate or Individual Client account to continue");
+                        builder1.setCancelable(false);
+
+                        builder1.setPositiveButton(
+                                "Proceed",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                        finish();
+                                    }
+                                });
+
+                        builder1.setNegativeButton(
+                                "Not now",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                        finish();
+                                    }
+                                });
+
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+
+                        break;
+                    }
+                }*/
 
 
             }
@@ -164,41 +210,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
 
-        selectRole();
-
-
-
-
-       /* if (sp != null) {
-            if (!code.contains("XIND") || code.contains("XCOR")) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                builder1.setMessage("Create Corporate or Individual Client account to continue");
-                builder1.setCancelable(false);
-
-                builder1.setPositiveButton(
-                        "Proceed",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                finish();
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "Not now",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                finish();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-
-            }
-        }*/
-
+//        selectRole();
 
         spinner_service_id = findViewById(R.id.spinner_service_id);
         material_item_id = findViewById(R.id.material_item_id);
@@ -916,7 +928,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     public void onAddPlaceButtonClicked(View view) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
+            checkLocationPermission();
+//            Toast.makeText(this, getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
             return;
         }
         try {
@@ -1061,7 +1074,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 params.put("client_location_name", name);
                 params.put("client_location_details", location_description.getText().toString());
                 params.put("order_details", String.valueOf(buy_materials));
-                params.put("client_type", buy_code);
+                params.put("client_type", "XIND");
 
 
                 return params;
@@ -1267,6 +1280,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                         switch (strName) {
                             case "INDIVIDUAL_CLIENT":
                                 buy_code = "XIND";
+
                                 break;
 
                             case "CORPORATE_CLIENT":
@@ -1296,5 +1310,79 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             }
         }
     }
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("Info")
+                        .setIcon(R.drawable.info)
+                        .setMessage("Enable location permissions to continue")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(Activity_Buy.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+//                        locationManager.requestLocationUpdates(provider, 400, 1, this);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                return;
+            }
+
+        }
+    }
+
+
 }
 

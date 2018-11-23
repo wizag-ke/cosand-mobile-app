@@ -30,9 +30,8 @@ import wizag.com.supa.SessionManager;
 public class Activity_List_Orders extends AppCompatActivity {
     AlertDialog alertDialog = null;
     EditText otp;
-    String validateOTPURL = "http://sduka.wizag.biz/api/v1/orders/23/complete";
     String message;
-    String order_id;
+    String order_id,site_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,8 @@ public class Activity_List_Orders extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             order_id = extras.getString("order_id");
+            site_id = extras.getString("site_id");
+
 //            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
 
 
@@ -118,6 +119,7 @@ public class Activity_List_Orders extends AppCompatActivity {
 
                                 Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);
                                 intent.putExtra("order_id", order_id);
+                                intent.putExtra("site_id", site_id);
                                 startActivity(intent);
 
 

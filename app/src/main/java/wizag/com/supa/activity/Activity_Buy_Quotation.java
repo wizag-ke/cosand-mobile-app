@@ -31,6 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,7 +170,11 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Custom Title
         TextView title = new TextView(this);
         // Title Properties
+        NumberFormat formatter = new DecimalFormat("#,###");
+        double myNumber = Double.parseDouble(total_cost_txt);
+        String formattedNumber = formatter.format(myNumber);
         title.setText("Confirm Payment");
+
         title.setPadding(20, 20, 20, 20);   // Set Position
         title.setGravity(Gravity.CENTER);
 
@@ -179,7 +185,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Message
         TextView msg = new TextView(this);
         // Message Properties
-        msg.setText("Confirm Payment of Ksh" + total_cost_txt);
+        msg.setText("Confirm Payment of Ksh\t" + formattedNumber);
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
         msg.setTextColor(Color.BLACK);
         msg.setTextSize(18);

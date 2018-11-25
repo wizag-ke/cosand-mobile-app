@@ -68,9 +68,9 @@ public class ActivityLoginWallet extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
     EditText enter_username;
     TextInputEditText enter_password;
-    //SharedPreferences prefs;
-   // SessionManager session;
-   // private static final String SHARED_PREF_NAME = "profile";
+    SharedPreferences prefs;
+    SessionManager session;
+    private static final String SHARED_PREF_NAME = "profile";
     String get_profile_url = "http://sduka.wizag.biz/api/v1/profiles";
     String token;
     JSONArray role_array;
@@ -78,7 +78,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.wallet_login);
 
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -87,9 +87,9 @@ public class ActivityLoginWallet extends AppCompatActivity {
         enter_password = findViewById(R.id.enter_password);
 
         // Session Manager
-       // session = new SessionManager(getApplicationContext());
-       // HashMap<String, String> user = session.getUserDetails();
-       // token = user.get("access_token");
+        session = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        token = user.get("access_token");
 
 
 //        if (session.isLoggedIn()) {
@@ -109,16 +109,19 @@ public class ActivityLoginWallet extends AppCompatActivity {
                 /** Validation class will check the error and display the error on respective fields
                  but it won't resist the form submission, so we need to check again before submit
                  */
+                String sharedprefpassword;
+                SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+                sharedprefpassword = sp.getString("password", null);
+                password = enter_password.getText().toString();
+                if (sharedprefpassword.equals(password)) {
 
-                if (loginValidation()) {
-                    Intent intent=getIntent();
-                    username = intent.getStringExtra("USERNAME");
-                    password = enter_password.getText().toString();
-                    loginUser();
-//                    getDriverProfile();
+                   Intent intent=new Intent(getApplicationContext(), Activity_Wallet.class);
+                   startActivity(intent);
+
+
                 } else {
                     Snackbar snackbar = Snackbar
-                            .make(coordinatorLayout, "Form contains errors", Snackbar.LENGTH_LONG)
+                            .make(coordinatorLayout, "Enter the correct Password", Snackbar.LENGTH_LONG)
                             .setAction("OK", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -134,7 +137,6 @@ public class ActivityLoginWallet extends AppCompatActivity {
 
 
         supaduka_signup = findViewById(R.id.supaduka_signup);
-
         supaduka_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +146,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
             }
         });
 
-      //  prefs = this.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        prefs = this.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         checkConnection();
     }
 
@@ -234,19 +236,19 @@ public class ActivityLoginWallet extends AppCompatActivity {
                         token_type = authUser.getTokenType();
 
 
-//                        prefs.edit().putBoolean("oauth.loggedin", true).apply();
-//                        prefs.edit().putString(ACCESS_TOKEN, access_token).apply();
-//                        prefs.edit().putString(REFRESH_TOKEN, refresh_token).apply();
-//                        prefs.edit().putString(TOKEN_TYPE, token_type).apply();
+                        prefs.edit().putBoolean("oauth.loggedin", true).apply();
+                        prefs.edit().putString(ACCESS_TOKEN, access_token).apply();
+                        prefs.edit().putString(REFRESH_TOKEN, refresh_token).apply();
+                        prefs.edit().putString(TOKEN_TYPE, token_type).apply();
 
                         //  String token = prefs.getString("access_token", ACCESS_TOKEN);
 
-                      //  session.createLoginSession(username, password, access_token);
+                        session.createLoginSession(username, password, access_token);
 
-                      //  SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                        //SharedPreferences.Editor editor = sp.edit();
-//                        editor.putString("password", password);
-//                        editor.apply();
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("password", password);
+                        editor.apply();
 
 
                         getIndividualProfile();
@@ -254,7 +256,9 @@ public class ActivityLoginWallet extends AppCompatActivity {
                         getCorporateProfile();
                         getTruckOwner();
                         getSupplierProfile();
-                        startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+                        Intent intent=new Intent(getApplicationContext(), Activity_Wallet.class);
+                      //  intent.putExtra("USERNAME", username);
+                        startActivity(intent);
                         finish();
 
                     }
@@ -353,16 +357,16 @@ public class ActivityLoginWallet extends AppCompatActivity {
 
 
                         JSONArray roles = user.getJSONArray("roles");
-                     //   SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                     //   SharedPreferences.Editor editor = sp.edit();
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
 
-//                        editor.putString("driver_fname", fname);
-//                        editor.putString("driver_lname", lname);
-//                        editor.putString("driver_email", email);
-//                        editor.putString("driver_phone", phone);
-//                        editor.putString("driver_id_no", id_no);
-//                        editor.putString("user_type", roles.toString());
-//                        editor.apply();
+                        editor.putString("driver_fname", fname);
+                        editor.putString("driver_lname", lname);
+                        editor.putString("driver_email", email);
+                        editor.putString("driver_phone", phone);
+                        editor.putString("driver_id_no", id_no);
+                        editor.putString("user_type", roles.toString());
+                        editor.apply();
 
                     }
 
@@ -386,15 +390,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-               // session = new SessionManager(getApplicationContext());
-               // HashMap<String, String> user = session.getUserDetails();
-                //String accessToken = user.get("access_token");
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
 
-               // String bearer = "Bearer " + accessToken;
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
-                //headers.put("Authorization", bearer);
+                headers.put("Authorization", bearer);
                 headers.putAll(headersSys);
                 return headers;
             }
@@ -438,15 +442,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
                         String id_no = user.getString("id_no");
 
                         JSONArray roles = user.getJSONArray("roles");
-                     //   SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                      //  SharedPreferences.Editor editor = sp.edit();
-//                        editor.putString("individual_fname", fname);
-//                        editor.putString("individual_lname", lname);
-//                        editor.putString("individual_email", email);
-//                        editor.putString("individual_phone", phone);
-//                        editor.putString("individual_id_no", id_no);
-//                        editor.putString("user_type", roles.toString());
-//                        editor.apply();
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("individual_fname", fname);
+                        editor.putString("individual_lname", lname);
+                        editor.putString("individual_email", email);
+                        editor.putString("individual_phone", phone);
+                        editor.putString("individual_id_no", id_no);
+                        editor.putString("user_type", roles.toString());
+                        editor.apply();
 
 
                     }
@@ -472,15 +476,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-            //    session = new SessionManager(getApplicationContext());
-            //    HashMap<String, String> user = session.getUserDetails();
-             //   String accessToken = user.get("access_token");
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
 
-              //  String bearer = "Bearer " + accessToken;
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
-              //  headers.put("Authorization", bearer);
+                headers.put("Authorization", bearer);
                 headers.putAll(headersSys);
                 return headers;
             }
@@ -525,15 +529,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
                         String id_no = user.getString("id_no");
 
                         JSONArray roles = user.getJSONArray("roles");
-//                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = sp.edit();
-//                        editor.putString("corporate_fname", fname);
-//                        editor.putString("corporate_lname", lname);
-//                        editor.putString("corporate_email", email);
-//                        editor.putString("corporate_phone", phone);
-//                        editor.putString("corporate_id_no", id_no);
-//                        editor.putString("user_type", roles.toString());
-//                        editor.apply();
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("corporate_fname", fname);
+                        editor.putString("corporate_lname", lname);
+                        editor.putString("corporate_email", email);
+                        editor.putString("corporate_phone", phone);
+                        editor.putString("corporate_id_no", id_no);
+                        editor.putString("user_type", roles.toString());
+                        editor.apply();
 
                     }
 
@@ -558,15 +562,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-//                session = new SessionManager(getApplicationContext());
-//                HashMap<String, String> user = session.getUserDetails();
-//                String accessToken = user.get("access_token");
-//
-    //              String bearer = "Bearer " + accessToken;
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
-               // headers.put("Authorization", bearer);
+                headers.put("Authorization", bearer);
                 headers.putAll(headersSys);
                 return headers;
             }
@@ -610,16 +614,16 @@ public class ActivityLoginWallet extends AppCompatActivity {
                         String id_no = user.getString("id_no");
 
                         JSONArray role = user.getJSONArray("roles");
-                      //  SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                      //  SharedPreferences.Editor editor = sp.edit();
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
 
-//                        editor.putString("truck_owner_fname", fname);
-//                        editor.putString("truck_owner_lname", lname);
-//                        editor.putString("truck_owner_email", email);
-//                        editor.putString("truck_owner_phone", phone);
-//                        editor.putString("user_type", role.toString());
-//                        editor.putString("truck_owner_id_no", id_no);
-//                        editor.apply();
+                        editor.putString("truck_owner_fname", fname);
+                        editor.putString("truck_owner_lname", lname);
+                        editor.putString("truck_owner_email", email);
+                        editor.putString("truck_owner_phone", phone);
+                        editor.putString("user_type", role.toString());
+                        editor.putString("truck_owner_id_no", id_no);
+                        editor.apply();
 
 
                     }
@@ -645,15 +649,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-             //   session = new SessionManager(getApplicationContext());
-              //  HashMap<String, String> user = session.getUserDetails();
-              //  String accessToken = user.get("access_token");
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
 
-              //  String bearer = "Bearer " + accessToken;
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
-              //  headers.put("Authorization", bearer);
+                headers.put("Authorization", bearer);
                 headers.putAll(headersSys);
                 return headers;
             }
@@ -697,16 +701,16 @@ public class ActivityLoginWallet extends AppCompatActivity {
                         String id_no = user.getString("id_no");
 
                         JSONArray role = user.getJSONArray("roles");
-                     //   SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                     //   SharedPreferences.Editor editor = sp.edit();
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
 
-                   //     editor.putString("supplier_fname", fname);
-//                        editor.putString("supplier_lname", lname);
-//                        editor.putString("supplier_email", email);
-//                        editor.putString("supplier_phone", phone);
-//                        editor.putString("supplier_id_no", id_no);
-//                        editor.putString("user_type", role.toString());
-//                        editor.apply();
+                        editor.putString("supplier_fname", fname);
+                        editor.putString("supplier_lname", lname);
+                        editor.putString("supplier_email", email);
+                        editor.putString("supplier_phone", phone);
+                        editor.putString("supplier_id_no", id_no);
+                        editor.putString("user_type", role.toString());
+                        editor.apply();
 
 
                     }
@@ -732,15 +736,15 @@ public class ActivityLoginWallet extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-              //  session = new SessionManager(getApplicationContext());
-              //  HashMap<String, String> user = session.getUserDetails();
-               // String accessToken = user.get("access_token");
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
 
-               // String bearer = "Bearer " + accessToken;
+                String bearer = "Bearer " + accessToken;
                 Map<String, String> headersSys = super.getHeaders();
                 Map<String, String> headers = new HashMap<String, String>();
                 headersSys.remove("Authorization");
-               // headers.put("Authorization", bearer);
+                headers.put("Authorization", bearer);
                 headers.putAll(headersSys);
                 return headers;
             }

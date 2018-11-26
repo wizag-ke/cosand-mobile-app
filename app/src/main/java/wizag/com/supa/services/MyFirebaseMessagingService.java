@@ -1,10 +1,15 @@
 package wizag.com.supa.services;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -41,79 +46,82 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-
-        // Check if message contains a data payload.
+//        super.onMessageReceived(remoteMessage);
         if (remoteMessage.getData().size() > 0) {
-//            MyApplication.isActivityVisible();
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            Map<String, String> data = remoteMessage.getData();
-            handleData(data);
+            Log.e(TAG, "message data payload" + remoteMessage.getData());
+
+            JSONObject data = new JSONObject(remoteMessage.getData());
+            try {
+                String jsonMessage = data.getString("order_id");
+
+                Log.e(TAG, "onMessageReceived" + jsonMessage);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-        } else if (remoteMessage.getNotification() != null) {
-//            MyApplication.isActivityVisible();
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            handleNotification(remoteMessage.getNotification());
-        }// Check if message contains a notification payload.
+        }
+        if (remoteMessage.getNotification() != null) {
+//            sendNotification(remoteMessage);
+            String title = remoteMessage.getNotification().getTitle();
+            String message = remoteMessage.getNotification().getBody();
+            String click_action = remoteMessage.getNotification().getClickAction();
 
+            Log.e(TAG, "Message Notification Title" + title);
+            Log.e(TAG, "Message Notification body" + message);
+            Log.e(TAG, "Message Notification click action" + click_action);
+
+            sendNotification(title, message, click_action);
+
+        }
     }
 
-    private void handleNotification(RemoteMessage.Notification RemoteMsgNotification) {
-        String message = RemoteMsgNotification.getBody();
-        String title = RemoteMsgNotification.getTitle();
-        Log.d("innitial message", message);
-        Model_Notification notificationVO = new Model_Notification();
-        notificationVO.setTitle(title);
-        notificationVO.setMessage(message);
-
-        Intent resultIntent = new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class);
-        NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-        notificationUtils.displayNotification(notificationVO, resultIntent);
-        notificationUtils.playNotificationSound();
-
-    }
-
-    private void handleData(Map<String, String> data) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent1 = new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class);
-        // Create the TaskStackBuilder and add the intent, which inflates the back stack
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntentWithParentStack(intent1);
-
-        // Set the Activity to start in a new, empty task
-        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 123, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), "id_product")
-                    .setSmallIcon(R.drawable.ic_close) //your app icon
-                    .setBadgeIconType(R.drawable.ic_close) //your app icon
-                    .setChannelId("order_id")
-                    .setContentTitle(data.get("title"))
-                    .setAutoCancel(true).setContentIntent(pendingIntent)
-                    .setNumber(1)
-                    .setColor(255)
-                    .setContentText(data.get("message"))
-                    .setWhen(System.currentTimeMillis());
+    private void sendNotification(String title, String message, String click_action) {
+       /* Map<String, String> data = remoteMessage.getData();adb
+        String title = data.get("title");
+        String content = data.get("message");*/
 
 
-            String order_id = data.get("order_id");
-            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("order_id", order_id);
-            editor.apply();
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String NOTIFICATION_CHANNEL_ID = "cosand_buy";
 
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-            notificationManager.notify(1, notificationBuilder.build());
+        Intent class_intent = null;
+        if(click_action.equals(".activity.Activity_Confirm_Notification_Order")){
+            class_intent = new Intent(this,Activity_Confirm_Notification_Order.class);
+            class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
+        /*for android oreo and higher*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Cosand Notification",
+                    NotificationManager.IMPORTANCE_MAX);
+            /*CONFIGURE notification channel*/
+            notificationChannel.setDescription("Cosand channel for order requests");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{
+                    0, 1000, 500, 1000
+            });
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        notificationBuilder.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.info)
+                .setTicker("Cosand")
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentInfo("info")
+                .setContentIntent(pendingIntent);
+
+        notificationManager.notify(1, notificationBuilder.build());
+
     }
 
-    
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/role"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/xind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:clickable="true"
+        android:text="Individual Client"
+        android:textAlignment="viewStart"
+        android:textColor="@color/textColor"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/xcor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:clickable="true"
+        android:text="Corporate Client"
+        android:textAlignment="viewStart"
+        android:textColor="@color/textColor"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:background="@color/colorPrimary"
+        android:padding="@dimen/_16sdp"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:orientation="horizontal"
+        android:padding="@dimen/_5sdp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/cancel2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_40sdp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Button
+
+            android:id="@+id/proceed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="Proceed"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

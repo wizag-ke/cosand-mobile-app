@@ -74,11 +74,19 @@ public class Activity_Wallet extends AppCompatActivity {
     EditText from, to;
     AlertDialog alertDialog = null;
     EditText password;
+    String flag_type="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            flag_type = extras.getString("flag_type");
+            Toast.makeText(this, flag_type, Toast.LENGTH_LONG).show();
+        }
 
 //        AuthWallet();
         SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
@@ -166,10 +174,16 @@ public class Activity_Wallet extends AppCompatActivity {
                 } else if (phone_txt.isEmpty()) {
                     Toast.makeText(Activity_Wallet.this, "Enter phone number to proceed", Toast.LENGTH_SHORT).show();
 
-                } else {
+                } else if (flag_type.equalsIgnoreCase("top_up")) {
 
+                    topUpWallet();
+                    /*delete value from shared prefs*/
+
+
+                } else {
                     loadWallet();
                 }
+
 
             }
         });
@@ -261,7 +275,7 @@ public class Activity_Wallet extends AppCompatActivity {
 //                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                             if (status.equalsIgnoreCase("success")) {
                                 Toast.makeText(Activity_Wallet.this, message, Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                                 finish();
                             }
 
@@ -317,6 +331,86 @@ public class Activity_Wallet extends AppCompatActivity {
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+
+    private void topUpWallet() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Wallet.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, LoadWalletUrl,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+//                            JSONObject data = jsonObject.getJSONObject("data");
+                            String message = jsonObject.getString("message");
+                            String status = jsonObject.getString("status");
+
+//                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                            if (status.equalsIgnoreCase("success")) {
+                                Toast.makeText(Activity_Wallet.this, message, Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), Activity_Buy_Quotation.class));
+                                finish();
+                            }
+
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int k = 0; k < jsonArray.length(); k++) {
+                                String data_message = jsonArray.getString(k);
+
+                                if (status.equalsIgnoreCase("fail")) {
+                                    Toast.makeText(Activity_Wallet.this, data_message, Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Wallet.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                Toast.makeText(getApplicationContext(), "Request could not be placed", Snackbar.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("amount", amount_txt);
+                params.put("phoneNumber", phone_txt);
+
+                //params.put("code", "blst786");
+                //  params.put("")
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 
     private void loadTransactions() {
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Wallet.this);

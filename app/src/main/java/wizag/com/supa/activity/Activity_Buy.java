@@ -10,6 +10,8 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -27,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,6 +140,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     String buy_code = "";
     JSONObject user_role_object;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    LinearLayout buy_role_layout;
+    TextView xind, xcor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,12 +149,11 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_buy);
         /*check network connectivity*/
         isNetworkConnectionAvailable();
-//        displayLocationSettingsRequest(this);
-
 
         firebase_token = FirebaseInstanceId.getInstance().getToken();
         postFirebaseToken();
 
+        buy_role_layout = findViewById(R.id.role);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -168,10 +172,11 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 code = user_role_object.getString("code");
                 code_buy = user_role_object.getString("name");
 
-               /* String[] matches = new String[]{code};
+                String[] matches = new String[]{code};
                 for (String s : matches) {
-                    if (s.contains("XDRI") || s.contains("XCOR")) {
+                    if (s.contains("XIND") || s.contains("XCOR")) {
                         selectRole();
+
                     } else {
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                         builder1.setMessage("Create Corporate or Individual Client account to continue");
@@ -191,6 +196,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
+                                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                                         finish();
                                     }
                                 });
@@ -200,8 +206,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
                         break;
                     }
-                }*/
-
+                }
 
             }
 
@@ -1074,7 +1079,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 params.put("client_location_name", name);
                 params.put("client_location_details", location_description.getText().toString());
                 params.put("order_details", String.valueOf(buy_materials));
-                params.put("client_type", "XIND");
+                params.put("client_type", buy_code);
 
 
                 return params;
@@ -1253,62 +1258,48 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         alertDialog.show();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
+    }
+
     private void selectRole() {
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(Activity_Buy.this);
-        builderSingle.setIcon(R.drawable.info);
-        builderSingle.setTitle("Select Role");
-        if (!code.isEmpty()) {
-            String[] code_names = new String[]{code_buy};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
+        builder.setTitle("info");
+        builder.setIcon(R.drawable.info);
+        builder.setMessage("Select Role to proceed");
+        builder.setCancelable(false);
 
-            int size = code_names.length;
-            for (int x = 0; x < size; x++) {
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Activity_Buy.this, android.R.layout.select_dialog_singlechoice);
-                arrayAdapter.add(code_names[x]);
-
-
-                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        builder.setPositiveButton("Individual Client",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        buy_code = "XIND";
+//                        dialog.cancel();
                         dialog.dismiss();
                     }
                 });
 
-                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String strName = arrayAdapter.getItem(which);
-                        switch (strName) {
-                            case "INDIVIDUAL_CLIENT":
-                                buy_code = "XIND";
-
-                                break;
-
-                            case "CORPORATE_CLIENT":
-                                buy_code = "XCOR";
-                                break;
-
-                            case "DRIVER":
-                                buy_code = "XDRI";
-
-                                break;
-
-                            case "TRUCK_OWNER":
-                                buy_code = "XTON";
-                                break;
-
-                            case "SUPPLIER":
-
-                                buy_code = "XSUP";
-                                break;
-
-
-                        }
-
+        builder.setNeutralButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                        finish();
                     }
                 });
-                builderSingle.show();
-            }
-        }
+
+        builder.setNegativeButton("Corporate Client",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        buy_code = "XCOR";
+//                        dialog.cancel();
+                    }
+                });
+
+
+
+
+        builder.create().show();
     }
 
     public boolean checkLocationPermission() {

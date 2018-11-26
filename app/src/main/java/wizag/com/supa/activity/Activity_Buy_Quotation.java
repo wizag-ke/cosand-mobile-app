@@ -351,8 +351,8 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                 // open wallet
 //                startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
                 /*to be removed*/
-                Intent intent = new Intent(getApplicationContext(), Activity_View_Order_summary.class);
-                intent.putExtra("order_id", order_id);
+                Intent intent = new Intent(getApplicationContext(), Activity_Wallet.class);
+                intent.putExtra("flag_type", "top_up");
                 startActivity(intent);
 
             }

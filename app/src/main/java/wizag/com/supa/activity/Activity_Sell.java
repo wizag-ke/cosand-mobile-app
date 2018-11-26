@@ -852,7 +852,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             String message = jsonObject.getString("message");
-                            JSONObject data =  jsonObject.getJSONObject("data");
+                            JSONObject data = jsonObject.getJSONObject("data");
                             request_id = data.getString("loadRequestId");
 
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -863,7 +863,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             e.printStackTrace();
                         }
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Activity_Sell.this, "", Toast.LENGTH_SHORT).show();
                     }
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -1260,7 +1260,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             e.printStackTrace();
                         }
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Activity_Sell.this, "", Toast.LENGTH_SHORT).show();
                     }
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -1295,6 +1295,47 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+    private void confirmSell() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Sell.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.layout_buy_role, null);
+
+        builder.setTitle("Select Role");
+        builder.setMessage("Confirm Load Registration");
+        builder.setIcon(R.drawable.info);
+        final Button cancel = dialogView.findViewById(R.id.cancel);
+        final Button proceed = dialogView.findViewById(R.id.proceed);
+
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                finish();
+
+            }
+
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+
+        alertDialog.show();
+    }
+
+
 
 }
 

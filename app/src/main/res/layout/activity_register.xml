@@ -40,7 +40,25 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="@dimen/_5sdp">
+                    <TextView
+                        android:id="@+id/text_dummy_hint_first_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="First Name"
+                        android:textSize="16sp"
+                        android:background="@android:color/white"
+                        android:visibility="invisible"/>
 
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="First Name"
+                        android:textColorHint="@color/textColor"
+                        app:hintTextAppearance="@style/HintTextStyle">
                     <EditText
                         android:id="@+id/edit_firstname"
                         android:layout_width="match_parent"
@@ -48,13 +66,32 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@drawable/sell"
                         android:fontFamily="@font/bariol_regular"
-                        android:hint="First Name"
                         android:inputType="textCapSentences"
                         android:padding="@dimen/_10sdp"
                         android:textColor="@color/textColor"
                         android:textColorHint="@color/textColor"
                         android:textSize="20sp" />
+                    </android.support.design.widget.TextInputLayout>
 
+                    <TextView
+                        android:id="@+id/text_dummy_hint_last_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="Last Name"
+                        android:textSize="16sp"
+                        android:background="@android:color/white"
+                        android:visibility="invisible"/>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Last Name"
+                        android:textColorHint="@color/textColor"
+                        app:hintTextAppearance="@style/HintTextStyle">
                     <EditText
                         android:id="@+id/edit_lastname"
                         android:layout_width="match_parent"
@@ -62,14 +99,31 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@drawable/sell"
                         android:fontFamily="@font/bariol_regular"
-                        android:hint="Last Name"
                         android:inputType="textCapSentences"
                         android:padding="@dimen/_10sdp"
                         android:textColor="@color/textColor"
                         android:textColorHint="@color/textColor"
                         android:textSize="20sp" />
+                    </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/text_dummy_hint_id_passport_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="ID/ Passport Number"
+                        android:textSize="16sp"
+                        android:background="@android:color/white"
+                        android:visibility="invisible"/>
 
-
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="ID/ Passport Number"
+                        android:textColorHint="@color/textColor"
+                        app:hintTextAppearance="@style/HintTextStyle">
                     <EditText
                         android:id="@+id/edit_id"
                         android:layout_width="match_parent"
@@ -77,13 +131,31 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@drawable/sell"
                         android:fontFamily="@font/bariol_regular"
-                        android:hint="ID/Passport Number"
                         android:inputType="number"
                         android:padding="@dimen/_10sdp"
                         android:textColor="@color/textColor"
                         android:textColorHint="@color/textColor"
                         android:textSize="20sp" />
+                    </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/text_dummy_hint_phone_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="Phone Number (07XX)"
+                        android:textSize="16sp"
+                        android:background="@android:color/white"
+                        android:visibility="invisible"/>
 
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Phone Number (07XX)"
+                        android:textColorHint="@color/textColor"
+                        app:hintTextAppearance="@style/HintTextStyle">
                     <EditText
                         android:maxLength="10"
                         android:id="@+id/edit_phone"
@@ -92,14 +164,31 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@drawable/sell"
                         android:fontFamily="@font/bariol_regular"
-                        android:hint="Phone Number (07XX)"
                         android:inputType="number"
                         android:padding="@dimen/_10sdp"
                         android:textColor="@color/textColor"
                         android:textColorHint="@color/textColor"
                         android:textSize="20sp" />
+                    </android.support.design.widget.TextInputLayout>
+                    <TextView
+                        android:id="@+id/text_dummy_hint_email_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="Enter email address"
+                        android:textSize="16sp"
+                        android:background="@android:color/white"
+                        android:visibility="invisible"/>
 
-
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter email address"
+                        android:textColorHint="@color/textColor"
+                        app:hintTextAppearance="@style/HintTextStyle">
                     <EditText
                         android:id="@+id/email_address"
                         android:layout_width="match_parent"
@@ -107,13 +196,12 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@drawable/sell"
                         android:fontFamily="@font/bariol_regular"
-                        android:hint="Enter email address"
                         android:inputType="textEmailAddress"
                         android:padding="@dimen/_10sdp"
                         android:textColor="@color/textColor"
                         android:textColorHint="@color/textColor"
                         android:textSize="20sp" />
-
+                    </android.support.design.widget.TextInputLayout>
                     <Button
                         android:onClick="showOptions"
                         android:id="@+id/upload_image"

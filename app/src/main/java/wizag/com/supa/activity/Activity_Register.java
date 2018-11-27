@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -57,7 +59,10 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     LinearLayout image_layout;
     String photo_path = "";
-
+    TextView text_dummy_hint_first_name,text_dummy_hint_last_name,
+            text_dummy_hint_id_passport_number,text_dummy_hint_phone_number,
+            text_dummy_hint_email_address,text_dummy_hint_create_password,
+            text_dummy_hint_confirm_password;
     ImageView id_image;
 
     @Override
@@ -69,15 +74,127 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 
         image_layout = findViewById(R.id.image_layout);
         id_image = findViewById(R.id.id_image);
-        edit_firstname = (EditText) findViewById(R.id.edit_firstname);
-        edit_lastname = (EditText) findViewById(R.id.edit_lastname);
-        edit_id = (EditText) findViewById(R.id.edit_id);
-        edit_phone = (EditText) findViewById(R.id.edit_phone);
-        email_address = (EditText) findViewById(R.id.email_address);
-        create_password = (EditText) findViewById(R.id.create_password);
-        confirm_password = (EditText) findViewById(R.id.confirm_password);
-        button_register = (Button) findViewById(R.id.button_register);
-        upload_image = (Button) findViewById(R.id.upload_image);
+        edit_firstname = findViewById(R.id.edit_firstname);
+        edit_lastname = findViewById(R.id.edit_lastname);
+        edit_id = findViewById(R.id.edit_id);
+        edit_phone = findViewById(R.id.edit_phone);
+        email_address = findViewById(R.id.email_address);
+        create_password = findViewById(R.id.create_password);
+        confirm_password = findViewById(R.id.confirm_password);
+        button_register = findViewById(R.id.button_register);
+        upload_image = findViewById(R.id.upload_image);
+        text_dummy_hint_first_name=findViewById(R.id.text_dummy_hint_first_name);
+        text_dummy_hint_last_name=findViewById(R.id.text_dummy_hint_last_name);
+        text_dummy_hint_id_passport_number =findViewById(R.id.text_dummy_hint_id_passport_number);
+        text_dummy_hint_phone_number =findViewById(R.id.text_dummy_hint_phone_number);
+        text_dummy_hint_email_address =findViewById(R.id.text_dummy_hint_email_address);
+        //handling editexts hints on focus changed
+        // first name
+        edit_firstname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (hasFocus) {
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // Show white background behind floating label
+                            text_dummy_hint_first_name.setVisibility(View.VISIBLE);
+                        }
+                    }, 100);
+                } else {
+                    // Required to show/hide white background behind floating label during focus change
+                    if (edit_firstname.getText().length() > 0)
+                        text_dummy_hint_first_name.setVisibility(View.VISIBLE);
+                    else
+                        text_dummy_hint_first_name.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        edit_lastname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (hasFocus) {
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // Show white background behind floating label
+                            text_dummy_hint_last_name.setVisibility(View.VISIBLE);
+                        }
+                    }, 100);
+                } else {
+                    // Required to show/hide white background behind floating label during focus change
+                    if (edit_lastname.getText().length() > 0)
+                        text_dummy_hint_last_name.setVisibility(View.VISIBLE);
+                    else
+                        text_dummy_hint_last_name.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        edit_id.setOnFocusChangeListener((v, hasFocus) -> {
+
+            if (hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // Show white background behind floating label
+                        text_dummy_hint_id_passport_number.setVisibility(View.VISIBLE);
+                    }
+                }, 100);
+            } else {
+                // Required to show/hide white background behind floating label during focus change
+                if (edit_id.getText().length() > 0)
+                    text_dummy_hint_id_passport_number.setVisibility(View.VISIBLE);
+                else
+                    text_dummy_hint_id_passport_number.setVisibility(View.INVISIBLE);
+            }
+        });
+        edit_phone.setOnFocusChangeListener((v, hasFocus) -> {
+
+            if (hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // Show white background behind floating label
+                        text_dummy_hint_phone_number.setVisibility(View.VISIBLE);
+                    }
+                }, 100);
+            } else {
+                // Required to show/hide white background behind floating label during focus change
+                if (edit_phone.getText().length() > 0)
+                    text_dummy_hint_phone_number.setVisibility(View.VISIBLE);
+                else
+                    text_dummy_hint_phone_number.setVisibility(View.INVISIBLE);
+            }
+        });
+        email_address.setOnFocusChangeListener((v, hasFocus) -> {
+
+            if (hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // Show white background behind floating label
+                        text_dummy_hint_email_address.setVisibility(View.VISIBLE);
+                    }
+                }, 100);
+            } else {
+                // Required to show/hide white background behind floating label during focus change
+                if (email_address.getText().length() > 0)
+                    text_dummy_hint_email_address.setVisibility(View.VISIBLE);
+                else
+                    text_dummy_hint_email_address.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
         button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

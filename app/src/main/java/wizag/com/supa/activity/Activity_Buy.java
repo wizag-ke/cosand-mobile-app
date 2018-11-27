@@ -1296,5 +1296,11 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             }
         }
     }
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent=new Intent(getApplicationContext(), Activity_Home.class);
+        startActivity(intent);
+    }
 }
 

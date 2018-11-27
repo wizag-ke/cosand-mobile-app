@@ -33,17 +33,6 @@ public class Model_Orders {
 
     public String getOrder_status() { return order_status; }
 
-//    public String getSite() { return site; }
-//
-//    public String getId() { return id; }
-//
-//    public String getName() { return name; }
-//
-//    public String getDescription() { return description; }
-//
-//    public String getLat_lng() { return lat_lng; }
-
-   // public void setClient(String client) { this.client = client; }
 
     public void setMaterial_type(String material_type) { this.material_type = material_type; }
 
@@ -58,16 +47,6 @@ public class Model_Orders {
     public void setQuote(String quote) { this.quote = quote; }
 
     public void setOrder_status(String order_status) { this.order_status = order_status; }
-
-//    public void setSite(String site) { this.site = site; }
-//
-//    public void setId(String id) { this.id = id; }
-//
-//    public void setName(String name) { this.name = name; }
-//
-//    public void setDescription(String description) { this.description = description; }
-//
-//    public void setLat_lng(String lat_lng) { this.lat_lng = lat_lng; }
 
 
 }

@@ -52,7 +52,7 @@ public class Adapter_View_orders extends RecyclerView.Adapter<Adapter_View_order
     public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_orderlist, parent, false);
+                .inflate(R.layout.order_list, parent, false);
 
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;

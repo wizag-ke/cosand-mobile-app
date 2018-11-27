@@ -31,6 +31,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/_10sdp"
         android:onClick="Arrival"
+        android:visibility="gone"
         app:srcCompat="@android:drawable/ic_menu_mylocation"/>
 
     <android.support.v7.widget.RecyclerView

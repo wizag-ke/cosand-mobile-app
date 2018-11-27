@@ -43,6 +43,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String DATA = "data";
     private static final String ACTION_DESTINATION = "action_destination";
     private static final String SHARED_PREF_NAME = "notification";
+    String order_id;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -52,9 +53,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             JSONObject data = new JSONObject(remoteMessage.getData());
             try {
-                String jsonMessage = data.getString("order_id");
+                order_id = data.getString("order_id");
 
-                Log.e(TAG, "onMessageReceived" + jsonMessage);
+                Log.e(TAG, "onMessageReceived" + order_id);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -78,49 +79,52 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String title, String message, String click_action) {
-       /* Map<String, String> data = remoteMessage.getData();adb
-        String title = data.get("title");
-        String content = data.get("message");*/
-
-
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "cosand_buy";
 
         Intent class_intent = null;
-        if(click_action.equals(".activity.Activity_Confirm_Notification_Order")){
-            class_intent = new Intent(this,Activity_Confirm_Notification_Order.class);
+        if (click_action != null && click_action.equals(".activity.Activity_Confirm_Notification_Order")) {
+            class_intent = new Intent(this, Activity_Confirm_Notification_Order.class);
+            class_intent.putExtra("order_id", order_id);
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
+
+
+
+
+
+
+
+            /*for android oreo and higher*/
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Cosand Notification",
+                        NotificationManager.IMPORTANCE_MAX);
+                /*CONFIGURE notification channel*/
+                notificationChannel.setDescription("Cosand channel for order requests");
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.setVibrationPattern(new long[]{
+                        0, 1000, 500, 1000
+                });
+                notificationChannel.enableVibration(true);
+                notificationManager.createNotificationChannel(notificationChannel);
+
+            }
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+            notificationBuilder.setAutoCancel(true)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.info)
+                    .setTicker("Cosand")
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setContentInfo("info")
+                    .setContentIntent(pendingIntent);
+
+            notificationManager.notify(1, notificationBuilder.build());
+
+
         }
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
-        /*for android oreo and higher*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Cosand Notification",
-                    NotificationManager.IMPORTANCE_MAX);
-            /*CONFIGURE notification channel*/
-            notificationChannel.setDescription("Cosand channel for order requests");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{
-                    0, 1000, 500, 1000
-            });
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-
-        }
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        notificationBuilder.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.info)
-                .setTicker("Cosand")
-                .setContentTitle(title)
-                .setContentText(message)
-                .setContentInfo("info")
-                .setContentIntent(pendingIntent);
-
-        notificationManager.notify(1, notificationBuilder.build());
 
     }
 

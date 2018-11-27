@@ -150,9 +150,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         /*check network connectivity*/
         isNetworkConnectionAvailable();
 
-        firebase_token = FirebaseInstanceId.getInstance().getToken();
-        postFirebaseToken();
-
         buy_role_layout = findViewById(R.id.role);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -166,50 +163,51 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
         try {
             JSONArray user_role = new JSONArray(driver_code);
-            for (int l = 0; l < user_role.length(); l++) {
+            if(user_role!=null) {
+                for (int l = 0; l < user_role.length(); l++) {
 
-                user_role_object = user_role.getJSONObject(l);
-                code = user_role_object.getString("code");
-                code_buy = user_role_object.getString("name");
+                    user_role_object = user_role.getJSONObject(l);
+                    code = user_role_object.getString("code");
+                    code_buy = user_role_object.getString("name");
 
-                String[] matches = new String[]{code};
-                for (String s : matches) {
-                    if (s.contains("XIND") || s.contains("XCOR")) {
-                        selectRole();
+                    String[] matches = new String[]{code};
+                    for (String s : matches) {
+                        if (s.contains("XIND") || s.contains("XCOR")) {
+                            selectRole();
 
-                    } else {
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                        builder1.setMessage("Create Corporate or Individual Client account to continue");
-                        builder1.setCancelable(false);
+                        } else {
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                            builder1.setMessage("Create Corporate or Individual Client account to continue");
+                            builder1.setCancelable(false);
 
-                        builder1.setPositiveButton(
-                                "Proceed",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                        finish();
-                                    }
-                                });
+                            builder1.setPositiveButton(
+                                    "Proceed",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                            finish();
+                                        }
+                                    });
 
-                        builder1.setNegativeButton(
-                                "Not now",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-                                        finish();
-                                    }
-                                });
+                            builder1.setNegativeButton(
+                                    "Not now",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                                            finish();
+                                        }
+                                    });
 
-                        AlertDialog alert11 = builder1.create();
-                        alert11.show();
+                            AlertDialog alert11 = builder1.create();
+                            alert11.show();
 
-                        break;
+                            break;
+                        }
                     }
+
                 }
-
             }
-
 
         } catch (JSONException e) {
             e.printStackTrace();

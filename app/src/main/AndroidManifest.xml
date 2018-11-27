@@ -25,12 +25,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="cosand_buy" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCNmyGXMTYmRIpOV3cvrYjZEjv4bugxuK4" />
@@ -218,10 +215,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Confirm_Notification_Order" />
-
         </activity>
         <activity android:name=".activity.Activity_Test_Notification" />
-
         <activity android:name=".activity.Activity_View_Order_summary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -237,7 +232,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Questionaire" />
         </activity>
-
+        <activity android:name=".activity.Activity_HandShake"></activity>
     </application>
 
 </manifest>

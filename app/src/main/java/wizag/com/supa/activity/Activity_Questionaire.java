@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -50,10 +51,20 @@ public class Activity_Questionaire extends AppCompatActivity {
     Button submit;
     String resp, text_response;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionaire);
+
+       /* Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            site_id = extras.getString("site_id");
+
+            Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
+
+
+        }*/
 
         submit = findViewById(R.id.submit);
 
@@ -254,17 +265,22 @@ public class Activity_Questionaire extends AppCompatActivity {
 
 
     public void QnResponse() {
-        SharedPreferences sp = getSharedPreferences("order", MODE_PRIVATE);
-        site_id = sp.getString("site_id", null);
-        order_id = sp.getString("order_id", null);
+        SharedPreferences sp = getSharedPreferences("site_id", MODE_PRIVATE);
+         site_id = sp.getString("site_id", null);
 
-        Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
+
+        SharedPreferences sp_order = getSharedPreferences("confirm_notification", MODE_PRIVATE);
+        order_id = sp_order.getString("order_id", null);
+
+        Toast.makeText(this, site_id+"\n"+order_id, Toast.LENGTH_SHORT).show();
+
+//        Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Questionaire.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/sites/" + site_id + "/feedback",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/sites/" + 101 + "/feedback",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -283,7 +299,7 @@ public class Activity_Questionaire extends AppCompatActivity {
 
 
                             }
-                            JSONArray data = new JSONArray("data");
+
 
                             if (status.equalsIgnoreCase("fail")) {
 

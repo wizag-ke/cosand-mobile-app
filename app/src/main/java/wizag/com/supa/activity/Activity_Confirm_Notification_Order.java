@@ -43,6 +43,9 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
     TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm, description;
     Button accept_order;
     String order_id;
+    String site_id;
+
+    private static final String SHARED_PREF_NAME = "site_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,11 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         setContentView(R.layout.activity_confirm_order);
         SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
 
-        order_id = sp.getString("order_id", null);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            order_id = extras.getString("order_id");
+            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+        }
 
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -115,7 +122,14 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
 
                         JSONObject site = data.getJSONObject("site");
                         String name = site.getString("name");
+
+                        site_id = site.getString("id");
                         String description_txt = site.getString("description");
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("site_id", site_id);
+                        editor.apply();
 
 
                         service.setText(material_type);
@@ -250,9 +264,12 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             String message = jsonObject.getString("message");
-                            startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
+                            Intent intent = new Intent(getApplicationContext(), Activity_HandShake.class);
+                            intent.putExtra("site_id", site_id);
+                            intent.putExtra("order_id", order_id);
+                            startActivity(intent);
                             finish();
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
                         } catch (JSONException e) {
                             e.printStackTrace();

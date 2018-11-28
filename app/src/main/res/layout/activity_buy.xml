@@ -36,6 +36,14 @@
                     android:textSize="@dimen/_22sdp" />
 
             </android.support.v7.widget.Toolbar>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:id="@+id/role"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
 
             <LinearLayout
 
@@ -307,5 +315,3 @@
     <include layout="@layout/activity_search_places"></include>
 
 </ViewFlipper>
-
-

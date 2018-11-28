@@ -27,7 +27,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="50dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/logo_truck" />
+                    android:src="@drawable/walleticon" />
 
                 <ImageView
                     android:id="@+id/login_logo"
@@ -139,7 +139,7 @@
                         android:layout_weight="1"
                         android:background="#173470"
                         android:padding="5dp"
-                        android:text="LOGIN"
+                        android:text="LOGIN TO WALLET"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
                         android:textStyle="bold" />

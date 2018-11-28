@@ -23,6 +23,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,11 +44,17 @@ public class Activity_Home extends AppCompatActivity {
     Context context;
     JSONArray roles;
     String order_id_txt, order_id_confirm;
+    String firebase_token;
+    String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        firebase_token = FirebaseInstanceId.getInstance().getToken();
+        postFirebaseToken();
+
 
         context = this;
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -99,8 +106,7 @@ public class Activity_Home extends AppCompatActivity {
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Activity_Buy.class));
-
+                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
             }
         });
@@ -314,8 +320,67 @@ public class Activity_Home extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-    public void loginToAccessWallet(View view)
-    {
 
+
+    private void postFirebaseToken() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Home.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, PostToken,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Home.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                error.getMessage();
+                Toast.makeText(Activity_Home.this, "Error sending instance token", Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", firebase_token);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SessionManager sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String token = user.get("access_token");
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
+
+
 }

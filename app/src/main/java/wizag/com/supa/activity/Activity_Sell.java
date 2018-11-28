@@ -150,27 +150,20 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         /*get roles*/
       /*  SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code = sp.getString("user_type", null);
-
         try {
             JSONArray user_role = new JSONArray(driver_code);
             for (int m = 0; m < user_role.length(); m++) {
-
                 JSONObject user_role_object = user_role.getJSONObject(m);
                 code = user_role_object.getString("code");
-
-
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         if (sp != null) {
             if (!code.contains("XDRI") || code.contains("XTON")) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                 builder1.setMessage("Create Driver or Truck Owner account to continue");
                 builder1.setCancelable(false);
-
                 builder1.setPositiveButton(
                         "Proceed",
                         new DialogInterface.OnClickListener() {
@@ -179,7 +172,6 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                                 finish();
                             }
                         });
-
                 builder1.setNegativeButton(
                         "Not now",
                         new DialogInterface.OnClickListener() {
@@ -188,10 +180,8 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                                 finish();
                             }
                         });
-
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
-
             }
         }*/
 
@@ -852,7 +842,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             JSONObject jsonObject = new JSONObject(response);
                             pDialog.dismiss();
                             String message = jsonObject.getString("message");
-                            JSONObject data =  jsonObject.getJSONObject("data");
+                            JSONObject data = jsonObject.getJSONObject("data");
                             request_id = data.getString("loadRequestId");
 
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -863,7 +853,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             e.printStackTrace();
                         }
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Activity_Sell.this, "", Toast.LENGTH_SHORT).show();
                     }
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -1260,7 +1250,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             e.printStackTrace();
                         }
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Activity_Sell.this, "", Toast.LENGTH_SHORT).show();
                     }
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -1295,5 +1285,46 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+    private void confirmSell() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Sell.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.layout_buy_role, null);
+
+        builder.setTitle("Select Role");
+        builder.setMessage("Confirm Load Registration");
+        builder.setIcon(R.drawable.info);
+        final Button cancel = dialogView.findViewById(R.id.cancel);
+        final Button proceed = dialogView.findViewById(R.id.proceed);
+
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                finish();
+
+            }
+
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+
+        alertDialog.show();
+    }
+
+
 
 }

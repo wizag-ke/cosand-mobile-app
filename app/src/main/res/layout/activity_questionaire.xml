@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.Activity_Questionaire">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,4 +27,28 @@
 
     </android.support.v7.widget.Toolbar>
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/qns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+
+
+    <Button
+
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:padding="@dimen/_2sdp"
+        android:text="Submit Response"
+        android:textColor="@android:color/white" />
+
+
+</LinearLayout>

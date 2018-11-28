@@ -39,35 +39,16 @@
             android:textColor="#000000"
             android:textSize="20sp" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <Button
+            android:id="@+id/confirm"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_25sdp"
-            android:orientation="horizontal"
-            android:padding="@dimen/_5sdp">
-
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_40sdp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:text="Cancel"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
-
-            <Button
-                android:id="@+id/confirm"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:text="Confirm"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="Confirm"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
 
 
     </LinearLayout>

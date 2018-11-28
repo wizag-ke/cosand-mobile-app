@@ -36,6 +36,8 @@ public class Activity_View_Order_summary extends AppCompatActivity {
     TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm;
     Button view_orders;
     String order_id;
+    String site_id;
+    private static final String SHARED_PREF_NAME = "order";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class Activity_View_Order_summary extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             order_id = extras.getString("order_id");
-            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -62,17 +64,20 @@ public class Activity_View_Order_summary extends AppCompatActivity {
         quantity_confirm = findViewById(R.id.quantity);
         location_confirm = findViewById(R.id.location);
         view_orders = findViewById(R.id.view_orders);
+        getOrderSummary();
+
+
         view_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
+                Intent intent = new Intent(Activity_View_Order_summary.this, Activity_List_Orders.class);
+                intent.putExtra("order_id", order_id);
+                intent.putExtra("site_id", site_id);
+                startActivity(intent);
                 finish();
             }
         });
 
-
-
-        getOrderSummary();
 
     }
 
@@ -101,6 +106,14 @@ public class Activity_View_Order_summary extends AppCompatActivity {
 
                         JSONObject site = data.getJSONObject("site");
                         String name = site.getString("name");
+                        site_id = String.valueOf(site.getInt("id"));
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("site_id", site_id);
+                        editor.putString("order_id", order_id);
+                        editor.apply();
+                        Toast.makeText(Activity_View_Order_summary.this, "site id"+site_id, Toast.LENGTH_SHORT).show();
 
 
                         service.setText(material_type);

@@ -31,6 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +49,8 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
     String makePaymentUrl = "http://sduka.wizag.biz/api/v1/wallet/pay-order";
     String pay_code;
     String message;
+    String formattedNumber;
+    private static final String SHARED_PREF_NAME = "quote";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,8 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         order_quantity = findViewById(R.id.order_quantity);
         total_cost = findViewById(R.id.total_cost);
 
+        getQuotation();
+
         payment = findViewById(R.id.payment);
         payment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +87,6 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                 PayOrder();
             }
         });
-        getQuotation();
 
 
     }
@@ -107,6 +112,13 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                         unit_cost_txt = quote.getString("unit_cost");
                         order_quantity_txt = quote.getString("order_quantity");
                         total_cost_txt = quote.getString("total_cost");
+
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("total_cost_txt", total_cost_txt);
+                        editor.apply();
+
 
                         unit_cost.setText(unit_cost_txt);
                         order_quantity.setText(order_quantity_txt);
@@ -168,7 +180,16 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Custom Title
         TextView title = new TextView(this);
         // Title Properties
+        NumberFormat formatter = new DecimalFormat("#,###");
+
+        SharedPreferences sp = getSharedPreferences("quote", MODE_PRIVATE);
+        String total_cost = sp.getString("total_cost_txt", null);
+
+        double myNumber = Double.parseDouble(total_cost);
+        formattedNumber = formatter.format(myNumber);
+
         title.setText("Confirm Payment");
+
         title.setPadding(20, 20, 20, 20);   // Set Position
         title.setGravity(Gravity.CENTER);
 
@@ -179,7 +200,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Message
         TextView msg = new TextView(this);
         // Message Properties
-        msg.setText("Confirm Payment of Ksh" + total_cost_txt);
+        msg.setText("Confirm Payment of Ksh\t" + formattedNumber);
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
         msg.setTextColor(Color.BLACK);
         msg.setTextSize(18);
@@ -266,8 +287,6 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                         }
 
 
-
-
                         //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
                     }
                 }, new com.android.volley.Response.ErrorListener()
@@ -285,8 +304,10 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
             //adding parameters to the request
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                SharedPreferences sp = getSharedPreferences("confirm_notification", MODE_PRIVATE);
+                String order_id_txt = sp.getString("order_id", null);
                 Map<String, String> params = new HashMap<>();
-                params.put("order_id", order_id);
+                params.put("order_id", order_id_txt);
 
                 return params;
             }
@@ -345,8 +366,8 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                 // open wallet
 //                startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
                 /*to be removed*/
-                Intent intent = new Intent(getApplicationContext(), Activity_View_Order_summary.class);
-                intent.putExtra("order_id", order_id);
+                Intent intent = new Intent(getApplicationContext(), Activity_HandShake.class);
+                intent.putExtra("flag_type", "top_up");
                 startActivity(intent);
 
             }

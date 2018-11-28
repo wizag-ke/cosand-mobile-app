@@ -764,23 +764,8 @@ public class ActivityLoginWallet extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        builder.setTitle("info");
-        builder.setMessage("Do you want to exit from the App?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.show();
+        Intent intent=new Intent(getApplicationContext(),Activity_Home.class);
+        startActivity(intent);
 
     }
 

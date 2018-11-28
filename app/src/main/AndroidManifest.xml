@@ -114,7 +114,7 @@
         </service>
 
         <activity android:name=".SecondActivity" />
-
+        <activity android:name=".activity.Activity_View_Indivindual_Sites"/>
         <service android:name=".services.LocationMonitoringService" />
         <!-- <activity android:name=".activity.SpinnerCountryActivity" /> -->
         <activity

@@ -1,169 +1,149 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
+import wizag.com.supa.adapter.Adapter_View_orders;
+import wizag.com.supa.models.Model_Orders;
 
 public class Activity_List_Orders extends AppCompatActivity {
     AlertDialog alertDialog = null;
     EditText otp;
     String message;
-    String order_id,site_id;
+
+    Adapter_View_orders adapter_view_orders;
+    TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm, TxtOrderStatus;
+    RecyclerView recycle;
+    private RecyclerView.Adapter adapter;
+    private List<Model_Orders> orderList;
+    private static final String URL_DATA = "http://sduka.wizag.biz/api/v1/orders/";
+    String order_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_orders);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            order_id = extras.getString("order_id");
-            site_id = extras.getString("site_id");
+        //initializing the recycler view
+        recycle = findViewById(R.id.recycler_view);
+        recycle.setHasFixedSize(true);
+        recycle.setLayoutManager(new LinearLayoutManager(this));
+        orderList = new ArrayList<>();
 
-//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+        //initializing adapter
+        adapter_view_orders = new Adapter_View_orders(orderList, this);
+        recycle.setAdapter(adapter_view_orders);
 
+        service = findViewById(R.id.service);
+        material = findViewById(R.id.material);
+        detail = findViewById(R.id.detail);
+        material_class = findViewById(R.id.material_class);
+        unit = findViewById(R.id.unit);
+        quantity_confirm = findViewById(R.id.quantity);
+        location_confirm = findViewById(R.id.location);
+        TxtOrderStatus = findViewById(R.id.order_Status);
+        loadUrlData();
 
-        }
     }
 
-    public void Arrival(View view) {
-        enterOTPDialog();
-    }
-
-
-    private void enterOTPDialog() {
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_List_Orders.this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.layout_confirm_otp, null);
-        otp = dialogView.findViewById(R.id.otp);
-
-
-        final Button cancel = dialogView.findViewById(R.id.cancel);
-        final Button proceed = dialogView.findViewById(R.id.confirm);
-
-
-        builder.setView(dialogView);
-        builder.setCancelable(false);
-
-
-        proceed.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                /*validate otp then start questionaire activity*/
-                if (!otp.getText().toString().isEmpty()) {
-                    validateOTP();
-
-                } else {
-                    Toast.makeText(Activity_List_Orders.this, "Enter OTP to continue", Toast.LENGTH_SHORT).show();
-                }
-//
-            }
-
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                finish();
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-
-        alertDialog.show();
-    }
-
-    private void validateOTP() {
-        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_List_Orders.this);
+    private void loadUrlData() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
         pDialog.show();
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/" + order_id + "/complete",
-                new com.android.volley.Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/orders/", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            pDialog.dismiss();
-                            message = jsonObject.getString("message");
-                            String status = jsonObject.getString("status");
-                            if (status.equalsIgnoreCase("success")) {
-                                Toast.makeText(Activity_List_Orders.this, message, Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);
-                                intent.putExtra("order_id", order_id);
-                                intent.putExtra("site_id", site_id);
-                                startActivity(intent);
+                    JSONObject jsonObject = new JSONObject(response);
+                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONArray orders = data.getJSONArray("orders");
+                        for (int k = 0; k < orders.length(); k++) {
+                            Model_Orders model_orders = new Model_Orders();
+                            JSONObject ordersObject = orders.getJSONObject(k);
 
 
-                            } else if (status.equalsIgnoreCase("fail")) {
+                            order_id = ordersObject.getString("order_id");
+                            String material_type = ordersObject.getString("material_type");
+                            String material_item = ordersObject.getString("material_item");
+                            String material_detail = ordersObject.getString("material_detail");
+                            String material_class_txt = ordersObject.getString("material_class");
+                            String material_quantity = ordersObject.getString("material_quantity");
+                            String material_cost = ordersObject.getString("quote");
+                            String order_status = ordersObject.getString("order_status");
 
-                                Toast.makeText(Activity_List_Orders.this, message, Toast.LENGTH_LONG).show();
+//                        JSONObject site = ordersObject.getJSONObject("site");
+//                        String name = site.getString("name");
+                            model_orders.setMaterial_type(material_type);
+                            model_orders.setMaterial_item(material_item);
+                            model_orders.setMaterial_detail(material_detail);
+                            model_orders.setMaterial_class(material_class_txt);
+                            model_orders.setMaterial_quantity(material_quantity);
+                            model_orders.setQuote(material_cost);
+                            model_orders.setOrder_status(order_status);
 
 
+                            if (orderList.contains(order_id)) {
+                                /*do nothing*/
+                            } else {
+                                orderList.add(model_orders);
                             }
-
-
-                            if (status.equalsIgnoreCase("error")) {
-                                Toast.makeText(Activity_List_Orders.this, message, Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);
-                                startActivity(intent);
-
-                            }
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
                         }
 
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
                     }
-                }, new com.android.volley.Response.ErrorListener()
 
-        {
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                adapter_view_orders.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                Toast.makeText(Activity_List_Orders.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
-            }
-        })
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
-        {
-            //adding parameters to the request
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("otp", otp.getText().toString());
-
-                return params;
             }
+
+
+        }) {
+
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -180,11 +160,19 @@ public class Activity_List_Orders extends AppCompatActivity {
                 headers.putAll(headersSys);
                 return headers;
             }
-
-
         };
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
     }
+
 
 }

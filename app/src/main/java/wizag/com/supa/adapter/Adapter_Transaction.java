@@ -27,8 +27,8 @@ public class Adapter_Transaction extends RecyclerView.Adapter<Adapter_Transactio
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.description = (TextView) itemView.findViewById(R.id.description);
-            this.amount = (TextView) itemView.findViewById(R.id.amount);
+            this.description = itemView.findViewById(R.id.description);
+            this.amount = itemView.findViewById(R.id.amount);
             this.type =  itemView.findViewById(R.id.type);
             this.status =  itemView.findViewById(R.id.status);
             this.date =  itemView.findViewById(R.id.date);
@@ -41,8 +41,7 @@ public class Adapter_Transaction extends RecyclerView.Adapter<Adapter_Transactio
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                           int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transactions_list, parent, false);
 

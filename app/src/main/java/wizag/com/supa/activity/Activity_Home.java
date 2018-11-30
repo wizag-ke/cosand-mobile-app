@@ -37,7 +37,6 @@ import java.util.Map;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
-import wizag.com.supa.services.SensorService;
 
 public class Activity_Home extends AppCompatActivity {
     CardView buy, sell, wallet, profile, supply, owner;
@@ -50,25 +49,11 @@ public class Activity_Home extends AppCompatActivity {
     String firebase_token;
     String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
 
-    /*ensure app is not killed*/
-    Intent mServiceIntent;
-    private SensorService mSensorService;
-    Context ctx;
-    public Context getCtx() {
-        return ctx;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        ctx = this;
-        mSensorService = new SensorService(getCtx());
-        mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
-        if (!isMyServiceRunning(mSensorService.getClass())) {
-            startService(mServiceIntent);
-        }
 
 
 
@@ -142,38 +127,47 @@ public class Activity_Home extends AppCompatActivity {
             }
         });
 
+        supply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
+            }
+        });
+
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (driver_code_sell.isEmpty()) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-//                                builder1.setTitle("Access Denied!");
-                    builder1.setMessage("Create a User Account to continue");
-                    builder1.setCancelable(true);
 
-                    builder1.setPositiveButton(
-                            "Proceed",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                    finish();
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "Not now",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                } else {
-
-                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
-                }
+                startActivity(new Intent(getApplicationContext(), ActivityLoginWallet.class));
+//                if (driver_code_sell.isEmpty()) {
+//                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+////   dont uncomment here                             builder1.setTitle("Access Denied!");
+//                    builder1.setMessage("Create a User Account to continue");
+//                    builder1.setCancelable(true);
+//
+//                    builder1.setPositiveButton(
+//                            "Proceed",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+//                                    finish();
+//                                }
+//                            });
+//
+//                    builder1.setNegativeButton(
+//                            "Not now",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    dialog.cancel();
+//                                }
+//                            });
+//
+//                    AlertDialog alert11 = builder1.create();
+//                    alert11.show();
+//                } else {
+//
+//                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+//                }
             }
         });
 
@@ -332,6 +326,7 @@ public class Activity_Home extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+
     private void postFirebaseToken() {
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Home.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
@@ -390,28 +385,6 @@ public class Activity_Home extends AppCompatActivity {
         };
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
-                return true;
-            }
-        }
-        Log.i ("isMyServiceRunning?", false+"");
-        return false;
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        stopService(mServiceIntent);
-        Log.i("MAINACT", "onDestroy!");
-        super.onDestroy();
-
     }
 
 }

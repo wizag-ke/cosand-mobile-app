@@ -119,16 +119,6 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name=".services.SensorService"
-            android:enabled="true"></service>
-
-        <receiver
-            android:name=".services.NotificationBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:label="RestartServiceWhenStopped"></receiver>
-
 
         <activity android:name=".SecondActivity" />
 
@@ -141,6 +131,7 @@
         <activity android:name=".activity.MapsActivity" />
         <activity android:name=".activity.Activity_Material_Types" />
         <activity android:name=".activity.Activity_Register_Dashboard" />
+        <activity android:name=".activity.ActivityLoginWallet" />
         <activity
             android:name=".activity.Activity_Driver_Register"
             android:windowSoftInputMode="stateHidden|adjustResize">

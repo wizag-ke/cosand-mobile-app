@@ -150,27 +150,20 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         /*get roles*/
       /*  SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code = sp.getString("user_type", null);
-
         try {
             JSONArray user_role = new JSONArray(driver_code);
             for (int m = 0; m < user_role.length(); m++) {
-
                 JSONObject user_role_object = user_role.getJSONObject(m);
                 code = user_role_object.getString("code");
-
-
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         if (sp != null) {
             if (!code.contains("XDRI") || code.contains("XTON")) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                 builder1.setMessage("Create Driver or Truck Owner account to continue");
                 builder1.setCancelable(false);
-
                 builder1.setPositiveButton(
                         "Proceed",
                         new DialogInterface.OnClickListener() {
@@ -179,7 +172,6 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                                 finish();
                             }
                         });
-
                 builder1.setNegativeButton(
                         "Not now",
                         new DialogInterface.OnClickListener() {
@@ -188,10 +180,8 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                                 finish();
                             }
                         });
-
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
-
             }
         }*/
 
@@ -1338,6 +1328,3 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
 
 
 }
-
-
-

@@ -315,5 +315,3 @@
     <include layout="@layout/activity_search_places"></include>
 
 </ViewFlipper>
-
-

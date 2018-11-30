@@ -118,7 +118,7 @@ public class Activity_Wallet extends AppCompatActivity {
         token = user.get("access_token");
 
 
-        balance = (TextView) findViewById(R.id.balance);
+        balance = findViewById(R.id.balance);
         balance.setFilters(new InputFilter[]{new CurrencyFormat()});
 
         deposit = (Button) findViewById(R.id.deposit);
@@ -705,4 +705,10 @@ public class Activity_Wallet extends AppCompatActivity {
         cancelBT.setLayoutParams(negBtnLP);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(getApplicationContext(),Activity_Home.class);
+        startActivity(intent);
+
+    }
 }

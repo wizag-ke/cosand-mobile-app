@@ -56,7 +56,7 @@ import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 import wizag.com.supa.Validation;
 
-public class Activity_Login extends AppCompatActivity {
+public class ActivityLoginWallet extends AppCompatActivity {
     public static final String ACCESS_TOKEN = "accessToken";
     public static final String REFRESH_TOKEN = "refreshToken";
     public static final String TOKEN_TYPE = "tokenType";
@@ -78,7 +78,7 @@ public class Activity_Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.wallet_login);
 
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -92,10 +92,10 @@ public class Activity_Login extends AppCompatActivity {
         token = user.get("access_token");
 
 
-        if (session.isLoggedIn()) {
-            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-            finish();
-        }
+//        if (session.isLoggedIn()) {
+//            startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
+//            finish();
+//        }
 //        checkUserRole();
 
 //        getDriverProfile();
@@ -109,15 +109,19 @@ public class Activity_Login extends AppCompatActivity {
                 /** Validation class will check the error and display the error on respective fields
                  but it won't resist the form submission, so we need to check again before submit
                  */
+                String sharedprefpassword;
+                SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+                sharedprefpassword = sp.getString("password", null);
+                password = enter_password.getText().toString();
+                if (sharedprefpassword.equals(password)) {
 
-                if (loginValidation()) {
-                    username = enter_username.getText().toString();
-                    password = enter_password.getText().toString();
-                    loginUser();
-//                    getDriverProfile();
+                   Intent intent=new Intent(getApplicationContext(), Activity_Wallet.class);
+                   startActivity(intent);
+
+
                 } else {
                     Snackbar snackbar = Snackbar
-                            .make(coordinatorLayout, "Form contains errors", Snackbar.LENGTH_LONG)
+                            .make(coordinatorLayout, "Enter the correct Password", Snackbar.LENGTH_LONG)
                             .setAction("OK", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -136,7 +140,7 @@ public class Activity_Login extends AppCompatActivity {
         supaduka_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Activity_Login.this, Activity_Register.class);
+                Intent intent = new Intent(ActivityLoginWallet.this, Activity_Register.class);
                 startActivity(intent);
 //                finish();
             }
@@ -252,8 +256,8 @@ public class Activity_Login extends AppCompatActivity {
                         getCorporateProfile();
                         getTruckOwner();
                         getSupplierProfile();
-                        Intent intent=new Intent(getApplicationContext(), Activity_Home.class);
-                        intent.putExtra("USERNAME", username);
+                        Intent intent=new Intent(getApplicationContext(), Activity_Wallet.class);
+                      //  intent.putExtra("USERNAME", username);
                         startActivity(intent);
                         finish();
 
@@ -327,7 +331,7 @@ public class Activity_Login extends AppCompatActivity {
         return errorMsg;
     }
 
-     void getDriverProfile() {
+    void getDriverProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -412,7 +416,7 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-     void getIndividualProfile() {
+    void getIndividualProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -453,7 +457,7 @@ public class Activity_Login extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityLoginWallet.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -499,7 +503,7 @@ public class Activity_Login extends AppCompatActivity {
     }
 
 
-     void getCorporateProfile() {
+    void getCorporateProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -584,7 +588,7 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-     void getTruckOwner() {
+    void getTruckOwner() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -671,7 +675,7 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
-     void getSupplierProfile() {
+    void getSupplierProfile() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -696,7 +700,7 @@ public class Activity_Login extends AppCompatActivity {
                         String phone = user.getString("phone");
                         String id_no = user.getString("id_no");
 
-                       JSONArray role = user.getJSONArray("roles");
+                        JSONArray role = user.getJSONArray("roles");
                         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
 
@@ -760,23 +764,8 @@ public class Activity_Login extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        builder.setTitle("info");
-        builder.setMessage("Do you want to exit from the App?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.show();
+        Intent intent=new Intent(getApplicationContext(),Activity_Home.class);
+        startActivity(intent);
 
     }
 

@@ -11,9 +11,13 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="wizag.com.supa.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <uses-feature android:name="android.hardware.location.gps" />
 
@@ -30,7 +34,7 @@
             android:value="cosand_buy" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCNmyGXMTYmRIpOV3cvrYjZEjv4bugxuK4" />
+            android:value="AIzaSyBJQXKdUUdORrsDzlnP1ku3WSqeuEojNRw" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -107,11 +111,24 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".services.MyFirebaseMessagingService">
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".services.SensorService"
+            android:enabled="true"></service>
+
+        <receiver
+            android:name=".services.NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped"></receiver>
+
 
         <activity android:name=".SecondActivity" />
 
@@ -120,16 +137,7 @@
         <activity
             android:name=".activity.Activity_Register_Truck"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".Spinner_Demo_Activity">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+        <activity android:name=".Spinner_Demo_Activity"></activity>
         <activity android:name=".activity.MapsActivity" />
         <activity android:name=".activity.Activity_Material_Types" />
         <activity android:name=".activity.Activity_Register_Dashboard" />
@@ -232,7 +240,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_Questionaire" />
         </activity>
-        <activity android:name=".activity.Activity_HandShake"></activity>
+        <activity android:name=".activity.Activity_HandShake">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_HandShake" />
+        </activity>
+        <activity android:name=".activity.Activity_track_Driver">
+            <intent-filter>
+                <action android:name=".activity.Activity_track_Driver" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.Activity_track_Driver" />
+        </activity>
+        <activity android:name=".activity.Activity_Driver_Movement">
+
+        </activity>
     </application>
 
 </manifest>

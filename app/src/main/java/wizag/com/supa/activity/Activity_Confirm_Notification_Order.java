@@ -42,8 +42,9 @@ import wizag.com.supa.helper.MyApplication;
 public class Activity_Confirm_Notification_Order extends AppCompatActivity {
     TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm, description;
     Button accept_order;
-    String order_id;
+    String order_id, client_name_txt, client_phone_txt;
     String site_id;
+    TextView client_name, client_phone;
 
     private static final String SHARED_PREF_NAME = "site_id";
 
@@ -56,7 +57,14 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             order_id = extras.getString("order_id");
-            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+            client_name_txt = extras.getString("client_name");
+            client_phone_txt = extras.getString("client_phone");
+//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+
+            /*if (client_name_txt==null || client_phone_txt==null) {
+                client_name.setText(client_name_txt);
+                client_phone.setText(client_phone_txt);
+            }*/
         }
 
 

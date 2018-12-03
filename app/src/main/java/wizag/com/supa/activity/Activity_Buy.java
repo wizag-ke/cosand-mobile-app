@@ -136,7 +136,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
         try {
             JSONArray user_role = new JSONArray(driver_code);
-            if(user_role!=null) {
+            if (user_role != null) {
                 for (int l = 0; l < user_role.length(); l++) {
 
                     user_role_object = user_role.getJSONObject(l);
@@ -1136,66 +1136,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         alertDialog.show();
     }
 
-    private void postFirebaseToken() {
-        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Buy.this);
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, PostToken,
-                new com.android.volley.Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-                            pDialog.dismiss();
-                            String message = jsonObject.getString("message");
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
-                    }
-                }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                error.getMessage();
-                Toast.makeText(Activity_Buy.this, "Error sending instance token", Toast.LENGTH_LONG).show();
-                pDialog.dismiss();
-            }
-        }) {
-            //adding parameters to the request
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", firebase_token);
-
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                SessionManager sessionManager = new SessionManager(getApplicationContext());
-                HashMap<String, String> user = sessionManager.getUserDetails();
-                String token = user.get("access_token");
-                String bearer = "Bearer ".concat(token);
-                Map<String, String> headersSys = super.getHeaders();
-                Map<String, String> headers = new HashMap<String, String>();
-                headersSys.remove("Authorization");
-                headers.put("Authorization", bearer);
-                headers.putAll(headersSys);
-                return headers;
-            }
-        };
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
 
     public boolean isNetworkConnectionAvailable() {
         ConnectivityManager cm =
@@ -1266,8 +1206,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 //                        dialog.cancel();
                     }
                 });
-
-
 
 
         builder.create().show();
@@ -1346,9 +1284,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onBackPressed()
-    {
-        Intent intent=new Intent(getApplicationContext(), Activity_Home.class);
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), Activity_Home.class);
         startActivity(intent);
     }
 

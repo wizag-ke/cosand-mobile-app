@@ -44,7 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String DATA = "data";
     private static final String ACTION_DESTINATION = "action_destination";
     private static final String SHARED_PREF_NAME = "notification";
-    String order_id, client_phone, driver_phone, driver_name,client_name;
+    String order_id, client_phone, driver_phone, driver_name, client_name;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -55,11 +55,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             JSONObject data = new JSONObject(remoteMessage.getData());
             try {
                 order_id = data.getString("order_id");
-                driver_phone = data.getString("driver_phone");
-                client_phone = data.getString("client_phone");
-                driver_name = data.getString("driver_name");
-                client_name = data.getString("client_name");
-
+                driver_phone = data.get("driver_phone").toString();
+                driver_name = data.get("driver_name").toString();
+                client_phone = data.get("client_phone").toString();
+                client_name = data.get("client_name").toString();
 
                 Log.e(TAG, "onMessageReceived" + client_name);
 
@@ -137,52 +136,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         notificationManager.notify(1, notificationBuilder.build());
-
-
-
-
-       /* else if (click_action != null && click_action.equals(".activity.Activity_track_Driver")) {
-            class_intent = new Intent(this, Activity_track_Driver.class);
-//            class_intent.putExtra("order_id", order_id);
-            class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
-
-
-
-
-
-
-
-            *//*for android oreo and higher*//*
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID_CLIENT, "Cosand Notification Client",
-                        NotificationManager.IMPORTANCE_MAX);
-                *//*CONFIGURE notification channel*//*
-                notificationChannel.setDescription("Cosand channel for client");
-                notificationChannel.enableLights(true);
-                notificationChannel.setLightColor(Color.RED);
-                notificationChannel.setVibrationPattern(new long[]{
-                        0, 1000, 500, 1000
-                });
-                notificationChannel.enableVibration(true);
-                notificationManager.createNotificationChannel(notificationChannel);
-
-            }
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID_CLIENT);
-            notificationBuilder.setAutoCancel(true)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.info)
-                    .setTicker("Cosand Client")
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setContentInfo("info")
-                    .setContentIntent(pendingIntent);
-
-            notificationManager.notify(1, notificationBuilder.build());
-
-
-        }*/
 
     }
 

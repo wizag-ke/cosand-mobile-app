@@ -71,7 +71,6 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
 
 
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-
         corporate_fname = sp.getString("corporate_fname", null);
         corporate_lname = sp.getString("corporate_lname", null);
         corporate_email = sp.getString("corporate_email", null);

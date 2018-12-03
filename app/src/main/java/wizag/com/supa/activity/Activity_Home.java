@@ -1,5 +1,6 @@
 package wizag.com.supa.activity;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,10 +49,13 @@ public class Activity_Home extends AppCompatActivity {
     String firebase_token;
     String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
 
         firebase_token = FirebaseInstanceId.getInstance().getToken();
         postFirebaseToken();
@@ -381,6 +386,5 @@ public class Activity_Home extends AppCompatActivity {
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-
 
 }

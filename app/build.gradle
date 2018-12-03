@@ -52,11 +52,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
     implementation 'com.google.android.gms:play-services-places:11.8.0'
+    implementation 'com.google.android.gms:play-services:11.8.0'
     implementation 'com.github.jd-alexander:library:1.1.0'
     implementation('io.nlopez.smartlocation:library:3.3.3') {
         transitive = false
     }
-
 
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:6.3.0@aar') {
         transitive = true
@@ -84,6 +84,8 @@ dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.koushikdutta.ion:ion:2.+'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.akexorcist:googledirectionlibrary:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

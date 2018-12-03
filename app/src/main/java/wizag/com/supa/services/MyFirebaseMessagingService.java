@@ -13,7 +13,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -28,6 +28,7 @@ import wizag.com.supa.R;
 import wizag.com.supa.TestActivity;
 import wizag.com.supa.activity.Activity_Confirm_Notification_Order;
 import wizag.com.supa.activity.Activity_Home;
+import wizag.com.supa.activity.Activity_track_Driver;
 import wizag.com.supa.helper.MyApplication;
 import wizag.com.supa.models.Model_Notification;
 
@@ -43,7 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String DATA = "data";
     private static final String ACTION_DESTINATION = "action_destination";
     private static final String SHARED_PREF_NAME = "notification";
-    String order_id;
+    String order_id, client_phone, driver_phone, driver_name,client_name;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -54,8 +55,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             JSONObject data = new JSONObject(remoteMessage.getData());
             try {
                 order_id = data.getString("order_id");
+                driver_phone = data.getString("driver_phone");
+                client_phone = data.getString("client_phone");
+                driver_name = data.getString("driver_name");
+                client_name = data.getString("client_name");
 
-                Log.e(TAG, "onMessageReceived" + order_id);
+
+                Log.e(TAG, "onMessageReceived" + client_name);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -81,11 +87,63 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(String title, String message, String click_action) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "cosand_buy";
+        String NOTIFICATION_CHANNEL_ID_CLIENT = "cosand_client";
+
 
         Intent class_intent = null;
         if (click_action != null && click_action.equals(".activity.Activity_Confirm_Notification_Order")) {
             class_intent = new Intent(this, Activity_Confirm_Notification_Order.class);
             class_intent.putExtra("order_id", order_id);
+            class_intent.putExtra("client_name", client_name);
+            class_intent.putExtra("client_phone", client_phone);
+            class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        } else if (click_action != null && click_action.equals(".activity.Activity_track_Driver")) {
+            class_intent = new Intent(this, Activity_track_Driver.class);
+            class_intent.putExtra("driver_phone", driver_phone);
+            class_intent.putExtra("driver_name", driver_name);
+            class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        }
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
+
+
+        /*for android oreo and higher*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Cosand Notification",
+                    NotificationManager.IMPORTANCE_MAX);
+            /*CONFIGURE notification channel*/
+            notificationChannel.setDescription("Cosand channel for order requests");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{
+                    0, 1000, 500, 1000
+            });
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        notificationBuilder.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.info)
+                .setTicker("Cosand")
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentInfo("info")
+                .setContentIntent(pendingIntent);
+
+        notificationManager.notify(1, notificationBuilder.build());
+
+
+
+
+       /* else if (click_action != null && click_action.equals(".activity.Activity_track_Driver")) {
+            class_intent = new Intent(this, Activity_track_Driver.class);
+//            class_intent.putExtra("order_id", order_id);
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -95,12 +153,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
-            /*for android oreo and higher*/
+            *//*for android oreo and higher*//*
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Cosand Notification",
+                @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID_CLIENT, "Cosand Notification Client",
                         NotificationManager.IMPORTANCE_MAX);
-                /*CONFIGURE notification channel*/
-                notificationChannel.setDescription("Cosand channel for order requests");
+                *//*CONFIGURE notification channel*//*
+                notificationChannel.setDescription("Cosand channel for client");
                 notificationChannel.enableLights(true);
                 notificationChannel.setLightColor(Color.RED);
                 notificationChannel.setVibrationPattern(new long[]{
@@ -110,12 +168,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationManager.createNotificationChannel(notificationChannel);
 
             }
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID_CLIENT);
             notificationBuilder.setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.info)
-                    .setTicker("Cosand")
+                    .setTicker("Cosand Client")
                     .setContentTitle(title)
                     .setContentText(message)
                     .setContentInfo("info")
@@ -124,8 +182,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.notify(1, notificationBuilder.build());
 
 
-        }
+        }*/
 
     }
+
 
 }

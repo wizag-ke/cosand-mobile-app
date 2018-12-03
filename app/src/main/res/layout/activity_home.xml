@@ -156,7 +156,7 @@
                         <ImageView
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
-                            android:src="@drawable/briefcase"
+                            android:src="@drawable/buy"
                             />
 
                         <TextView
@@ -195,7 +195,7 @@
                         <ImageView
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
-                            android:src="@drawable/owner"
+                            android:src="@drawable/walleticon"
                             />
 
                         <TextView
@@ -277,12 +277,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="invisible">
 
                         <ImageView
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
-                            android:src="@drawable/owner"
+                            android:src="@drawable/trip"
                             />
 
                         <TextView

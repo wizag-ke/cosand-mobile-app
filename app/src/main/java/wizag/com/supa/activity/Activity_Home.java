@@ -190,8 +190,8 @@ public class Activity_Home extends AppCompatActivity {
                     Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
                     startActivity(cor_profile);
                 } else if (user_role.equalsIgnoreCase("XTON")) {
-                    Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
-                    startActivity(truck_profile);
+//                    Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
+//                    startActivity(truck_profile);
                 } else if (user_role.equalsIgnoreCase("XSUP")) {
                     Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
                     startActivity(truck_profile);

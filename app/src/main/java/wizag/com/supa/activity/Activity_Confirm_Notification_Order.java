@@ -59,12 +59,7 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
             order_id = extras.getString("order_id");
             client_name_txt = extras.getString("client_name");
             client_phone_txt = extras.getString("client_phone");
-//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
 
-            /*if (client_name_txt==null || client_phone_txt==null) {
-                client_name.setText(client_name_txt);
-                client_phone.setText(client_phone_txt);
-            }*/
         }
 
 
@@ -134,9 +129,12 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
                         site_id = site.getString("id");
                         String description_txt = site.getString("description");
 
+                        String lat_lng = site.getString("lat_lng");
+
                         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putString("site_id", site_id);
+                        editor.putString("lat_lng", lat_lng);
                         editor.apply();
 
 

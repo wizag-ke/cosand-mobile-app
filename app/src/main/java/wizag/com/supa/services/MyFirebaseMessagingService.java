@@ -44,7 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String DATA = "data";
     private static final String ACTION_DESTINATION = "action_destination";
     private static final String SHARED_PREF_NAME = "notification";
-    String order_id, client_phone, driver_phone, driver_name, client_name;
+    String order_id, client_phone, driver_phone, driver_name, client_name,order_otp;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -56,6 +56,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             try {
                 order_id = data.getString("order_id");
                 driver_phone = data.get("driver_phone").toString();
+                order_otp = data.get("order_otp").toString();
                 driver_name = data.get("driver_name").toString();
                 client_phone = data.get("client_phone").toString();
                 client_name = data.get("client_name").toString();
@@ -86,7 +87,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(String title, String message, String click_action) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "cosand_buy";
-        String NOTIFICATION_CHANNEL_ID_CLIENT = "cosand_client";
 
 
         Intent class_intent = null;
@@ -101,6 +101,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             class_intent = new Intent(this, Activity_track_Driver.class);
             class_intent.putExtra("driver_phone", driver_phone);
             class_intent.putExtra("driver_name", driver_name);
+            class_intent.putExtra("order_otp", order_otp);
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         }

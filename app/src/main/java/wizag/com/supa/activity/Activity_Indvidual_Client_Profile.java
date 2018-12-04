@@ -36,7 +36,7 @@ import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
-public class Activity_Indvidual_Client_Profile extends AppCompatActivity implements View.OnClickListener {
+public class Activity_Indvidual_Client_Profile extends AppCompatActivity  {
     ViewFlipper flipper;
     EditText fname, lname, id_no, email, phone;
     Button next;
@@ -130,19 +130,25 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity impleme
         id_no.setText(individual_id_no);
 
         next = findViewById(R.id.next);
-        next.setOnClickListener(this);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getApplicationContext(), Activity_View_Indivindual_Sites.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.next:
-                flipper.showNext();
-                break;
-
-        }
-    }
+//    @Override
+//    public void onClick(View view) {
+//        switch (view.getId()) {
+//            case R.id.next:
+//                flipper.showNext();
+//                break;
+//
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

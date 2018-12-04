@@ -48,7 +48,11 @@
             android:name=".activity.Activity_Login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MenuActivity"
@@ -117,7 +121,7 @@
 
 
         <activity android:name=".SecondActivity" />
-
+        <activity android:name=".activity.Activity_View_Indivindual_Sites"/>
         <service android:name=".services.LocationMonitoringService" />
         <!-- <activity android:name=".activity.SpinnerCountryActivity" /> -->
         <activity
@@ -243,11 +247,7 @@
                 android:value=".activity.Activity_track_Driver" />
         </activity>
         <activity android:name=".activity.Activity_Driver_Movement">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

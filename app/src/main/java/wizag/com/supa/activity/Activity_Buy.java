@@ -377,10 +377,10 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
     private void getServiceType() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+        pDialog.show();*/
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types", new Response.Listener<String>() {
             @Override
@@ -388,7 +388,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+                    /*pDialog.dismiss();*/
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         materialTypes = data.getJSONArray("materialTypes");
@@ -429,7 +429,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+                /*pDialog.dismiss();*/
                 Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -470,10 +470,10 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     /*Selecting Material type*/
     private void getMaterial() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+        pDialog.show();*/
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
@@ -482,7 +482,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+                    /*pDialog.dismiss();*/
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         materials = data.getJSONArray("materials");
@@ -524,7 +524,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+                /*pDialog.dismiss();*/
                 Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -565,10 +565,10 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     /*get material details*/
     private void getMaterialDetails() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+        pDialog.show();*/
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
@@ -577,7 +577,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+                    /*pDialog.dismiss();*/
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject details_obj = data.getJSONObject("materialItem");
@@ -621,7 +621,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+                /*pDialog.dismiss();*/
                 Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -662,10 +662,10 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     /*get material classes*/
     private void getMaterialClasses() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+        pDialog.show();*/
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
@@ -674,7 +674,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+                    /*pDialog.dismiss();*/
 
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
@@ -723,7 +723,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+                /*pDialog.dismiss();*/
                 Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -764,10 +764,10 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     /*get material units*/
     private void getMaterialUnits() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.show();
+        pDialog.show();*/
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
@@ -776,7 +776,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
+                    /*pDialog.dismiss();*/
                     if (jsonObject != null) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject units_obj = data.getJSONObject("materialItem");
@@ -819,7 +819,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+                /*pDialog.dismiss();*/
                 Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -1010,7 +1010,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
-                            pDialog.dismiss();
+                            /*pDialog.dismiss();*/
                             String message = jsonObject.getString("message");
                             JSONObject data = jsonObject.getJSONObject("data");
                             String order_id = data.getString("order_id");
@@ -1039,7 +1039,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 Toast.makeText(Activity_Buy.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                pDialog.dismiss();
+                /*pDialog.dismiss();*/
             }
         }) {
             //adding parameters to the request

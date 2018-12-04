@@ -44,24 +44,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String DATA = "data";
     private static final String ACTION_DESTINATION = "action_destination";
     private static final String SHARED_PREF_NAME = "notification";
-    String order_id, client_phone, driver_phone, driver_name, client_name,order_otp;
-
+    String order_id, client_phone, driver_phone, driver_name, client_name, order_otp;
+    JSONObject data;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 //        super.onMessageReceived(remoteMessage);
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "message data payload" + remoteMessage.getData());
 
-            JSONObject data = new JSONObject(remoteMessage.getData());
+             data = new JSONObject(remoteMessage.getData());
             try {
                 order_id = data.getString("order_id");
                 driver_phone = data.get("driver_phone").toString();
                 order_otp = data.get("order_otp").toString();
                 driver_name = data.get("driver_name").toString();
-                client_phone = data.get("client_phone").toString();
-                client_name = data.get("client_name").toString();
 
-                Log.e(TAG, "onMessageReceived" + client_name);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -93,15 +91,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (click_action != null && click_action.equals(".activity.Activity_Confirm_Notification_Order")) {
             class_intent = new Intent(this, Activity_Confirm_Notification_Order.class);
             class_intent.putExtra("order_id", order_id);
-            class_intent.putExtra("client_name", client_name);
-            class_intent.putExtra("client_phone", client_phone);
+            try {
+                client_phone = data.get("client_phone").toString();
+                client_name = data.get("client_name").toString();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("client_phone", client_phone);
+            editor.putString("client_name", client_name);
+            editor.apply();
+
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         } else if (click_action != null && click_action.equals(".activity.Activity_track_Driver")) {
             class_intent = new Intent(this, Activity_track_Driver.class);
-            class_intent.putExtra("driver_phone", driver_phone);
+          /*  class_intent.putExtra("driver_phone", driver_phone);
             class_intent.putExtra("driver_name", driver_name);
-            class_intent.putExtra("order_otp", order_otp);
+            class_intent.putExtra("order_otp", order_otp);*/
+
+            SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("driver_phone", driver_phone);
+            editor.putString("driver_name", driver_name);
+            editor.putString("order_otp", order_otp);
+            editor.apply();
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         }

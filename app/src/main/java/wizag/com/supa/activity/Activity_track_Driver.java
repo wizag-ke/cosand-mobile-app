@@ -2,6 +2,7 @@ package wizag.com.supa.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ public class Activity_track_Driver extends AppCompatActivity {
         driver_name = findViewById(R.id.driver_name);
         order_otp = findViewById(R.id.order_otp);
 
-        Bundle extras = getIntent().getExtras();
+       /* Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
             driver_name_txt = extras.getString("driver_name");
@@ -40,6 +41,15 @@ public class Activity_track_Driver extends AppCompatActivity {
             order_otp.setText("OTP:\t"+order_otp_txt);
 
         }
+*/
+        SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
+        driver_name_txt = sp.getString("driver_name", null);
+        driver_phone_txt = sp.getString("driver_phone", null);
+        order_otp_txt = sp.getString("order_otp", null);
+
+        driver_name.setText(driver_name_txt);
+        phone.setText(driver_phone_txt);
+        order_otp.setText("OTP:\t"+order_otp_txt);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);

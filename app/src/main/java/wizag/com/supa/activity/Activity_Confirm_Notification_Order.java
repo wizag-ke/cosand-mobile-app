@@ -57,8 +57,6 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             order_id = extras.getString("order_id");
-            client_name_txt = extras.getString("client_name");
-            client_phone_txt = extras.getString("client_phone");
 
         }
 
@@ -77,6 +75,15 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         location_confirm = findViewById(R.id.location);
         description = findViewById(R.id.description);
         accept_order = findViewById(R.id.accept_order);
+        client_phone = findViewById(R.id.client_phone);
+        client_name = findViewById(R.id.client_name);
+
+        client_name_txt = sp.getString("client_name", null);
+        client_phone_txt = sp.getString("client_phone", null);
+        client_phone.setText(client_phone_txt);
+        client_name.setText(client_name_txt);
+
+
         accept_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

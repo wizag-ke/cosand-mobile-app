@@ -39,7 +39,7 @@ import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
 public class Activity_Home extends AppCompatActivity {
-    CardView buy, sell, wallet, profile, supply, owner;
+    CardView buy, sell, wallet, profile, supply, owner,track_order;
     JSONArray role_array;
     SessionManager session;
     String token, user_role;
@@ -99,7 +99,7 @@ public class Activity_Home extends AppCompatActivity {
         wallet = findViewById(R.id.wallet);
         profile = findViewById(R.id.profile);
         supply = findViewById(R.id.supply);
-        owner = findViewById(R.id.trip);
+        track_order = findViewById(R.id.track_order);
 
         /*get user code*/
         SharedPreferences sharedPreferences_sell = getSharedPreferences("profile", MODE_PRIVATE);
@@ -116,6 +116,13 @@ public class Activity_Home extends AppCompatActivity {
             }
         });
 
+        track_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Activity_track_Driver.class));
+
+            }
+        });
 
         sell.setOnClickListener(new View.OnClickListener() {
             @Override

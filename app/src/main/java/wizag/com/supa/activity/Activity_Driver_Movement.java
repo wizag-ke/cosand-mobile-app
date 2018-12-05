@@ -150,7 +150,7 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
             mk = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
                     //.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
                     .icon(BitmapDescriptorFactory.fromBitmap((smallMarker))).flat(true).anchor(0.5f ,0.5f).rotation(90.0f));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlong, 16));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlong, 11));
 
             //Set Marker Count to 1 after first marker is created
             markerCount = 1;

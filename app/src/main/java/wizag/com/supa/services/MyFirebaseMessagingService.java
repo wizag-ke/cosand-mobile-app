@@ -46,19 +46,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String SHARED_PREF_NAME = "notification";
     String order_id, client_phone, driver_phone, driver_name, client_name, order_otp;
     JSONObject data;
+    PendingIntent pendingIntent;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 //        super.onMessageReceived(remoteMessage);
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "message data payload" + remoteMessage.getData());
 
-             data = new JSONObject(remoteMessage.getData());
+            data = new JSONObject(remoteMessage.getData());
             try {
                 order_id = data.getString("order_id");
                 driver_phone = data.get("driver_phone").toString();
                 order_otp = data.get("order_otp").toString();
                 driver_name = data.get("driver_name").toString();
-
 
 
             } catch (JSONException e) {
@@ -87,9 +88,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String NOTIFICATION_CHANNEL_ID = "cosand_buy";
 
 
-        Intent class_intent = null;
+//        Intent class_intent = null;
+
         if (click_action != null && click_action.equals(".activity.Activity_Confirm_Notification_Order")) {
-            class_intent = new Intent(this, Activity_Confirm_Notification_Order.class);
+            Intent class_intent = new Intent(this, Activity_Confirm_Notification_Order.class);
             class_intent.putExtra("order_id", order_id);
             try {
                 client_phone = data.get("client_phone").toString();
@@ -105,9 +107,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             editor.apply();
 
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
+
 
         } else if (click_action != null && click_action.equals(".activity.Activity_track_Driver")) {
-            class_intent = new Intent(this, Activity_track_Driver.class);
+            Intent class_intent = new Intent(this, Activity_track_Driver.class);
           /*  class_intent.putExtra("driver_phone", driver_phone);
             class_intent.putExtra("driver_name", driver_name);
             class_intent.putExtra("order_otp", order_otp);*/
@@ -119,11 +123,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             editor.putString("order_otp", order_otp);
             editor.apply();
             class_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
+
 
         }
 
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
 
 
         /*for android oreo and higher*/
@@ -131,7 +137,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Cosand Notification",
                     NotificationManager.IMPORTANCE_MAX);
             /*CONFIGURE notification channel*/
-            notificationChannel.setDescription("Cosand channel for order requests");
+            notificationChannel.setDescription("Cosand channel for order reuqests");
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.setVibrationPattern(new long[]{

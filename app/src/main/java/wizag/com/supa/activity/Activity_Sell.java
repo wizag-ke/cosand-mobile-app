@@ -845,8 +845,10 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             JSONObject data = jsonObject.getJSONObject("data");
                             request_id = data.getString("loadRequestId");
 
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                            postLocationUpdates();
+                            /*store request id on shared prefs*/
+
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                            postLocationUpdates();
                             startActivity(new Intent(getApplicationContext(), Activity_Home.class));
 
                         } catch (JSONException e) {

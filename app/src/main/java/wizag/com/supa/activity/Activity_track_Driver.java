@@ -14,9 +14,9 @@ import android.widget.TextView;
 import wizag.com.supa.R;
 
 public class Activity_track_Driver extends AppCompatActivity {
-    TextView phone, driver_name,order_otp;
+    TextView phone, driver_name, order_otp;
     Button track;
-    String driver_name_txt, driver_phone_txt,order_otp_txt;
+    String driver_name_txt, driver_phone_txt, order_otp_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +43,19 @@ public class Activity_track_Driver extends AppCompatActivity {
         }
 */
         SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
-        driver_name_txt = sp.getString("driver_name", null);
-        driver_phone_txt = sp.getString("driver_phone", null);
-        order_otp_txt = sp.getString("order_otp", null);
+        if (sp != null) {
+            driver_name_txt = sp.getString("driver_name", null);
+            driver_phone_txt = sp.getString("driver_phone", null);
+            order_otp_txt = sp.getString("order_otp", null);
 
-        driver_name.setText(driver_name_txt);
-        phone.setText(driver_phone_txt);
-        order_otp.setText("OTP:\t"+order_otp_txt);
+            driver_name.setText(driver_name_txt);
+            phone.setText(driver_phone_txt);
+            order_otp.setText("OTP:\t" + order_otp_txt);
+
+        } else {
+            track.setVisibility(View.GONE);
+        }
+
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);

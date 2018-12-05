@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
@@ -58,7 +57,7 @@
                     android:fontFamily="@font/bariol_regular"
                     android:gravity="center"
                     android:padding="@dimen/_16sdp"
-                    android:text="Confirm Delivery by entering OTP provided by the client"
+                    android:text="Confirm Delivery by entering OTP provided by the client on arrival to the site"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_18sdp" />
 
@@ -83,7 +82,7 @@
                     android:id="@+id/confirm"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp"
-                    android:layout_marginTop="@dimen/_80sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
 
                     android:background="@color/colorPrimary"
                     android:text="Confirm"

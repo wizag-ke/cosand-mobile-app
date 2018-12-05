@@ -4,6 +4,7 @@ package wizag.com.supa.activity;
 import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +24,11 @@ import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,11 +41,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -50,8 +59,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import wizag.com.supa.R;
+import wizag.com.supa.SessionManager;
 import wizag.com.supa.utils.AppConstants;
 import wizag.com.supa.utils.DataParser;
 
@@ -73,6 +84,9 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
     String lat_lng_txt;
     String[] lat_lng_values;
     String buyer_latitude, buyer_longitude;
+    String loc;
+    String token;
+    SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +102,10 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
 
 
         markerCount = 0;
+
+        sessionManager = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = sessionManager.getUserDetails();
+        token = user.get("access_token");
 
         //Check If Google Services Is Available
         if (getServicesAvailable()) {
@@ -128,6 +146,9 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
         }
         //Uncomment To Show Google Location Blue Pointer
         // mMap.setMyLocationEnabled(true);
+        mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.map_night));
     }
 
     Marker mk = null;
@@ -141,7 +162,7 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
             //Set Custom BitMap for Pointer
             int height = 80;
             int width = 45;
-            BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.icon_car);
+            BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.marker_icon);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
             mMap = googleMap;
@@ -149,7 +170,7 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
             LatLng latlong = new LatLng(lat, lon);
             mk = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon))
                     //.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
-                    .icon(BitmapDescriptorFactory.fromBitmap((smallMarker))).flat(true).anchor(0.5f ,0.5f).rotation(90.0f));
+                    .icon(BitmapDescriptorFactory.fromBitmap((smallMarker))).flat(true).anchor(0.5f, 0.5f).rotation(90.0f));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlong, 11));
 
             //Set Marker Count to 1 after first marker is created
@@ -242,11 +263,11 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
             if (mLastLocation != null) {
                 double latitude = mLastLocation.getLatitude();
                 double longitude = mLastLocation.getLongitude();
-                String loc = "" + latitude + " ," + longitude + " ";
+                loc = "" + latitude + " ," + longitude + " ";
                 Toast.makeText(this, loc, Toast.LENGTH_SHORT).show();
 
                 //Add pointer to the map at location
-                addMarker(mMap, Double.valueOf(buyer_latitude), Double.valueOf(buyer_longitude));
+                addMarker(mMap, latitude, longitude);
 
 
             } else {
@@ -398,6 +419,64 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
                 return new LatLng(lat, lng);
             }
         }
+    }
+
+
+    private void postLocationUpdates() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Driver_Movement.this);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/load-request/" + request_id + "/location",
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            pDialog.dismiss();
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(Activity_Driver_Movement.this, "", Toast.LENGTH_SHORT).show();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                error.printStackTrace();
+                Toast.makeText(Activity_Driver_Movement.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                pDialog.dismiss();
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("location", loc);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String bearer = "Bearer ".concat(token);
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
 

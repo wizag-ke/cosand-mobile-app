@@ -1,7 +1,9 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -91,6 +93,13 @@ public class Activity_HandShake extends AppCompatActivity {
                             message = jsonObject.getString("message");
                             String status = jsonObject.getString("status");
                             if (status.equalsIgnoreCase("success")) {
+
+                                /*delete shared prefs value for OTP on the buyer side*/
+                                SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
+                                sp.edit().remove("driver_name").commit();
+                                sp.edit().remove("driver_phone").commit();
+                                sp.edit().remove("order_otp").commit();
+
                                 Toast.makeText(Activity_HandShake.this, message, Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);

@@ -195,7 +195,7 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
 
-        int socketTimeout = 30000;
+        int socketTimeout = 70000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);

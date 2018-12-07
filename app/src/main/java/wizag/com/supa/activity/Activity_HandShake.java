@@ -118,6 +118,8 @@ public class Activity_HandShake extends AppCompatActivity {
 
                             if (status.equalsIgnoreCase("error")) {
                                 Toast.makeText(Activity_HandShake.this, message, Toast.LENGTH_LONG).show();
+
+                                /*close ur eyes n ride along*/
                                 Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);
                                 startActivity(intent);
 

@@ -303,7 +303,7 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-
+                /*no params, dude it's just a confirmation anyway*/
 
                 return params;
             }

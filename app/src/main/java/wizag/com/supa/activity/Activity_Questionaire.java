@@ -57,14 +57,14 @@ public class Activity_Questionaire extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionaire);
 
-       /* Bundle extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             site_id = extras.getString("site_id");
 
             Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
 
 
-        }*/
+        }
 
         submit = findViewById(R.id.submit);
 
@@ -280,7 +280,7 @@ public class Activity_Questionaire extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/sites/" + 101 + "/feedback",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/sites/" + site_id + "/feedback",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

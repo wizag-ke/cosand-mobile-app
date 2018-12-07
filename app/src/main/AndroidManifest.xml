@@ -48,11 +48,7 @@
             android:name=".activity.Activity_Login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MenuActivity"
@@ -119,15 +115,15 @@
             </intent-filter>
         </service>
 
-
         <activity android:name=".SecondActivity" />
-        <activity android:name=".activity.Activity_View_Indivindual_Sites"/>
+        <activity android:name=".activity.Activity_View_Indivindual_Sites" />
+
         <service android:name=".services.LocationMonitoringService" />
         <!-- <activity android:name=".activity.SpinnerCountryActivity" /> -->
         <activity
             android:name=".activity.Activity_Register_Truck"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".Spinner_Demo_Activity"></activity>
+        <activity android:name=".Spinner_Demo_Activity" />
         <activity android:name=".activity.MapsActivity" />
         <activity android:name=".activity.Activity_Material_Types" />
         <activity android:name=".activity.Activity_Register_Dashboard" />
@@ -242,12 +238,18 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Activity_track_Driver" />
         </activity>
-        <activity android:name=".activity.Activity_Driver_Movement">
+        <activity android:name=".activity.Activity_Driver_Movement"></activity>
+        <activity android:name=".activity.Wallet_Test">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

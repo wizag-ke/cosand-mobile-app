@@ -66,6 +66,7 @@ dependencies {
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.16.0') {
         transitive = true
     }
+    implementation 'com.github.iPaykenya:iPay-easy-way:0.0.3'
     implementation 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.firebase:geofire-android:2.3.1'

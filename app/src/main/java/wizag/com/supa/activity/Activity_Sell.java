@@ -845,7 +845,12 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
                             JSONObject data = jsonObject.getJSONObject("data");
                             request_id = data.getString("loadRequestId");
 
-                            /*store request id on shared prefs*/
+                            /*store loadRequestId in shared prefs*/
+                            SharedPreferences sp = getSharedPreferences(SHARED_PREF_LOCATION_NAME, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("loadRequestId", request_id);
+                            editor.apply();
+
 
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 //                            postLocationUpdates();

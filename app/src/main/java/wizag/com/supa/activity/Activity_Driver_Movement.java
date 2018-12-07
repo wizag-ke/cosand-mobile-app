@@ -265,6 +265,8 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
                 double longitude = mLastLocation.getLongitude();
                 loc = "" + latitude + " ," + longitude + " ";
                 Toast.makeText(this, loc, Toast.LENGTH_SHORT).show();
+                /*post location updates*/
+                postLocationUpdates();
 
                 //Add pointer to the map at location
                 addMarker(mMap, latitude, longitude);
@@ -423,12 +425,15 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
 
 
     private void postLocationUpdates() {
+        SharedPreferences sp = getSharedPreferences("location", MODE_PRIVATE);
+        String sell_id = sp.getString("loadRequestId", null);
+
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Driver_Movement.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/load-request/" + 23 + "/location",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/load-request/" + sell_id + "/location",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -459,7 +464,6 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("location", loc);
-
                 return params;
             }
 

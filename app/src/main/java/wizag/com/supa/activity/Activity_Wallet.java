@@ -63,7 +63,7 @@ public class Activity_Wallet extends AppCompatActivity {
     String LoadWalletUrl = "http://sduka.wizag.biz/api/v1/wallet/load";
     String LoadTransactions = "http://sduka.wizag.biz/api/v1/wallet/summary";
     SessionManager sessionManager;
-    String token, amount_txt, phone_txt, prefs_phone;
+    String token, amount_txt, email_txt, phone_txt, prefs_phone;
     RecyclerView recycler_view;
     private RecyclerView.LayoutManager layoutManager;
     private List<Model_Transaction> listTransactions;
@@ -74,7 +74,7 @@ public class Activity_Wallet extends AppCompatActivity {
     EditText from, to;
     AlertDialog alertDialog = null;
     EditText password;
-    String flag_type="";
+    String flag_type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class Activity_Wallet extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             flag_type = extras.getString("flag_type");
-            Toast.makeText(this, flag_type, Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, flag_type, Toast.LENGTH_LONG).show();
         }
 
 //        AuthWallet();
@@ -149,16 +149,16 @@ public class Activity_Wallet extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.layout_amount, null);
         dialogBuilder.setView(dialogView);
-
         final EditText amount = dialogView.findViewById(R.id.load_amount);
-        final EditText phone = dialogView.findViewById(R.id.phone);
+        final TextView phone = dialogView.findViewById(R.id.phone);
+        final TextView email = dialogView.findViewById(R.id.email);
         amount.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        phone.setFilters(new InputFilter[]{new CurrencyFormat()});
-        SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
-        String phone_prefs = prefs_orders.getString("phone", null);
-        //do something with edt.getText().toString();
 
+        SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
+        String phone_prefs = prefs_orders.getString("reg_phone", null);
+        String email_prefs = prefs_orders.getString("reg_email", null);
         phone.setText(phone_prefs);
+        email.setText(email_prefs);
 
 
 //        Toast.makeText(Activity_Wallet.this, prefs_phone, Toast.LENGTH_SHORT).show();
@@ -168,20 +168,28 @@ public class Activity_Wallet extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 amount_txt = amount.getText().toString();
                 phone_txt = phone.getText().toString();
+                email_txt = email.getText().toString();
+
 
                 if (amount_txt.isEmpty()) {
                     Toast.makeText(Activity_Wallet.this, "Enter amount to proceed", Toast.LENGTH_SHORT).show();
-                } else if (phone_txt.isEmpty()) {
-                    Toast.makeText(Activity_Wallet.this, "Enter phone number to proceed", Toast.LENGTH_SHORT).show();
-
                 } else if (flag_type.equalsIgnoreCase("top_up")) {
 
-                    topUpWallet();
+//                    topUpWallet();
+                    /*we moved to iPay*/
+
+
                     /*delete value from shared prefs*/
 
 
                 } else {
-                    loadWallet();
+//                    loadWallet();
+                    Intent ipay = new Intent(getApplicationContext(), Wallet_Ipay.class);
+                    ipay.putExtra("phone", phone_txt);
+                    ipay.putExtra("email", email_txt);
+                    ipay.putExtra("amount", amount_txt);
+                    startActivity(ipay);
+                    finish();
                 }
 
 
@@ -194,63 +202,6 @@ public class Activity_Wallet extends AppCompatActivity {
         });
         AlertDialog b = dialogBuilder.create();
         b.show();
-    }
-
-
-    public void FromDate() {
-        final Calendar mcurrentDate = Calendar.getInstance();
-
-        mcurrentDate.set(mcurrentDate.get(Calendar.YEAR), mcurrentDate.get(Calendar.MONTH), mcurrentDate.get(Calendar.DAY_OF_MONTH),
-                mcurrentDate.get(Calendar.HOUR_OF_DAY), mcurrentDate.get(Calendar.MINUTE), 0);
-
-
-        int mYear = mcurrentDate.get(Calendar.YEAR);
-        int mMonth = mcurrentDate.get(Calendar.MONTH);
-        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-
-        android.app.DatePickerDialog mDatePicker = new android.app.DatePickerDialog(this, new android.app.DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                // TODO Auto-generated method stub
-                /*      Your code   to get date and time    */
-                mcurrentDate.set(Calendar.YEAR, selectedyear);
-                mcurrentDate.set(Calendar.MONTH, selectedmonth);
-                mcurrentDate.set(Calendar.DAY_OF_MONTH, selectedday);
-                String myFormat = "yyyy-MMM-dd"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-                from.setText(sdf.format(mcurrentDate.getTime()));
-            }
-        }, mYear, mMonth, mDay);
-        mDatePicker.setTitle("Select date");
-        mDatePicker.show();
-
-    }
-
-    public void ToDate() {
-        final Calendar mcurrentDate = Calendar.getInstance();
-
-        mcurrentDate.set(mcurrentDate.get(Calendar.YEAR), mcurrentDate.get(Calendar.MONTH), mcurrentDate.get(Calendar.DAY_OF_MONTH),
-                mcurrentDate.get(Calendar.HOUR_OF_DAY), mcurrentDate.get(Calendar.MINUTE), 0);
-
-
-        int mYear = mcurrentDate.get(Calendar.YEAR);
-        int mMonth = mcurrentDate.get(Calendar.MONTH);
-        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-
-        android.app.DatePickerDialog mDatePicker = new android.app.DatePickerDialog(this, new android.app.DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                // TODO Auto-generated method stub
-                /*      Your code   to get date and time    */
-                mcurrentDate.set(Calendar.YEAR, selectedyear);
-                mcurrentDate.set(Calendar.MONTH, selectedmonth);
-                mcurrentDate.set(Calendar.DAY_OF_MONTH, selectedday);
-                String myFormat = "yyyy-MMM-dd"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-                to.setText(sdf.format(mcurrentDate.getTime()));
-            }
-        }, mYear, mMonth, mDay);
-        mDatePicker.setTitle("Select date");
-        mDatePicker.show();
-
     }
 
 
@@ -707,7 +658,7 @@ public class Activity_Wallet extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent=new Intent(getApplicationContext(),Activity_Home.class);
+        Intent intent = new Intent(getApplicationContext(), Activity_Home.class);
         startActivity(intent);
 
     }

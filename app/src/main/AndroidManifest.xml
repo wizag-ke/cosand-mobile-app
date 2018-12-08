@@ -48,7 +48,11 @@
             android:name=".activity.Activity_Login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MenuActivity"
@@ -244,12 +248,8 @@
                 android:value=".activity.Activity_track_Driver" />
         </activity>
         <activity android:name=".activity.Activity_Driver_Movement"></activity>
-        <activity android:name=".activity.Wallet_Test">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".activity.Wallet_Ipay">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -29,27 +29,53 @@
         android:textColorHint="@color/textColor" />
 
     <TextView
+        android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginLeft="@dimen/_25sdp"
-        android:text="Phone Number(2547XX..) :"
+        android:text="Phone Number(07XX..) :"
+        android:textAlignment="viewStart"
+        android:textColor="@color/textColor"
+
+        android:textStyle="bold" />
+
+    <!-- <EditText
+         android:id="@+id/phone"
+         android:layout_width="match_parent"
+         android:layout_height="@dimen/_30sdp"
+         android:layout_gravity="start"
+         android:layout_marginLeft="@dimen/_20sdp"
+         android:layout_marginRight="@dimen/_20sdp"
+         android:inputType="number"
+         android:padding="8dp"
+         android:textAlignment="textStart"
+         android:textColorHint="@color/textColor" />
+
+ -->
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:text="Email :"
         android:textAlignment="viewStart"
         android:textColor="@color/textColor"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/phone"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_gravity="start"
-        android:layout_marginLeft="@dimen/_20sdp"
-        android:layout_marginRight="@dimen/_20sdp"
-        android:padding="8dp"
-        android:inputType="number"
-        android:textAlignment="textStart"
-        android:textColorHint="@color/textColor" />
+    <!--  <EditText
 
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/_30sdp"
+          android:layout_gravity="start"
+          android:layout_marginLeft="@dimen/_20sdp"
+          android:layout_marginRight="@dimen/_20sdp"
+          android:inputType="textEmailAddress"
+          android:padding="8dp"
+          android:textAlignment="textStart"
+          android:textColorHint="@color/textColor" />
 
-
+  -->
 </LinearLayout>

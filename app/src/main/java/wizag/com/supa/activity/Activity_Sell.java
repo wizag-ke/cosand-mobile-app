@@ -251,30 +251,6 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
             e.printStackTrace();
         }
 
-        /*get location update service*/
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        String latitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LATITUDE);
-                        String longitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LONGITUDE);
-
-                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_LOCATION_NAME, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-
-
-                        editor.putString("latitude", latitude);
-                        editor.putString("longitude", longitude);
-                        editor.apply();
-
-
-                        // Toast.makeText(context, "Data" + longitude + latitude, Toast.LENGTH_SHORT).show();
-                    }
-                }, new IntentFilter(LocationMonitoringService.ACTION_LOCATION_BROADCAST)
-        );
-
-        /*send location updates*/
-//        postLocationUpdates();
 
         spinner_sell_material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

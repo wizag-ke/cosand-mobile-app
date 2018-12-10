@@ -104,13 +104,27 @@ public class Activity_Home extends AppCompatActivity {
         /*get user code*/
         SharedPreferences sharedPreferences_sell = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code_sell = sharedPreferences_sell.getString("user_type", null);
-
+        String indivindual_client_buy = sharedPreferences_sell.getString("user_type", null);
+        String corporate_client_buy = sharedPreferences_sell.getString("user_type", null);
 //        Toast.makeText(context, driver_code_sell, Toast.LENGTH_LONG).show();
 
 
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (driver_code_sell.isEmpty()) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setTitle("Access Denied!");
+                    builder1.setMessage("Create a User Account to continue");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Proceed",
+                            (dialog, id) -> {
+                                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
+                                finish();
+                            });
+                }
                 startActivity(new Intent(getApplicationContext(), Activity_Buy.class));
 
             }
@@ -124,28 +138,30 @@ public class Activity_Home extends AppCompatActivity {
             }
         });
 
-        sell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        sell.setOnClickListener(view -> {
+            if (driver_code_sell.isEmpty()) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                builder1.setTitle("Access Denied!");
+                builder1.setMessage("Create a User Account to continue");
+                builder1.setCancelable(true);
 
-
-                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-
+                builder1.setPositiveButton(
+                        "Proceed",
+                        (dialog, id) -> {
+                            startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
+                            finish();
+                        });
             }
+
+
+
         });
 
-        supply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
-            }
-        });
+        supply.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class)));
 
-        wallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        wallet.setOnClickListener(view -> {
 
-                startActivity(new Intent(getApplicationContext(), ActivityLoginWallet.class));
+            startActivity(new Intent(getApplicationContext(), ActivityLoginWallet.class));
 //                if (driver_code_sell.isEmpty()) {
 //                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 ////   dont uncomment here                             builder1.setTitle("Access Denied!");
@@ -175,7 +191,6 @@ public class Activity_Home extends AppCompatActivity {
 //
 //                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
 //                }
-            }
         });
 
         profile.setOnClickListener(new View.OnClickListener() {

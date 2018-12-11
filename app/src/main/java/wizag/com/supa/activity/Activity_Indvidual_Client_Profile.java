@@ -36,13 +36,14 @@ import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
-public class Activity_Indvidual_Client_Profile extends AppCompatActivity  {
+public class Activity_Indvidual_Client_Profile extends AppCompatActivity {
     ViewFlipper flipper;
     EditText fname, lname, id_no, email, phone;
     Button next;
     String individual_fname, individual_lname, individual_email, individual_phone, individual_id_no, user_code;
     JSONArray roles;
     Activity_Login login;
+    private static final String SHARED_PREF_NAME = "ipay_profile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,13 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity  {
         individual_phone = sp.getString("individual_phone", null);
         individual_id_no = sp.getString("individual_id_no", null);
         user_code = sp.getString("user_type", null);
+
+        SharedPreferences ipay_sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = ipay_sp.edit();
+        editor.putString("email", individual_email);
+        editor.putString("phone", individual_phone);
+        editor.apply();
+
 
         try {
             roles = new JSONArray(sp.getString("user_type", null));
@@ -133,7 +141,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity  {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getApplicationContext(), Activity_View_Indivindual_Sites.class);
+                Intent intent = new Intent(getApplicationContext(), Activity_View_Indivindual_Sites.class);
                 startActivity(intent);
             }
         });
@@ -175,25 +183,25 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity  {
                         case 0:
 
                             getCorporateProfile();
-                            finish();
+//                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Corporate_Profile.class));
                             break;
 
                         case 1:
                             getTruckOwner();
-                            finish();
+//                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class));
                             break;
 
                         case 2:
                             getDriverProfile();
-                            finish();
+//                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Driver_Profile.class));
                             break;
 
                         case 3:
                             getSupplierProfile();
-                            finish();
+//                            finish();
                             startActivity(new Intent(getApplicationContext(), Activity_Supplier_Profile.class));
                             break;
 

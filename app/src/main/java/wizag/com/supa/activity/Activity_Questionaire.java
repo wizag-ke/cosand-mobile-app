@@ -41,16 +41,20 @@ import java.util.Map;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
+import wizag.com.supa.models.Model_Buy;
+import wizag.com.supa.models.Model_Questionnaire;
 
 public class Activity_Questionaire extends AppCompatActivity {
     ArrayList<String> Type;
     LinearLayout layout;
     String qn_response = "";
     String order_id, site_id;
+    String answer;
     String qn_id;
     Button submit;
     String resp, text_response;
-
+    JSONArray questionnaire;
+    List<Model_Questionnaire> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,10 @@ public class Activity_Questionaire extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+
                 QnResponse();
             }
         });
@@ -112,7 +120,7 @@ public class Activity_Questionaire extends AppCompatActivity {
                             JSONObject materials_object = materialTypes.getJSONObject(p);
 
                             qn_id = materials_object.getString("id");
-                            String answer = materials_object.getString("question");
+                             answer = materials_object.getString("question");
                             String type = materials_object.getString("answer_type");
 
 
@@ -150,6 +158,24 @@ public class Activity_Questionaire extends AppCompatActivity {
                                                     if (btn.getId() == checkedId) {
                                                         text_response = String.valueOf(btn.getText());
                                                         qn_response = text_response;
+
+/*
+
+                                                        list.add(new Model_Buy(
+                                                                qn_id,
+                                                                answer
+                                                                ));
+
+
+
+                                                        JSONArray jsonArray = new JSONArray();
+                                                        for (int i = 0; i < list.size(); i++) {
+                                                            buy_materials = jsonArray.put(list.get(i).getJSONObject());
+
+//                    Log.d("ufala",buy_materials);
+                                                        }
+*/
+
 
                                                         // do something with text
                                                         return;
@@ -266,13 +292,13 @@ public class Activity_Questionaire extends AppCompatActivity {
 
     public void QnResponse() {
         SharedPreferences sp = getSharedPreferences("site_id", MODE_PRIVATE);
-         site_id = sp.getString("site_id", null);
+        site_id = sp.getString("site_id", null);
 
 
         SharedPreferences sp_order = getSharedPreferences("confirm_notification", MODE_PRIVATE);
         order_id = sp_order.getString("order_id", null);
 
-        Toast.makeText(this, site_id+"\n"+order_id, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, site_id + "\n" + order_id, Toast.LENGTH_SHORT).show();
 
 //        Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Questionaire.this);

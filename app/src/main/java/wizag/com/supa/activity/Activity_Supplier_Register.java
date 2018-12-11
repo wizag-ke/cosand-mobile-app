@@ -71,12 +71,13 @@ public class Activity_Supplier_Register extends AppCompatActivity {
     RecyclerView recyclerView;
     String type_name, details_name, material_name, units_name, class_name;
     Button submit;
-    EditText kra_pin, location;
-    String kra_pin_txt, location_txt;
+    EditText kra_pin, name, location;
+    String kra_pin_txt, location_txt, name_txt;
     String unit_cost_txt;
     String selected_material, selected_unit, selected_class, selected_detail;
     String supplier_Driver_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
     JSONArray supplier_materials;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +97,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         submit = findViewById(R.id.submit);
         kra_pin = findViewById(R.id.kra_pin);
         location = findViewById(R.id.location);
+        name = findViewById(R.id.name);
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -115,10 +117,11 @@ public class Activity_Supplier_Register extends AppCompatActivity {
             public void onClick(View view) {
                 kra_pin_txt = kra_pin.getText().toString();
                 location_txt = location.getText().toString();
+                name_txt = name.getText().toString();
 
                 JSONArray jsonArray = new JSONArray();
-                for (int i=0; i < list.size(); i++) {
-                     supplier_materials=  jsonArray.put(list.get(i).getJSONObject());
+                for (int i = 0; i < list.size(); i++) {
+                    supplier_materials = jsonArray.put(list.get(i).getJSONObject());
                 }
 
                 registerSupplier();
@@ -315,8 +318,6 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         });
         AlertDialog b = dialogBuilder.create();
         b.show();
-
-
 
 
     }
@@ -829,7 +830,6 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                     if (status.equalsIgnoreCase("success")) {
 
                         /*message for verification*/
-                        
 
 
                         Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_SHORT).show();
@@ -875,6 +875,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
             @Override
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
+                params.put("name", name_txt);
                 params.put("kra_pin", kra_pin_txt);
                 params.put("location", location_txt);
                 params.put("materials", String.valueOf(supplier_materials));

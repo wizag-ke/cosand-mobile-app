@@ -75,18 +75,13 @@ public class Activity_Wallet extends AppCompatActivity {
     AlertDialog alertDialog = null;
     EditText password;
     String flag_type = "";
+    String top_up_cost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
 
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            flag_type = extras.getString("flag_type");
-//            Toast.makeText(this, flag_type, Toast.LENGTH_LONG).show();
-        }
 
 //        AuthWallet();
         SharedPreferences prefs_orders = getSharedPreferences("profile", MODE_PRIVATE);
@@ -160,6 +155,18 @@ public class Activity_Wallet extends AppCompatActivity {
         phone.setText(phone_prefs);
         email.setText(email_prefs);
 
+        /*if request is initiated from quotation*/
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            flag_type = extras.getString("flag_type");
+            if (flag_type.equalsIgnoreCase("top_up")) ;
+            top_up_cost = extras.getString("amount");
+//            Toast.makeText(this, flag_type, Toast.LENGTH_LONG).show();
+            amount.setText("Ksh:\t" + top_up_cost);
+            amount.setFilters(new InputFilter[]{new CurrencyFormat()});
+
+        }
+
 
 //        Toast.makeText(Activity_Wallet.this, prefs_phone, Toast.LENGTH_SHORT).show();
 
@@ -170,19 +177,33 @@ public class Activity_Wallet extends AppCompatActivity {
                 phone_txt = phone.getText().toString();
                 email_txt = email.getText().toString();
 
+               /* String phone_254 = String.valueOf(phone_txt.charAt(0));
+                if (phone_254.equalsIgnoreCase("0")) {
+                    StringBuilder ipay_phone = new StringBuilder(phone_txt);
+                    ipay_phone.deleteCharAt(0);
+                    ipay_phone.append("254");
+                    phone_txt = ipay_phone.toString();
+
+                }
+*/
 
                 if (amount_txt.isEmpty()) {
                     Toast.makeText(Activity_Wallet.this, "Enter amount to proceed", Toast.LENGTH_SHORT).show();
-                } else if (flag_type.equalsIgnoreCase("top_up")) {
+                } /*else if (flag_type.equalsIgnoreCase("top_up")) {
 
 //                    topUpWallet();
-                    /*we moved to iPay*/
+                    *//*we moved to iPay*//*
+                    Intent ipay = new Intent(getApplicationContext(), Wallet_Ipay.class);
+                    ipay.putExtra("phone", phone_txt);
+                    ipay.putExtra("email", email_txt);
+                    ipay.putExtra("amount", amount_txt);
+                    startActivity(ipay);
+                    finish();
+
+                    *//*delete value from shared prefs*//*
 
 
-                    /*delete value from shared prefs*/
-
-
-                } else {
+                }*/ else {
 //                    loadWallet();
                     Intent ipay = new Intent(getApplicationContext(), Wallet_Ipay.class);
                     ipay.putExtra("phone", phone_txt);

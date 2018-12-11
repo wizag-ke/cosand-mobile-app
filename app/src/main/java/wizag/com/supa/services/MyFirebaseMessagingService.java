@@ -112,9 +112,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         } else if (click_action != null && click_action.equals(".activity.Activity_track_Driver")) {
             Intent class_intent = new Intent(this, Activity_track_Driver.class);
-          /*  class_intent.putExtra("driver_phone", driver_phone);
-            class_intent.putExtra("driver_name", driver_name);
-            class_intent.putExtra("order_otp", order_otp);*/
 
             SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
@@ -127,10 +124,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         }
-
-
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, class_intent, PendingIntent.FLAG_ONE_SHOT);
-
 
         /*for android oreo and higher*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

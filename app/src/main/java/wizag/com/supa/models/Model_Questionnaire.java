@@ -5,9 +5,10 @@ import org.json.JSONObject;
 
 public class Model_Questionnaire {
 
-    int question_id, answer;
+    int question_id;
+    String answer;
 
-    public Model_Questionnaire(int question_id, int answer) {
+    public Model_Questionnaire(int question_id, String answer) {
         this.question_id = question_id;
         this.answer = answer;
     }
@@ -16,7 +17,7 @@ public class Model_Questionnaire {
         return question_id;
     }
 
-    public int getAnswer() {
+    public String getAnswer() {
         return answer;
     }
 

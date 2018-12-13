@@ -61,6 +61,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 order_otp = data.get("order_otp").toString();
                 driver_name = data.get("driver_name").toString();
 
+                /*store order id*/
+                SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("order_id", order_id);
+                editor.apply();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();

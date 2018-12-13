@@ -42,7 +42,6 @@ public class Activity_HandShake extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
         otp = findViewById(R.id.otp);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -122,7 +121,6 @@ public class Activity_HandShake extends AppCompatActivity {
                                 /*close ur eyes n ride along*/
                                 Intent intent = new Intent(getApplicationContext(), Activity_Questionaire.class);
                                 startActivity(intent);
-
                             }
                         } catch (JSONException e1) {
                             e1.printStackTrace();

@@ -17,6 +17,7 @@ public class Model_Buy {
         this.material_quantity = material_quantity;
     }
 
+
     public int getMaterial_item_id() {
         return material_item_id;
     }

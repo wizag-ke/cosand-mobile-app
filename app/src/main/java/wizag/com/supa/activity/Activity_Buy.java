@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wizag.com.supa.GPSLocation;
 import wizag.com.supa.Geofencing;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.PlaceContract;
@@ -115,19 +116,42 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     LinearLayout buy_role_layout;
     TextView xind, xcor;
-
+    GPSLocation gps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
         /*check network connectivity*/
         isNetworkConnectionAvailable();
-
+        gps = new GPSLocation(this);
         buy_role_layout = findViewById(R.id.role);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        gps = new GPSLocation(this);
+        if (gps.canGetLocation()) {
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            // Toast.makeText(getApplicationContext(), "" + location, Toast.LENGTH_SHORT).show();
+
+        } else {
+            gps.showSettingsAlert();
+        }
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 
         /*get roles*/
@@ -357,7 +381,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
                     JSONObject dataClicked = units_array.getJSONObject(i);
                     id_unit = dataClicked.getInt("id");
-
+                    Toast.makeText(Activity_Buy.this, id_unit, Toast.LENGTH_LONG).show();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -984,9 +1008,12 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                         quantity));
 
 
+
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < list.size(); i++) {
                     buy_materials = jsonArray.put(list.get(i).getJSONObject());
+
+//                    Log.d("ufala",buy_materials);
                 }
 
 //                confirmQuote();

@@ -254,8 +254,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
 
         spinner_sell_material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner_sell_material.getSelectedItem().toString();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { String value = spinner_sell_material.getSelectedItem().toString();
 //                Toast.makeText(getApplicationContext(), ""+value, Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject dataClicked = materials.getJSONObject(i);
@@ -313,7 +312,6 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         spinner_sell_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner_sell_class.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = class_array.getJSONObject(i);
@@ -357,7 +355,6 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         spinner_sell_supplier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = spinner_sell_supplier.getSelectedItem().toString();
 
                 try {
                     JSONObject dataClicked = suppliers_array.getJSONObject(i);

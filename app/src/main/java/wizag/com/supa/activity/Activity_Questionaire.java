@@ -41,16 +41,20 @@ import java.util.Map;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
+import wizag.com.supa.models.Model_Buy;
+import wizag.com.supa.models.Model_Questionnaire;
 
 public class Activity_Questionaire extends AppCompatActivity {
     ArrayList<String> Type;
     LinearLayout layout;
     String qn_response = "";
-    String order_id, site_id;
-    String qn_id;
+    String site_id;
+    String answer;
+    int qn_id;
     Button submit;
     String resp, text_response;
-
+    JSONArray questionnaire;
+    List<Model_Questionnaire> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +65,8 @@ public class Activity_Questionaire extends AppCompatActivity {
         if (extras != null) {
             site_id = extras.getString("site_id");
 
-            Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
-
-
         }
+
 
         submit = findViewById(R.id.submit);
 
@@ -82,6 +84,8 @@ public class Activity_Questionaire extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 QnResponse();
             }
         });
@@ -111,8 +115,8 @@ public class Activity_Questionaire extends AppCompatActivity {
                         for (int p = 0; p < materialTypes.length(); p++) {
                             JSONObject materials_object = materialTypes.getJSONObject(p);
 
-                            qn_id = materials_object.getString("id");
-                            String answer = materials_object.getString("question");
+                            qn_id = Integer.parseInt(materials_object.getString("id"));
+                            answer = materials_object.getString("question");
                             String type = materials_object.getString("answer_type");
 
 
@@ -150,6 +154,21 @@ public class Activity_Questionaire extends AppCompatActivity {
                                                     if (btn.getId() == checkedId) {
                                                         text_response = String.valueOf(btn.getText());
                                                         qn_response = text_response;
+
+
+                                                        list.add(new Model_Questionnaire(
+                                                                qn_id,
+                                                                answer
+                                                        ));
+
+
+                                                        JSONArray jsonArray = new JSONArray();
+                                                        for (int m = 0; m < list.size(); m++) {
+                                                            questionnaire = jsonArray.put(list.get(m).getJSONObject());
+
+
+                                                        }
+
 
                                                         // do something with text
                                                         return;
@@ -202,6 +221,20 @@ public class Activity_Questionaire extends AppCompatActivity {
                                         layout.addView(dynamicEdittext);
                                         /*get text from dynamic edittext*/
                                         qn_response = resp;
+
+                                        list.add(new Model_Questionnaire(
+                                                qn_id,
+                                                resp
+                                        ));
+
+
+                                        JSONArray jsonArray = new JSONArray();
+                                        for (int m = 0; m < list.size(); m++) {
+                                            questionnaire = jsonArray.put(list.get(m).getJSONObject());
+
+
+                                        }
+
 
                                         Type.add(answer);
                                     }
@@ -265,16 +298,9 @@ public class Activity_Questionaire extends AppCompatActivity {
 
 
     public void QnResponse() {
-        SharedPreferences sp = getSharedPreferences("site_id", MODE_PRIVATE);
-         site_id = sp.getString("site_id", null);
+        SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
+       String id_order = sp.getString("order_id", null);
 
-
-        SharedPreferences sp_order = getSharedPreferences("confirm_notification", MODE_PRIVATE);
-        order_id = sp_order.getString("order_id", null);
-
-        Toast.makeText(this, site_id+"\n"+order_id, Toast.LENGTH_SHORT).show();
-
-//        Toast.makeText(this, site_id, Toast.LENGTH_SHORT).show();
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Questionaire.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -330,11 +356,10 @@ public class Activity_Questionaire extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-
-                params.put("question_id", qn_id);
-                params.put("answer", qn_response);
-                params.put("order_id", order_id);
+                params.put("questionnaire", String.valueOf(questionnaire));
+                params.put("order_id", id_order);
                 return params;
+
             }
 
             @Override

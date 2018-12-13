@@ -60,6 +60,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
     Button xind, xton, xsup, xdri;
     JSONObject role;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -33,9 +34,12 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import wizag.com.supa.CurrencyFormat;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
@@ -69,7 +73,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             order_id = extras.getString("order_id");
-//            Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
+           Toast.makeText(this, order_id, Toast.LENGTH_SHORT).show();
 
 
         }
@@ -120,9 +124,10 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                         editor.apply();
 
 
-                        unit_cost.setText(unit_cost_txt);
+                        unit_cost.setText("KES\t"+unit_cost_txt);
                         order_quantity.setText(order_quantity_txt);
-                        total_cost.setText(total_cost_txt);
+                        total_cost.setText("KES\t"+total_cost_txt);
+
 
 
                     }
@@ -366,8 +371,9 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
                 // open wallet
 //                startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
                 /*to be removed*/
-                Intent intent = new Intent(getApplicationContext(), Activity_HandShake.class);
+                Intent intent = new Intent(getApplicationContext(), Activity_Wallet.class);
                 intent.putExtra("flag_type", "top_up");
+                intent.putExtra("amount", total_cost_txt);
                 startActivity(intent);
 
             }

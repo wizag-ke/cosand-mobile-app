@@ -142,9 +142,7 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
-        }
-
-        else {
+        } else {
             loadSupplierMaterials();
         }
 
@@ -260,6 +258,7 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
 
         if (id == R.id.switch_role) {
 
+
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose an Account");
@@ -271,7 +270,6 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case 0:
-
 
                             getCorporateProfile();
 
@@ -292,6 +290,7 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
                             getDriverProfile();
                             startActivity(new Intent(getApplicationContext(), Activity_Driver_Profile.class));
                             break;
+
 
                         default:
                             Toast.makeText(getApplicationContext(), "No roles defined", Toast.LENGTH_SHORT).show();

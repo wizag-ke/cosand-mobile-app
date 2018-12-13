@@ -165,7 +165,7 @@ public class Activity_Home extends AppCompatActivity {
 //                if (driver_code_sell.isEmpty()) {
 //                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 ////   dont uncomment here                             builder1.setTitle("Access Denied!");
-//                    builder1.setMessage("Create a User Account to continue");
+//                    builder1.setMessage("Create `a User Account to continue");
 //                    builder1.setCancelable(true);
 //
 //                    builder1.setPositiveButton(

@@ -7,13 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
@@ -41,7 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +51,11 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     Button button_register, upload_image, upload_image_back;
     String RegisterUrl = "http://sduka.wizag.biz/api/v1/auth/signup";
     private int SELECT_FILE = 1;
+    private int SELECT_FILE_BACK = 2;
     private int REQUEST_CAMERA = 0;
+    private int REQUEST_CAMERA_BACK = 3;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int MY_CAMERA_PERMISSION_CODE_BACK = 200;
 
 
     LinearLayout image_layout, image_layout_back;
@@ -67,7 +65,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
             text_dummy_hint_email_address, text_dummy_hint_create_password,
             text_dummy_hint_confirm_password;
     ImageView id_image, id_image_back;
-    Bitmap photo,photo_back;
+    Bitmap photo, photo_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -369,7 +367,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.truck_menu);
+        popup.inflate(R.menu.id_menu);
         popup.show();
     }
 
@@ -395,6 +393,26 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 }
 
                 return true;
+
+            case R.id.existing_back:
+                Intent back_intent = new Intent();
+                back_intent.setType("image/*");
+                back_intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(back_intent, "Select File"), SELECT_FILE_BACK);
+
+                return true;
+            case R.id.camera_photo_back:
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE_BACK);
+                } else {
+                    Intent back_cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(back_cameraIntent, REQUEST_CAMERA_BACK);
+                }
+
+                return true;
+
             default:
                 return false;
         }
@@ -405,55 +423,41 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
         super.onActivityResult(requestCode, resultCode, data);
         ImageView imageView = findViewById(R.id.id_image);
 
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE) {
-                photo = null;
-                if (data != null) {
-                    try {
-                        photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
+            photo = null;
+            if (data != null) {
+                try {
+                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                image_layout.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(photo);
-            } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-                image_layout.setVisibility(View.VISIBLE);
-                photo = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(photo);
-
-//                encodedCameraImage = encodeImage(photo_back);
-
-
             }
+            image_layout.setVisibility(View.VISIBLE);
+            imageView.setImageBitmap(photo);
+        } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
+            image_layout.setVisibility(View.VISIBLE);
+            photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
+        } else if (requestCode == SELECT_FILE_BACK && resultCode == Activity.RESULT_OK) {
 
+            photo = null;
+            if (data != null) {
+                try {
 
+                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            image_layout_back.setVisibility(View.VISIBLE);
+            id_image_back.setImageBitmap(photo);
+        } else if (requestCode == REQUEST_CAMERA_BACK && resultCode == Activity.RESULT_OK) {
+            image_layout_back.setVisibility(View.VISIBLE);
+            photo = (Bitmap) data.getExtras().get("data");
+            id_image_back.setImageBitmap(photo);
         }
 
-       else if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE) {
-                photo_back = null;
-                if (data != null) {
-                    try {
-                        photo_back = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                image_layout_back.setVisibility(View.VISIBLE);
-                id_image_back.setImageBitmap(photo_back);
-            } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-                image_layout_back.setVisibility(View.VISIBLE);
-                photo_back = (Bitmap) data.getExtras().get("data");
-                id_image_back.setImageBitmap(photo_back);
 
-//                encodedCameraImage = encodeImage(photo);
-
-
-            }
-
-
-        }
     }
 
 
@@ -463,7 +467,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.truck_menu);
+        popup.inflate(R.menu.id_menu_back);
         popup.show();
     }
 }

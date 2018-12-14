@@ -464,7 +464,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.truck_menu);
+        popup.inflate(R.menu.id_menu);
         popup.show();
     }
 

@@ -64,6 +64,8 @@ public class Activity_Login extends AppCompatActivity {
     //String username = "admin@cosand.com";
     String username, password;
     //String password = "Qwerty123!";
+    private static final String SHARED_PREF_NAME2 = "handshake";
+
     Button supaduka_login, supaduka_signup;
     CoordinatorLayout coordinatorLayout;
     EditText enter_username;
@@ -79,10 +81,7 @@ public class Activity_Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-
-
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-
         enter_username = findViewById(R.id.enter_username);
         enter_password = findViewById(R.id.enter_password);
 
@@ -95,6 +94,13 @@ public class Activity_Login extends AppCompatActivity {
         if (session.isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), Activity_Home.class));
             finish();
+            SharedPreferences prefs = getSharedPreferences(SHARED_PREF_NAME2, MODE_PRIVATE);
+            String restoredText = prefs.getString("site_id", null);
+            if (restoredText != null) {
+                Intent intent=new Intent(getApplicationContext(), Activity_HandShake.class);
+//                String name = prefs.getString("name", "No name defined");//"No name defined" is the default value.
+//                int idName = prefs.getInt("idName", 0); //0 is the default value.
+            }
         }
 //        checkUserRole();
 

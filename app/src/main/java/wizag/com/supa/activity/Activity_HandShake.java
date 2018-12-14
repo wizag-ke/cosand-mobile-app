@@ -24,13 +24,16 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import wizag.com.supa.BuildConfig;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
 public class Activity_HandShake extends AppCompatActivity {
+    SharedPreferences prefs  ;
     EditText otp;
     String message;
     String order_id, site_id;
+    private static final String SHARED_PREF_NAME2 = "handshake";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class Activity_HandShake extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        prefs=this.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 
         otp = findViewById(R.id.otp);
         Bundle extras = getIntent().getExtras();
@@ -48,7 +51,13 @@ public class Activity_HandShake extends AppCompatActivity {
             order_id = extras.getString("order_id");
             site_id = extras.getString("site_id");
 
-//            Toast.makeText(this, order_id+"\n"+site_id, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, order_id+"\n"+site_id, Toast.LENGTH_SHORT).show();
+            //save sHared preferences here
+            // MY_PREFS_NAME - a static String variable like:
+            //public static final String MY_PREFS_NAME = "MyPrefsFile";
+            SharedPreferences prefs = getSharedPreferences(SHARED_PREF_NAME2, MODE_PRIVATE);
+            prefs.edit().putString(order_id, order_id).apply();
+            prefs.edit().putString(site_id, site_id).apply();
 
 
         }
@@ -127,18 +136,13 @@ public class Activity_HandShake extends AppCompatActivity {
                         }
 
 
-                        //Toast.makeText(Activity_Buy.this, "", Toast.LENGTH_SHORT).show();
-                    }
-                }, new com.android.volley.Response.ErrorListener()
 
-        {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                Toast.makeText(Activity_HandShake.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                pDialog.dismiss();
-            }
-        })
+                    }
+                }, error -> {
+                    error.printStackTrace();
+                    Toast.makeText(Activity_HandShake.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    pDialog.dismiss();
+                })
 
         {
             //adding parameters to the request

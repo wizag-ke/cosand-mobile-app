@@ -226,7 +226,7 @@
                         android:fontFamily="@font/bariol_bold"
                         android:onClick="showOptions"
                         android:padding="@dimen/_10sdp"
-                        android:text="Upload Image of ID"
+                        android:text="Upload Image of ID(Front)"
                         android:textAllCaps="false"
                         android:textColor="@color/textColor"
                         android:textSize="20sp"
@@ -242,6 +242,45 @@
 
                         <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/id_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_150sdp"
+
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:padding="@dimen/_16sdp" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/upload_image_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/sell"
+                        android:drawableLeft="@android:drawable/ic_menu_camera"
+                        android:drawableStart="@android:drawable/ic_menu_camera"
+                        android:drawableTint="@color/colorPrimary"
+                        android:fontFamily="@font/bariol_bold"
+                        android:onClick="showOptionsBack"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Upload Image of ID(Back)"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                    <LinearLayout
+                        android:id="@+id/image_layout_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/id_image_back"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_150sdp"
 

@@ -381,7 +381,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
                     JSONObject dataClicked = units_array.getJSONObject(i);
                     id_unit = dataClicked.getInt("id");
-                    Toast.makeText(Activity_Buy.this, id_unit, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(Activity_Buy.this, id_unit, Toast.LENGTH_LONG).show();
 
                 } catch (Exception e) {
                     e.printStackTrace();

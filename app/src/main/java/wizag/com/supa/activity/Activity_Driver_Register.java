@@ -89,7 +89,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements View.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.truck_details);
+        setContentView(R.layout.activity_driver_register);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);

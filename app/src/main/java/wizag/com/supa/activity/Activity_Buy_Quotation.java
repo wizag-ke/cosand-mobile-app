@@ -190,9 +190,9 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("quote", MODE_PRIVATE);
         String total_cost = sp.getString("total_cost_txt", null);
 
-        double myNumber = Double.parseDouble(total_cost);
+        /*double myNumber = Double.parseDouble(total_cost);
         formattedNumber = formatter.format(myNumber);
-
+*/
         title.setText("Confirm Payment");
 
         title.setPadding(20, 20, 20, 20);   // Set Position
@@ -205,7 +205,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         // Set Message
         TextView msg = new TextView(this);
         // Message Properties
-        msg.setText("Confirm Payment of Ksh\t" + formattedNumber);
+        msg.setText("Confirm Payment of Ksh\t" + total_cost);
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
         msg.setTextColor(Color.BLACK);
         msg.setTextSize(18);

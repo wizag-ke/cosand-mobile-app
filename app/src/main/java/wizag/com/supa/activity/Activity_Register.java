@@ -7,13 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
@@ -41,7 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,18 +48,24 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     ProgressDialog progressDialog;
     EditText edit_firstname, edit_lastname, edit_id, edit_phone, email_address, create_password, confirm_password;
     private static final String SHARED_PREF_NAME = "profile";
-    Button button_register, upload_image;
+    Button button_register, upload_image, upload_image_back;
     String RegisterUrl = "http://sduka.wizag.biz/api/v1/auth/signup";
     private int SELECT_FILE = 1;
+    private int SELECT_FILE_BACK = 2;
     private int REQUEST_CAMERA = 0;
+    private int REQUEST_CAMERA_BACK = 3;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    LinearLayout image_layout;
+    private static final int MY_CAMERA_PERMISSION_CODE_BACK = 200;
+
+
+    LinearLayout image_layout, image_layout_back;
     String photo_path = "";
-    TextView text_dummy_hint_first_name,text_dummy_hint_last_name,
-            text_dummy_hint_id_passport_number,text_dummy_hint_phone_number,
-            text_dummy_hint_email_address,text_dummy_hint_create_password,
+    TextView text_dummy_hint_first_name, text_dummy_hint_last_name,
+            text_dummy_hint_id_passport_number, text_dummy_hint_phone_number,
+            text_dummy_hint_email_address, text_dummy_hint_create_password,
             text_dummy_hint_confirm_password;
-    ImageView id_image;
+    ImageView id_image, id_image_back;
+    Bitmap photo, photo_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,9 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
         progressDialog = new ProgressDialog(this);
 
         image_layout = findViewById(R.id.image_layout);
+        image_layout_back = findViewById(R.id.image_layout_back);
         id_image = findViewById(R.id.id_image);
+        id_image_back = findViewById(R.id.id_image_back);
         edit_firstname = findViewById(R.id.edit_firstname);
         edit_lastname = findViewById(R.id.edit_lastname);
         edit_id = findViewById(R.id.edit_id);
@@ -83,11 +87,12 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
         confirm_password = findViewById(R.id.confirm_password);
         button_register = findViewById(R.id.button_register);
         upload_image = findViewById(R.id.upload_image);
-        text_dummy_hint_first_name=findViewById(R.id.text_dummy_hint_first_name);
-        text_dummy_hint_last_name=findViewById(R.id.text_dummy_hint_last_name);
-        text_dummy_hint_id_passport_number =findViewById(R.id.text_dummy_hint_id_passport_number);
-        text_dummy_hint_phone_number =findViewById(R.id.text_dummy_hint_phone_number);
-        text_dummy_hint_email_address =findViewById(R.id.text_dummy_hint_email_address);
+        upload_image_back = findViewById(R.id.upload_image_back);
+        text_dummy_hint_first_name = findViewById(R.id.text_dummy_hint_first_name);
+        text_dummy_hint_last_name = findViewById(R.id.text_dummy_hint_last_name);
+        text_dummy_hint_id_passport_number = findViewById(R.id.text_dummy_hint_id_passport_number);
+        text_dummy_hint_phone_number = findViewById(R.id.text_dummy_hint_phone_number);
+        text_dummy_hint_email_address = findViewById(R.id.text_dummy_hint_email_address);
         //handling editexts hints on focus changed
         // first name
         edit_firstname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -215,6 +220,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 editor.putString("reg_id", edit_id_txt);
                 editor.putString("reg_phone", edit_phone_txt);
                 editor.putString("reg_email", email_address_txt);
+                editor.putString("role_id", "XIND");
                 editor.apply();
 
 
@@ -340,6 +346,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 params.put("fname", edit_firstname.getText().toString());
                 params.put("lname", edit_lastname.getText().toString());
                 params.put("phone", edit_phone.getText().toString());
+                params.put("role_id", "XIND");
 
 //                params.put("role_id", "2");
                 return params;
@@ -360,7 +367,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.truck_menu);
+        popup.inflate(R.menu.id_menu);
         popup.show();
     }
 
@@ -380,92 +387,87 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE);
-                }
-
-
-               /* if (ContextCompat.checkSelfPermission(Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            MY_CAMERA_PERMISSION_CODE);
-                }*/
-                else {
+                } else {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(cameraIntent, REQUEST_CAMERA);
                 }
 
                 return true;
+
+            case R.id.existing_back:
+                Intent back_intent = new Intent();
+                back_intent.setType("image/*");
+                back_intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(back_intent, "Select File"), SELECT_FILE_BACK);
+
+                return true;
+            case R.id.camera_photo_back:
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE_BACK);
+                } else {
+                    Intent back_cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(back_cameraIntent, REQUEST_CAMERA_BACK);
+                }
+
+                return true;
+
             default:
                 return false;
         }
-    }
-    public String getPath(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = this.getContentResolver().query(contentUri, proj, "", null, "");
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        String path = Environment.getExternalStorageDirectory() + res.replace("/storage/emulated/0", "");
-        return res;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ImageView imageView = findViewById(R.id.id_image);
 
-        if (resultCode == Activity.RESULT_OK) {
-
-            if (requestCode == SELECT_FILE) {
-                photo_path = null;
-                if (data != null) {
-                    image_layout.setVisibility(View.VISIBLE);
-                    try {
-                        photo_path = getPath(data.getData());
-                        Toast.makeText(this, photo_path, Toast.LENGTH_LONG).show();
-
-                        File imgFile = new File(photo_path);
-                        if(imgFile.exists())
-                        {
-
-
-                            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                            ImageView imageView=findViewById(R.id.id_image);
-                            imageView.setImageBitmap(myBitmap);
-
-                            Toast.makeText(this, "I set", Toast.LENGTH_LONG).show();
-                        }else {
-
-
-                            Toast.makeText(this, "Cant", Toast.LENGTH_LONG).show();
-                        }
-
-
-
-
-//                        photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
+            photo = null;
+            if (data != null) {
+                try {
+                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-
-            } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-
-                image_layout.setVisibility(View.VISIBLE);
-
-                //photo = (Bitmap) data.getExtras().get("data");
-//                id_image.setImageBitmap(photo);
-
-//                encodedCameraImage = encodeImage(photo);
-
-
             }
+            image_layout.setVisibility(View.VISIBLE);
+            imageView.setImageBitmap(photo);
+        } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
+            image_layout.setVisibility(View.VISIBLE);
+            photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
+        } else if (requestCode == SELECT_FILE_BACK && resultCode == Activity.RESULT_OK) {
 
+            photo = null;
+            if (data != null) {
+                try {
 
+                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            image_layout_back.setVisibility(View.VISIBLE);
+            id_image_back.setImageBitmap(photo);
+        } else if (requestCode == REQUEST_CAMERA_BACK && resultCode == Activity.RESULT_OK) {
+            image_layout_back.setVisibility(View.VISIBLE);
+            photo = (Bitmap) data.getExtras().get("data");
+            id_image_back.setImageBitmap(photo);
         }
+
+
     }
 
 
+    public void showOptionsBack(View view) {
+
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.id_menu_back);
+        popup.show();
+    }
 }

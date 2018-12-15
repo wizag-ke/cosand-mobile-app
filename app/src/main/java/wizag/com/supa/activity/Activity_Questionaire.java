@@ -55,6 +55,7 @@ public class Activity_Questionaire extends AppCompatActivity {
     String resp, text_response;
     JSONArray questionnaire;
     List<Model_Questionnaire> list = new ArrayList<>();
+    String order_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class Activity_Questionaire extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             site_id = extras.getString("site_id");
+            order_id = extras.getString("order_id");
 
         }
 
@@ -126,6 +128,7 @@ public class Activity_Questionaire extends AppCompatActivity {
 
 
                                 } else {
+
                                     if (type.equalsIgnoreCase("MULTIPLE_CHOICE")) {
                                         TextView dynamicTextView = new TextView(getApplicationContext());
                                         dynamicTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -154,21 +157,6 @@ public class Activity_Questionaire extends AppCompatActivity {
                                                     if (btn.getId() == checkedId) {
                                                         text_response = String.valueOf(btn.getText());
                                                         qn_response = text_response;
-
-
-                                                        list.add(new Model_Questionnaire(
-                                                                qn_id,
-                                                                answer
-                                                        ));
-
-
-                                                        JSONArray jsonArray = new JSONArray();
-                                                        for (int m = 0; m < list.size(); m++) {
-                                                            questionnaire = jsonArray.put(list.get(m).getJSONObject());
-
-
-                                                        }
-
 
                                                         // do something with text
                                                         return;
@@ -222,7 +210,7 @@ public class Activity_Questionaire extends AppCompatActivity {
                                         /*get text from dynamic edittext*/
                                         qn_response = resp;
 
-                                        list.add(new Model_Questionnaire(
+                                       /* list.add(new Model_Questionnaire(
                                                 qn_id,
                                                 resp
                                         ));
@@ -233,12 +221,23 @@ public class Activity_Questionaire extends AppCompatActivity {
                                             questionnaire = jsonArray.put(list.get(m).getJSONObject());
 
 
-                                        }
+                                        }*/
 
 
                                         Type.add(answer);
                                     }
+                                    list.add(new Model_Questionnaire(
+                                            qn_id,
+                                            qn_response
+                                    ));
 
+
+                                    JSONArray jsonArray = new JSONArray();
+                                    for (int m = 0; m < list.size(); m++) {
+                                        questionnaire = jsonArray.put(list.get(m).getJSONObject());
+
+
+                                    }
 
                                 }
 
@@ -298,9 +297,10 @@ public class Activity_Questionaire extends AppCompatActivity {
 
 
     public void QnResponse() {
-        SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
-       String id_order = sp.getString("order_id", null);
-
+       /* SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
+        String id_order = sp.getString("order_id", null);
+        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+*/
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Questionaire.this);
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -356,8 +356,9 @@ public class Activity_Questionaire extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
+                params.put("order_id", order_id);
                 params.put("questionnaire", String.valueOf(questionnaire));
-                params.put("order_id", id_order);
+
                 return params;
 
             }

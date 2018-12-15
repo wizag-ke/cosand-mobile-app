@@ -296,7 +296,7 @@ public class Activity_Register_Truck extends AppCompatActivity implements PopupM
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.truck_menu);
+        popup.inflate(R.menu.id_menu);
         popup.show();
     }
 

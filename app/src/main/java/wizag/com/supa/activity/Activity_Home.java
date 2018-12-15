@@ -39,7 +39,7 @@ import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
 public class Activity_Home extends AppCompatActivity {
-    CardView buy, sell, wallet, profile, supply, owner,track_order;
+    CardView buy, sell, wallet, profile, supply, owner, track_order;
     JSONArray role_array;
     SessionManager session;
     String token, user_role;
@@ -56,7 +56,6 @@ public class Activity_Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
 
-
         firebase_token = FirebaseInstanceId.getInstance().getToken();
         postFirebaseToken();
 
@@ -65,28 +64,7 @@ public class Activity_Home extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-      /*  SharedPreferences sp = getSharedPreferences("notification", MODE_PRIVATE);
-        if (sp != null) {
-            order_id_txt = sp.getString("35", null);
-        }
 
-        SharedPreferences sp_confirm = getSharedPreferences("confirm_notification", MODE_PRIVATE);
-        if (sp_confirm != null) {
-            order_id_confirm = sp_confirm.getString("35", null);
-        }
-
-        if (order_id_confirm != null && order_id_txt != null) {
-            if (order_id_txt.equalsIgnoreCase(order_id_confirm)) {
-                sp_confirm.edit().remove("order_id").commit();
-                startActivity(new Intent(getApplicationContext(), Activity_Confirm_Notification_Order.class));
-                finish();
-
-            }
-        }*/
-
-
-
-        /*kill shot!*/
         checkUserRole();
 
 
@@ -101,7 +79,7 @@ public class Activity_Home extends AppCompatActivity {
         supply = findViewById(R.id.supply);
         track_order = findViewById(R.id.track_order);
 
-        /*get user code*/
+
         SharedPreferences sharedPreferences_sell = getSharedPreferences("profile", MODE_PRIVATE);
         String driver_code_sell = sharedPreferences_sell.getString("user_type", null);
         String indivindual_client_buy = sharedPreferences_sell.getString("user_type", null);
@@ -151,8 +129,10 @@ public class Activity_Home extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
                             finish();
                         });
+            } else {
+                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
+                finish();
             }
-
 
 
         });
@@ -165,7 +145,7 @@ public class Activity_Home extends AppCompatActivity {
 //                if (driver_code_sell.isEmpty()) {
 //                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 ////   dont uncomment here                             builder1.setTitle("Access Denied!");
-//                    builder1.setMessage("Create `a User Account to continue");
+//                    builder1.setMessage("Create a User Account to continue");
 //                    builder1.setCancelable(true);
 //
 //                    builder1.setPositiveButton(

@@ -42,7 +42,7 @@
                             android:background="@color/colorPrimary"
                             android:fontFamily="@font/opensans_bold"
                             android:gravity="center_horizontal|center_vertical"
-                            android:text="Company Details"
+                            android:text="Company Contact Person"
                             android:textColor="#ffffff"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -59,13 +59,13 @@
                         <EditText
                             android:textColor="@color/textColor"
                             android:textColorHint="@color/textColor"
-                            android:id="@+id/company_name"
+                            android:id="@+id/first_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_5sdp"
                             android:background="@drawable/sell"
                             android:fontFamily="@font/opensans_regular"
-                            android:hint="Company Name"
+                            android:hint="First Name"
                             android:inputType="textCapSentences"
                             android:padding="@dimen/_10sdp"
                             android:textSize="20sp" />
@@ -73,26 +73,26 @@
                         <EditText
                             android:textColor="@color/textColor"
                             android:textColorHint="@color/textColor"
-                            android:id="@+id/registration_certificate_no"
+                            android:id="@+id/last_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_5sdp"
                             android:background="@drawable/sell"
                             android:fontFamily="@font/opensans_regular"
-                            android:hint="Registration Certificate Number"
+                            android:hint="Last Name"
                             android:inputType="textCapSentences"
                             android:padding="@dimen/_10sdp"
                             android:textSize="20sp" />
 
 
                         <EditText
-                            android:id="@+id/telephone_no"
+                            android:id="@+id/id_no"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_5sdp"
                             android:background="@drawable/sell"
                             android:fontFamily="@font/opensans_regular"
-                            android:hint="Telephone Number"
+                            android:hint="ID Number"
                             android:inputType="textCapCharacters"
                             android:padding="@dimen/_10sdp"
                             android:textColor="@color/textColor"
@@ -100,13 +100,13 @@
                             android:textSize="20sp" />
 
                         <EditText
-                            android:id="@+id/email_address"
+                            android:id="@+id/telephone_number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_5sdp"
                             android:background="@drawable/sell"
                             android:fontFamily="@font/opensans_regular"
-                            android:hint="Email Address"
+                            android:hint="Telephone Number"
                             android:inputType="textCapSentences"
                             android:padding="@dimen/_10sdp"
                             android:textColor="@color/textColor"
@@ -114,20 +114,45 @@
                             android:textSize="20sp" />
 
 
-                        <Button
-
-                            android:id="@+id/next_truck_details"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="@dimen/_10sdp"
-                            android:background="@drawable/proceed_button"
-                            android:fontFamily="@font/opensans_bold"
-                            android:text="Next"
-                            android:textAllCaps="false"
-                            android:textColor="#ffffff"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:layout_marginTop="30dp">
+
+                            <Button
+                                android:id="@+id/previous"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/next"
+                                android:layout_alignBottom="@+id/next"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_gravity="start"
+                                android:layout_margin="7dp"
+                                android:layout_weight="1"
+                                android:background="@color/colorPrimary"
+                                android:text="Previous"
+                                android:textAllCaps="false"
+                                android:textColor="#FFFFFF" />
+
+                            <Button
+                                android:id="@+id/next_licence_info"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="end"
+                                android:layout_margin="7dp"
+                                android:layout_marginBottom="20dp"
+                                android:layout_marginTop="30dp"
+                                android:layout_weight="1"
+                                android:background="@color/colorPrimary"
+                                android:text="Next"
+                                android:textAllCaps="false"
+                                android:textColor="#FFFFFF" />
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

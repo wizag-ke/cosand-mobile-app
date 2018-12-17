@@ -13,7 +13,7 @@ import wizag.com.supa.BR;
 public class Model_Supplier {
 
     int id_material,id_detail,id_class,id_unit;
-    String material_name,details_name,class_name,units_name,cost;
+    String material_name,details_name,class_name,units_name,cost,location;
 
 
 
@@ -22,7 +22,7 @@ public class Model_Supplier {
     }
 
 
-    public Model_Supplier(int id_material, int id_detail, int id_class, int id_unit, String material_name, String details_name, String class_name, String units_name, String cost) {
+    public Model_Supplier(int id_material, int id_detail, int id_class, int id_unit, String material_name, String details_name, String class_name, String units_name, String cost, String location) {
         this.id_material = id_material;
         this.id_detail = id_detail;
         this.id_class = id_class;
@@ -32,6 +32,7 @@ public class Model_Supplier {
         this.class_name = class_name;
         this.units_name = units_name;
         this.cost = cost;
+        this.location = location;
     }
 
     public int getId_material() {
@@ -66,10 +67,8 @@ public class Model_Supplier {
         return units_name;
     }
 
-    public String getCost() {
-        return cost;
-    }
-
+    public String getCost() { return cost; }
+    public String getLocation() { return location; }
 
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();

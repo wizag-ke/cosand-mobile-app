@@ -12,7 +12,7 @@ import android.content.Intent;
  * the transition type and geofence id(s) that triggered the transition. Creates a JobIntentService
  * that will handle the intent in the background.
  */
-public class GeoFenceBroadcastReceiver extends BroadcastReceiver {
+public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
     /**
      * Receives incoming intents.

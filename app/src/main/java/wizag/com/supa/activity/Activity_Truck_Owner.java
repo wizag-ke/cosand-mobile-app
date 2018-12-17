@@ -18,7 +18,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,35 +55,28 @@ import wizag.com.supa.models.Model_Supplier;
 import wizag.com.supa.models.Model_Truck_Owner;
 
 public class Activity_Truck_Owner extends AppCompatActivity {
-    EditText kra_pin, sacco_name, sacco_number;
+
     String register_truck_owner_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
     RecyclerView recyclerView;
     Button submit;
     Adapter_Truck_Owner adapter;
     List<Model_Truck_Owner> trucks_list = new ArrayList<>();
     FloatingActionButton fab;
-    JSONArray trucks, tonnage_array;
-    String model_txt, make_txt, axle_count_txt, plate_no_txt, tonnage_id_txt;
+    JSONArray trucks;
+    String plate_no_txt, driver_id_no_txt, axle_count_txt;
     SessionManager sessionManager;
     int id_tonnage;
-    ArrayList<String> Tonnage;
-    String tonnages_url = "http://sduka.wizag.biz/api/v1/trucks/tonnages";
-    String tonnage_name;
-    Spinner tonnage;
+    LinearLayout driver_dl_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_owner);
 
-        Tonnage = new ArrayList<>();
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        kra_pin = findViewById(R.id.kra_pin);
-        sacco_name = findViewById(R.id.sacco_name);
-        sacco_number = findViewById(R.id.sacco_number);
         recyclerView = findViewById(R.id.recycler_view);
         submit = findViewById(R.id.submit);
 
@@ -94,7 +90,6 @@ public class Activity_Truck_Owner extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showTrucksDialog();
-                getTonnage();
 
             }
         });
@@ -104,9 +99,6 @@ public class Activity_Truck_Owner extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                kra_pin = findViewById(R.id.kra_pin);
-                sacco_name = findViewById(R.id.sacco_name);
-                sacco_number = findViewById(R.id.sacco_number);
 
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < trucks_list.size(); i++) {
@@ -126,52 +118,27 @@ public class Activity_Truck_Owner extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.layout_truck_owner_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        TextView make;
-        TextView model;
-        TextView axle_count;
-        TextView plate_no;
+        ImageView dl_image;
+        EditText plate_no;
+        EditText driver_id_no;
 
 
-        make = dialogView.findViewById(R.id.dialog_make);
-        model = dialogView.findViewById(R.id.dialog_model);
-        axle_count = dialogView.findViewById(R.id.dialog_axle_count);
-        plate_no = dialogView.findViewById(R.id.dialog_plate_no);
-        tonnage = dialogView.findViewById(R.id.dialog_tonnage);
-
-
-        tonnage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = tonnage.getSelectedItem().toString();
-
-                try {
-                    JSONObject dataClicked = tonnage_array.getJSONObject(i);
-                    id_tonnage = dataClicked.getInt("id");
-//                    getMaterialUnits();
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
+        dl_image = dialogView.findViewById(R.id.driver_dl_image);
+        plate_no = dialogView.findViewById(R.id.plate_no);
+        driver_id_no = dialogView.findViewById(R.id.driver_id);
+        driver_dl_layout = dialogView.findViewById(R.id.driver_dl_layout);
 
         dialogBuilder.setTitle("Truck Details");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                make_txt = make.getText().toString();
-                model_txt = model.getText().toString();
-                axle_count_txt = axle_count.getText().toString();
+
+
                 plate_no_txt = plate_no.getText().toString();
+                driver_dl_layout_txt = driver_id_no.getText().toString();
+                /*get image */
 
-//                Toast.makeText(Activity_Truck_Owner.this, plate_no_txt, Toast.LENGTH_SHORT).show();
 
-                if (make_txt.isEmpty()) {
+                if (plate_no_txt.isEmpty()) {
                     Toast.makeText(Activity_Truck_Owner.this, "Enter Truck make to continue", Toast.LENGTH_SHORT).show();
                 } else if (model_txt.isEmpty()) {
                     Toast.makeText(Activity_Truck_Owner.this, "Enter Truck model to continue", Toast.LENGTH_SHORT).show();
@@ -273,10 +240,8 @@ public class Activity_Truck_Owner extends AppCompatActivity {
             @Override
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("kra_pin", kra_pin.getText().toString());
-                params.put("sacco", sacco_name.getText().toString());
+
                 params.put("trucks", String.valueOf(trucks));
-                params.put("sacco_member", sacco_number.getText().toString());
                 params.put("role_id", "XTON");
 //                params.put("licence_file", "adwerty");
                 return params;
@@ -305,80 +270,15 @@ public class Activity_Truck_Owner extends AppCompatActivity {
 
     }
 
-    private void getTonnage() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-        pDialog.show();
 
+    public void itemClicked(View view) {
+        CheckBox checkBox = (CheckBox) view;
+        if (checkBox.isChecked()) {
+            driver_dl_layout.setVisibility(View.VISIBLE);
+        }
+        else {
+            driver_dl_layout.setVisibility(View.VISIBLE);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, tonnages_url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
-                    if (jsonObject != null) {
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        tonnage_array = data.getJSONArray("tonnages");
-
-                        for (int z = 0; z < tonnage_array.length(); z++) {
-                            JSONObject suppliers_object = tonnage_array.getJSONObject(z);
-
-                            String material_id = suppliers_object.getString("id");
-                            tonnage_name = suppliers_object.getString("description");
-
-
-                            if (tonnage_array != null) {
-
-                                if (Tonnage.contains(tonnage_name)) {
-
-
-                                } else {
-
-                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
-                                    Tonnage.add(tonnage_name);
-//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
-
-                                }
-
-                            }
-
-
-                        }
-
-
-                    }
-                    tonnage.setAdapter(new ArrayAdapter<String>(Activity_Truck_Owner.this, android.R.layout.simple_spinner_dropdown_item, Tonnage));
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                pDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-
-
-        });
-
-        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-
-
+        }
     }
-
 }

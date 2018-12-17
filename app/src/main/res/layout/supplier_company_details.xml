@@ -74,18 +74,18 @@
                     android:textColorHint="@color/textColor" />
 
 
-                <EditText
-                    android:id="@+id/location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_margin="@dimen/_7sdp"
-                    android:background="@drawable/sell"
-                    android:hint="Location Address"
-                    android:inputType="textCapSentences"
-                    android:padding="@dimen/_16sdp"
-                    android:textAlignment="textStart"
-                    android:textColorHint="@color/textColor" />
+                <!--<EditText-->
+                    <!--android:id="@+id/location"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="start"-->
+                    <!--android:layout_margin="@dimen/_7sdp"-->
+                    <!--android:background="@drawable/sell"-->
+                    <!--android:hint="Location Address"-->
+                    <!--android:inputType="textCapSentences"-->
+                    <!--android:padding="@dimen/_16sdp"-->
+                    <!--android:textAlignment="textStart"-->
+                    <!--android:textColorHint="@color/textColor" />-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

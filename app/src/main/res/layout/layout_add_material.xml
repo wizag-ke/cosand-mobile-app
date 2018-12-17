@@ -276,7 +276,15 @@
             android:hint="Enter Unit Cost"
             android:inputType="number"
             android:padding="@dimen/_10sdp" />
-
+        <EditText
+            android:id="@+id/location_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/sell"
+            android:hint="Enter Location Address"
+            android:inputType="text"
+            android:padding="@dimen/_10sdp" />
 
        <!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

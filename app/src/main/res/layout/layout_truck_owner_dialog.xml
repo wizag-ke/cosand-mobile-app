@@ -11,59 +11,64 @@
         android:orientation="vertical">
 
 
-
-        <EditText
-            android:id="@+id/dialog_model"
+        <Button
+            android:id="@+id/upload_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="@dimen/_7sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/sell"
-            android:hint="Model"
-            android:inputType="textCapSentences"
-            android:padding="@dimen/_16sdp"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/textColor" />
+            android:drawableLeft="@android:drawable/ic_menu_camera"
+            android:drawableStart="@android:drawable/ic_menu_camera"
+            android:drawableTint="@color/colorPrimary"
+            android:fontFamily="@font/bariol_bold"
+            android:onClick="uploadDL"
+            android:padding="@dimen/_10sdp"
+            android:text="Upload Image of Driving Licence"
+            android:textAllCaps="false"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <LinearLayout
+            android:id="@+id/driver_dl_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/dialog_make"
+            <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/driver_dl_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:padding="@dimen/_16sdp" />
+
+        </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="@dimen/_7sdp"
-            android:background="@drawable/sell"
-            android:hint="Make"
-            android:inputType="textCapSentences"
-            android:padding="@dimen/_16sdp"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/textColor" />
-
-        <EditText
-            android:id="@+id/dialog_axle_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="@dimen/_7sdp"
-            android:background="@drawable/sell"
-            android:hint="Axle Count"
-            android:inputType="number"
-            android:padding="@dimen/_16sdp"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/textColor" />
-
-        <EditText
-            android:id="@+id/dialog_plate_no"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="@dimen/_7sdp"
-            android:background="@drawable/sell"
             android:hint="Plate Number"
-            android:inputType="textCapCharacters"
-            android:padding="@dimen/_16sdp"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/textColor" />
+            android:textColorHint="@color/textColor">
+
+
+            <EditText
+                android:id="@+id/plate_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/sell"
+                android:fontFamily="@font/opensans_regular"
+                android:inputType="textCapCharacters"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/textColor"
+                android:textSize="20sp" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
 
@@ -83,34 +88,42 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:textColor="@color/textColor"
                 android:fontFamily="@font/bariol_regular"
-                android:text="Tonnage"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#B8BECC" />
-
-            <Spinner
-                android:id="@+id/dialog_tonnage"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="10"
-
-                android:entries="@array/tonnage_arrays"
-                android:fontFamily="@font/bariol_bold"
-                android:prompt="@string/tonnage_prompt"
+                android:text="Link Truck to a driver"
                 android:textColor="@color/textColor"
                 android:textSize="20sp" />
 
+
+            <CheckBox
+                android:id="@+id/link_driver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="itemClicked" />
 
         </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Driver ID Number"
+            android:textColorHint="@color/textColor"
+            android:visibility="gone">
+
+
+            <EditText
+                android:id="@+id/driver_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/sell"
+                android:fontFamily="@font/opensans_regular"
+                android:inputType="textCapCharacters"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/textColor"
+                android:textSize="20sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
 
     </LinearLayout>
 </ScrollView>

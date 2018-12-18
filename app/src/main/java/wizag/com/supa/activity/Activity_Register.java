@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +59,6 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private static final int MY_CAMERA_PERMISSION_CODE_BACK = 200;
 
-
     LinearLayout image_layout, image_layout_back;
     String photo_path = "";
     TextView text_dummy_hint_first_name, text_dummy_hint_last_name,
@@ -66,6 +67,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
             text_dummy_hint_confirm_password;
     ImageView id_image, id_image_back;
     Bitmap photo, photo_back;
+    String front_id, back_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,6 +269,9 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 
                 } else {
                     registerUser();
+                    Toast.makeText(Activity_Register.this, front_id + "\n", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Activity_Register.this, back_id + "\n", Toast.LENGTH_SHORT).show();
+
                 }
 
 
@@ -422,15 +427,21 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ImageView imageView = findViewById(R.id.id_image);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
-            photo = null;
+
             if (data != null) {
                 try {
                     photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
             }
             image_layout.setVisibility(View.VISIBLE);
             imageView.setImageBitmap(photo);
@@ -438,25 +449,52 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
             image_layout.setVisibility(View.VISIBLE);
             photo = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(photo);
-        } else if (requestCode == SELECT_FILE_BACK && resultCode == Activity.RESULT_OK) {
 
-            photo = null;
+           /* photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
+*/
+        }
+
+
+        /*convert bitmap to base 64*/
+       /* photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
+*/
+
+        if (requestCode == SELECT_FILE_BACK && resultCode == Activity.RESULT_OK) {
+
+            photo_back = null;
             if (data != null) {
                 try {
 
-                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                    photo_back = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                  /*  photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray_back = byteArrayOutputStream.toByteArray();
+                    back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);
+*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             image_layout_back.setVisibility(View.VISIBLE);
-            id_image_back.setImageBitmap(photo);
+            id_image_back.setImageBitmap(photo_back);
         } else if (requestCode == REQUEST_CAMERA_BACK && resultCode == Activity.RESULT_OK) {
             image_layout_back.setVisibility(View.VISIBLE);
-            photo = (Bitmap) data.getExtras().get("data");
-            id_image_back.setImageBitmap(photo);
+            photo_back = (Bitmap) data.getExtras().get("data");
+            id_image_back.setImageBitmap(photo_back);
+
+           /* photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray_back = byteArrayOutputStream.toByteArray();
+            back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);*/
         }
 
+        /*convert bitmap to base 64*/
+      /*  photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray_back = byteArrayOutputStream.toByteArray();
+        back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);
+*/
 
     }
 

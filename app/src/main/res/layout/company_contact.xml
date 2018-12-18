@@ -161,6 +161,6 @@
             </android.support.design.widget.CoordinatorLayout>
         </LinearLayout>
     </ScrollView>
-    <include layout="@layout/company_contact"></include>
+    <include layout="@layout/company_details"></include>
     <include layout="@layout/upload_company_copies"></include>
 </ViewFlipper>

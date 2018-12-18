@@ -1,12 +1,21 @@
 package wizag.com.supa.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,15 +23,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.internal.http.multipart.MultipartEntity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -33,11 +48,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonObject;
+import com.koushikdutta.async.http.body.StringBody;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,36 +77,34 @@ import wizag.com.supa.adapter.Supplier_Adapter;
 import wizag.com.supa.models.Model_Supplier;
 import wizag.com.supa.models.Model_Truck_Owner;
 
-public class Activity_Truck_Owner extends AppCompatActivity {
-    EditText kra_pin, sacco_name, sacco_number;
+public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+
     String register_truck_owner_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
     RecyclerView recyclerView;
     Button submit;
     Adapter_Truck_Owner adapter;
     List<Model_Truck_Owner> trucks_list = new ArrayList<>();
     FloatingActionButton fab;
-    JSONArray trucks, tonnage_array;
-    String model_txt, make_txt, axle_count_txt, plate_no_txt, tonnage_id_txt;
+    JSONArray trucks;
+    String plate_no_txt, driver_id_no_txt, axle_count_txt;
     SessionManager sessionManager;
-    int id_tonnage;
-    ArrayList<String> Tonnage;
-    String tonnages_url = "http://sduka.wizag.biz/api/v1/trucks/tonnages";
-    String tonnage_name;
-    Spinner tonnage;
+
+    LinearLayout logbook_layout, link_driver_layout;
+
+    private int SELECT_FILE = 1;
+    private int REQUEST_CAMERA = 0;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    ImageView logbook_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_owner);
 
-        Tonnage = new ArrayList<>();
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        kra_pin = findViewById(R.id.kra_pin);
-        sacco_name = findViewById(R.id.sacco_name);
-        sacco_number = findViewById(R.id.sacco_number);
         recyclerView = findViewById(R.id.recycler_view);
         submit = findViewById(R.id.submit);
 
@@ -94,7 +118,6 @@ public class Activity_Truck_Owner extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showTrucksDialog();
-                getTonnage();
 
             }
         });
@@ -104,9 +127,6 @@ public class Activity_Truck_Owner extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                kra_pin = findViewById(R.id.kra_pin);
-                sacco_name = findViewById(R.id.sacco_name);
-                sacco_number = findViewById(R.id.sacco_number);
 
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < trucks_list.size(); i++) {
@@ -126,68 +146,39 @@ public class Activity_Truck_Owner extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.layout_truck_owner_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        TextView make;
-        TextView model;
-        TextView axle_count;
-        TextView plate_no;
+        ImageView logbook_image;
+        EditText plate_no;
+        EditText driver_id_no;
+        CheckBox link_driver;
 
 
-        make = dialogView.findViewById(R.id.dialog_make);
-        model = dialogView.findViewById(R.id.dialog_model);
-        axle_count = dialogView.findViewById(R.id.dialog_axle_count);
-        plate_no = dialogView.findViewById(R.id.dialog_plate_no);
-        tonnage = dialogView.findViewById(R.id.dialog_tonnage);
-
-
-        tonnage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = tonnage.getSelectedItem().toString();
-
-                try {
-                    JSONObject dataClicked = tonnage_array.getJSONObject(i);
-                    id_tonnage = dataClicked.getInt("id");
-//                    getMaterialUnits();
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
+        logbook_image = dialogView.findViewById(R.id.logbook_image);
+        plate_no = dialogView.findViewById(R.id.plate_no);
+        driver_id_no = dialogView.findViewById(R.id.driver_id);
+        link_driver_layout = dialogView.findViewById(R.id.link_driver_layout);
+        logbook_layout = dialogView.findViewById(R.id.logbook_layout);
+        link_driver = dialogView.findViewById(R.id.link_driver);
 
         dialogBuilder.setTitle("Truck Details");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                make_txt = make.getText().toString();
-                model_txt = model.getText().toString();
-                axle_count_txt = axle_count.getText().toString();
+
+
                 plate_no_txt = plate_no.getText().toString();
+                driver_id_no_txt = driver_id_no.getText().toString();
+                /*get image */
 
-//                Toast.makeText(Activity_Truck_Owner.this, plate_no_txt, Toast.LENGTH_SHORT).show();
 
-                if (make_txt.isEmpty()) {
-                    Toast.makeText(Activity_Truck_Owner.this, "Enter Truck make to continue", Toast.LENGTH_SHORT).show();
-                } else if (model_txt.isEmpty()) {
-                    Toast.makeText(Activity_Truck_Owner.this, "Enter Truck model to continue", Toast.LENGTH_SHORT).show();
-                } else if (axle_count_txt.isEmpty()) {
-                    Toast.makeText(Activity_Truck_Owner.this, "Enter Truck axle count to continue", Toast.LENGTH_SHORT).show();
+                if (driver_id_no_txt.isEmpty() && link_driver.isChecked()) {
+                    Toast.makeText(Activity_Truck_Owner.this, "Enter Attached Driver ID Number", Toast.LENGTH_LONG).show();
                 } else if (plate_no_txt.isEmpty()) {
-                    Toast.makeText(Activity_Truck_Owner.this, "Enter Truck Plate Number to continue", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Activity_Truck_Owner.this, "Enter Truck Plate Number ", Toast.LENGTH_LONG).show();
                 } else {
-
+                    String logbook_image_ = null;
                     trucks_list.add(new Model_Truck_Owner(
-                            model_txt,
-                            make_txt,
-                            axle_count_txt,
+                            logbook_image_,
                             plate_no_txt,
-                            tonnage_name,
-                            id_tonnage));
+                            driver_id_no_txt));
                     adapter.notifyDataSetChanged();
 
 
@@ -273,10 +264,8 @@ public class Activity_Truck_Owner extends AppCompatActivity {
             @Override
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("kra_pin", kra_pin.getText().toString());
-                params.put("sacco", sacco_name.getText().toString());
+
                 params.put("trucks", String.valueOf(trucks));
-                params.put("sacco_member", sacco_number.getText().toString());
                 params.put("role_id", "XTON");
 //                params.put("licence_file", "adwerty");
                 return params;
@@ -305,80 +294,80 @@ public class Activity_Truck_Owner extends AppCompatActivity {
 
     }
 
-    private void getTonnage() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+
+    public void itemClicked(View view) {
+        CheckBox checkBox = (CheckBox) view;
+        if (checkBox.isChecked()) {
+            link_driver_layout.setVisibility(View.VISIBLE);
+        } else {
+            link_driver_layout.setVisibility(View.GONE);
+
+        }
+    }
+
+    public void uploadDL(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.id_menu_back);
+        popup.show();
+    }
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, tonnages_url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.existing:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+
+                return true;
+            case R.id.camera_photo:
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE);
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, REQUEST_CAMERA);
+                }
+
+                return true;
+
+
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bitmap photo;
+        if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
+            photo = null;
+            if (data != null) {
                 try {
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
-                    if (jsonObject != null) {
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        tonnage_array = data.getJSONArray("tonnages");
-
-                        for (int z = 0; z < tonnage_array.length(); z++) {
-                            JSONObject suppliers_object = tonnage_array.getJSONObject(z);
-
-                            String material_id = suppliers_object.getString("id");
-                            tonnage_name = suppliers_object.getString("description");
-
-
-                            if (tonnage_array != null) {
-
-                                if (Tonnage.contains(tonnage_name)) {
-
-
-                                } else {
-
-                                    //Toast.makeText(getApplicationContext(), "data\n" + size.getJSONObject(m).getString("size"), Toast.LENGTH_SHORT).show();
-                                    Tonnage.add(tonnage_name);
-//                                    Type.add(materialTypes.getJSONObject(p).getString("id"));
-
-                                }
-
-                            }
-
-
-                        }
-
-
-                    }
-                    tonnage.setAdapter(new ArrayAdapter<String>(Activity_Truck_Owner.this, android.R.layout.simple_spinner_dropdown_item, Tonnage));
-
-
-                } catch (JSONException e) {
+                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                pDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-
-
-        });
-
-        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+            link_driver_layout.setVisibility(View.VISIBLE);
+            logbook_image.setImageBitmap(photo);
+        } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
+            link_driver_layout.setVisibility(View.VISIBLE);
+            photo = (Bitmap) data.getExtras().get("data");
+            logbook_image.setImageBitmap(photo);
+        }
 
 
     }
+
 
 }

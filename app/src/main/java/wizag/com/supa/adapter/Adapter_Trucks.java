@@ -18,25 +18,22 @@ import wizag.com.supa.utils.ItemClickListener;
 public class Adapter_Trucks extends RecyclerView.Adapter<Adapter_Trucks.MyViewHolder> {
 
     private List<Model_Trucks> dataSet;
-      Context context;
+    Context context;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView make;
-        TextView model;
-        TextView axle_count;
         TextView plate_no;
-        TextView tonnage;
+        TextView driver_id_no;
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.make =  itemView.findViewById(R.id.make);
-            this.model =  itemView.findViewById(R.id.model);
-            this.axle_count = itemView.findViewById(R.id.axle_count);
-            this.plate_no = itemView.findViewById(R.id.owner_plate_no);
-            this.tonnage = itemView.findViewById(R.id.tonnage);
+            this.plate_no = itemView.findViewById(R.id.plate_no);
+            this.driver_id_no = itemView.findViewById(R.id.driver_id_no);
+
         }
     }
+
 
     public Adapter_Trucks(List<Model_Trucks> data, Context context) {
         this.dataSet = data;
@@ -58,18 +55,11 @@ public class Adapter_Trucks extends RecyclerView.Adapter<Adapter_Trucks.MyViewHo
         final Model_Trucks trucks = dataSet.get(listPosition);
 
 
-        TextView make = holder.make;
-        TextView model = holder.model;
-        TextView axle_count = holder.axle_count;
         TextView plate_no = holder.plate_no;
-        TextView tonnage = holder.tonnage;
+        TextView driver_id_no = holder.driver_id_no;
 
-
-        make.setText(trucks.getMake());
-        model.setText(trucks.getModel());
-        axle_count.setText(trucks.getAxle_count());
-        plate_no.setText(trucks.getPlate_no());
-        tonnage.setText(trucks.getTonnage_id());
+        plate_no.setText(trucks.getMake());
+        driver_id_no.setText(trucks.getModel());
 
     }
 

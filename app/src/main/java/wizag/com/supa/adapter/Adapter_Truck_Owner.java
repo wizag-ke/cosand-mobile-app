@@ -24,19 +24,13 @@ public class Adapter_Truck_Owner extends RecyclerView.Adapter<Adapter_Truck_Owne
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView make;
-        TextView model;
-        TextView axle_count;
         TextView plate_no;
-        TextView tonnage;
+        TextView driver_id_no;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.make =  itemView.findViewById(R.id.make);
-            this.model =  itemView.findViewById(R.id.model);
-            this.axle_count = itemView.findViewById(R.id.axle_count);
-            this.plate_no = itemView.findViewById(R.id.owner_plate_no);
-            this.tonnage = itemView.findViewById(R.id.tonnage);
+            this.plate_no =  itemView.findViewById(R.id.plate_no);
+            this.driver_id_no =  itemView.findViewById(R.id.driver_id_no);
         }
     }
 
@@ -60,18 +54,12 @@ public class Adapter_Truck_Owner extends RecyclerView.Adapter<Adapter_Truck_Owne
         final Model_Truck_Owner supplier = dataSet.get(listPosition);
 
 
-        TextView make = holder.make;
-        TextView model = holder.model;
-        TextView axle_count = holder.axle_count;
         TextView plate_no = holder.plate_no;
-        TextView tonnage = holder.tonnage;
+        TextView driver_id_no = holder.driver_id_no;
 
 
-        make.setText(supplier.getMake());
-        model.setText(supplier.getModel());
-        axle_count.setText(supplier.getAxle_count());
         plate_no.setText(supplier.getPlate_no());
-        tonnage.setText(supplier.getTonnage_id());
+        driver_id_no.setText(supplier.getDriver_id_no());
 
     }
 

@@ -4,20 +4,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Model_Truck_Owner {
-    private String dl_image, plate_no, driver_id_no;
+    private String logbook_image, plate_no, driver_id_no;
 
-
-    public Model_Truck_Owner() {
-    }
-
-    public Model_Truck_Owner(String dl_image, String plate_no, String driver_id_no) {
-        this.dl_image = dl_image;
+    public Model_Truck_Owner(String logbook_image, String plate_no, String driver_id_no) {
+        this.logbook_image = logbook_image;
         this.plate_no = plate_no;
         this.driver_id_no = driver_id_no;
     }
 
     public String getDl_image() {
-        return dl_image;
+        return logbook_image;
     }
 
     public String getPlate_no() {
@@ -31,7 +27,7 @@ public class Model_Truck_Owner {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("dl_image", dl_image);
+            obj.put("logbook_image", logbook_image);
             obj.put("plate_no", plate_no);
             obj.put("driver_id_no", driver_id_no);
         } catch (JSONException e) {

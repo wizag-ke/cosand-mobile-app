@@ -157,7 +157,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
 
         company_name_txt = company_name.getText().toString();
         registration_certificate_no_txt= registration_certificate_no.getText().toString();
-        telephone_no_txt=telephone_no.getText().toString();
+        //telephone_no_txt=telephone_no.getText().toString();
         email_address_txt=email_address.getText().toString();
         first_name_txt=first_name.getText().toString();
         last_name_txt=last_name.getText().toString();
@@ -217,11 +217,14 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
             @Override
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("email", email.getText().toString());
-                params.put("location", office_location.getText().toString());
-                params.put("certificate_number", cert_no_txt);
-                params.put("kra_pin", company_pin_txt);
+                params.put("email", email_address_txt);
                 params.put("company", company_name_txt);
+                params.put("certificate_number", registration_certificate_no_txt);
+                params.put("first_name", first_name_txt);
+                params.put("company", company_name_txt);
+                params.put("last_name", last_name_txt);
+                params.put("id_no", id_no_txt);
+                params.put("tel_no", telephone_no_txt);
                 params.put("role_id", "XCOR");
 //                params.put("id_file", "");
                 return params;
@@ -310,7 +313,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
             if (requestCode == SELECT_FILE) {
                 photo = null;
                 if (data != null) {
-                    image_layout.setVisibility(View.VISIBLE);
+                    id_front.setVisibility(View.VISIBLE);
                     try {
                         photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                     } catch (IOException e) {
@@ -318,11 +321,11 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                     }
                 }
 
-                id_image.setImageBitmap(photo);
+                id_front_image.setImageBitmap(photo);
             } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-                image_layout.setVisibility(View.VISIBLE);
+                id_front.setVisibility(View.VISIBLE);
                 photo = (Bitmap) data.getExtras().get("data");
-                id_image.setImageBitmap(photo);
+                id_front_image.setImageBitmap(photo);
 
 //                encodedCameraImage = encodeImage(photo);
 

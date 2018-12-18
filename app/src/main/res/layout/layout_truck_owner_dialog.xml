@@ -32,7 +32,7 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/driver_dl_layout"
+            android:id="@+id/logbook_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -40,7 +40,7 @@
             android:visibility="gone">
 
             <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/driver_dl_image"
+                android:id="@+id/logbook_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_150sdp"
                 android:layout_marginTop="@dimen/_10sdp"
@@ -72,7 +72,6 @@
 
         <LinearLayout
 
-            android:id="@+id/linear_material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/complete_details"
@@ -102,29 +101,40 @@
 
         </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
+
+            android:id="@+id/link_driver_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Driver ID Number"
-            android:textColorHint="@color/textColor"
-            android:visibility="gone">
+            android:layout_below="@id/complete_details"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_5sdp">
 
 
-            <EditText
-                android:id="@+id/driver_id"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="@drawable/sell"
-                android:fontFamily="@font/opensans_regular"
-                android:inputType="textCapCharacters"
-                android:padding="@dimen/_10sdp"
-                android:textColor="@color/textColor"
-                android:textSize="20sp" />
+                android:hint="Enter Driver ID Number"
+                android:textColorHint="@color/textColor"
+                >
 
-        </android.support.design.widget.TextInputLayout>
 
+                <EditText
+                    android:id="@+id/driver_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@drawable/sell"
+                    android:fontFamily="@font/opensans_regular"
+                    android:inputType="textCapCharacters"
+                    android:padding="@dimen/_10sdp"
+                    android:textColor="@color/textColor"
+                    android:textSize="20sp" />
+
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
-

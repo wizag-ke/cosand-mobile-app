@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +47,7 @@ import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
 public class Activity_Corporate_Client extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
-    Button submit,upload_id_front, upload_id_back, upload_company_cert;
+    Button submit,upload_id_front, upload_id_back, upload_company_cert,next_company_contact,next_upload_company_copies, previous_company_contact,previous;;
     EditText company_name,registration_certificate_no,telephone_no,email_address, first_name, last_name, id_no, telephone_number;
     ViewFlipper flipper;
     String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
@@ -55,9 +57,13 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     LinearLayout id_front,image_id_back,image_company_cert;
     //ImageView id_image;
     private int SELECT_FILE = 1;
+    private int SELECT_FILE_BACK = 2;
     private int REQUEST_CAMERA = 0;
+    private int REQUEST_CAMERA_BACK = 3;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    Bitmap photo;
+    private static final int MY_CAMERA_PERMISSION_CODE_BACK = 200;
+    Bitmap photo,photo_back;
+    String front_id, back_id;
     SessionManager sessionManager;
 
     @Override
@@ -83,22 +89,38 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         id_no=findViewById(R.id.id_no);
         telephone_number=findViewById(R.id.telephone_number);
 
-
+        id_front=findViewById(R.id.id_front);
+        image_id_back=findViewById(R.id.image_id_back);
+        image_company_cert=findViewById(R.id.image_company_cert);
 
 
        // email = findViewById(R.id.email);
         id_front_image = findViewById(R.id.id_front_image);
         id_back_image = findViewById(R.id.id_back_image);
         company_cert_image = findViewById(R.id.company_cert_image);
-        id_front.setVisibility(View.GONE);
-        image_id_back.setVisibility(View.GONE);
-        image_company_cert.setVisibility(View.GONE);
+        //dont uncomment this
+//        id_front.setVisibility(View.GONE);
+//        image_id_back.setVisibility(View.GONE);
+//        image_company_cert.setVisibility(View.GONE);
         flipper = findViewById(R.id.flipper);
 
+
+
+        next_company_contact=findViewById(R.id.next_company_contact);
+        next_company_contact.setOnClickListener(this);
+
+        next_upload_company_copies=findViewById(R.id.next_upload_company_copies);
+        next_upload_company_copies.setOnClickListener(this);
+
+        previous_company_contact=findViewById(R.id.previous_company_contact);
+
+        previous=findViewById(R.id.previous);
 
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(this);
 
+        previous.setOnClickListener(v -> flipper.showPrevious());
+        previous_company_contact.setOnClickListener(v -> flipper.showPrevious());
 
     }
 
@@ -106,6 +128,32 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     public void onClick(View view) {
 
         switch (view.getId()) {
+            case R.id.next_company_contact:
+                if (company_name.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Company Name to continue", Toast.LENGTH_LONG).show();
+                } else if (registration_certificate_no.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Registration Certificate No to continue", Toast.LENGTH_LONG).show();
+                } else if (telephone_no.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Telephone number to continue", Toast.LENGTH_LONG).show();
+                } else if (email_address.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Email Address to continue", Toast.LENGTH_LONG).show();}
+                    flipper.showNext();
+                    break;
+
+            case R.id .next_upload_company_copies:
+                if (first_name.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter First Name to proceed", Toast.LENGTH_LONG).show();
+                }else if (last_name.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Last Name to proceed", Toast.LENGTH_LONG).show();
+                }
+                else if (id_no.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter ID Number to proceed", Toast.LENGTH_LONG).show();
+                }
+                else if (telephone_number.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Telephone Number to proceed", Toast.LENGTH_LONG).show();
+                }
+                flipper.showNext();
+                break;
 
             case R.id.submit:
 //                validate
@@ -285,20 +333,32 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE);
-                }
-
-
-               /* if (ContextCompat.checkSelfPermission(Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            MY_CAMERA_PERMISSION_CODE);
-                }*/
-                else {
+                } else {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(cameraIntent, REQUEST_CAMERA);
                 }
 
                 return true;
+
+            case R.id.existing_back:
+                Intent back_intent = new Intent();
+                back_intent.setType("image/*");
+                back_intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(back_intent, "Select File"), SELECT_FILE_BACK);
+
+                return true;
+            case R.id.camera_photo_back:
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE_BACK);
+                } else {
+                    Intent back_cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(back_cameraIntent, REQUEST_CAMERA_BACK);
+                }
+
+                return true;
+
             default:
                 return false;
         }
@@ -307,33 +367,85 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ImageView imageView = findViewById(R.id.id_image);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == SELECT_FILE) {
-                photo = null;
-                if (data != null) {
-                    id_front.setVisibility(View.VISIBLE);
-                    try {
-                        photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            if (data != null) {
+                try {
+                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-                id_front_image.setImageBitmap(photo);
-            } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-                id_front.setVisibility(View.VISIBLE);
-                photo = (Bitmap) data.getExtras().get("data");
-                id_front_image.setImageBitmap(photo);
-
-//                encodedCameraImage = encodeImage(photo);
-
+                photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
             }
+            id_front.setVisibility(View.VISIBLE);
+            imageView.setImageBitmap(photo);
+        } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
+            id_front.setVisibility(View.VISIBLE);
+            photo = (Bitmap) data.getExtras().get("data");
+            id_front_image.setImageBitmap(photo);
 
 
+           /* photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
+*/
         }
-    }
 
+
+        /*convert bitmap to base 64*/
+       /* photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
+*/
+
+        if (requestCode == SELECT_FILE_BACK && resultCode == Activity.RESULT_OK) {
+
+            photo_back = null;
+            if (data != null) {
+                try {
+
+                    photo_back = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                  /*  photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray_back = byteArrayOutputStream.toByteArray();
+                    back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);
+*/
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            image_id_back.setVisibility(View.VISIBLE);
+            id_back_image.setImageBitmap(photo_back);
+        } else if (requestCode == REQUEST_CAMERA_BACK && resultCode == Activity.RESULT_OK) {
+            image_id_back.setVisibility(View.VISIBLE);
+            photo_back = (Bitmap) data.getExtras().get("data");
+            id_back_image.setImageBitmap(photo_back);
+
+           /* photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray_back = byteArrayOutputStream.toByteArray();
+            back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);*/
+        }
+
+        /*convert bitmap to base 64*/
+      /*  photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray_back = byteArrayOutputStream.toByteArray();
+        back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);
+*/
+
+    }
+    public void showOptionsBack(View view) {
+
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.id_menu_back);
+        popup.show();
+    }
 }

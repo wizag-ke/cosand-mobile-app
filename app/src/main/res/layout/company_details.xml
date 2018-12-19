@@ -116,7 +116,7 @@
 
                         <Button
 
-                            android:id="@+id/next_truck_details"
+                            android:id="@+id/next_company_contact"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -136,6 +136,6 @@
             </android.support.design.widget.CoordinatorLayout>
         </LinearLayout>
     </ScrollView>
-    <include layout="@layout/company_contact"></include>
-    <include layout="@layout/upload_company_copies"></include>
+    <include layout="@layout/company_contact"/>
+    <include layout="@layout/upload_company_copies"/>
 </ViewFlipper>

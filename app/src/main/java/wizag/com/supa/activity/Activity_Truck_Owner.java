@@ -77,6 +77,8 @@ import wizag.com.supa.adapter.Supplier_Adapter;
 import wizag.com.supa.models.Model_Supplier;
 import wizag.com.supa.models.Model_Truck_Owner;
 
+import static wizag.com.supa.activity.Activity_Driver_Register.encodeTobase64;
+
 public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     String register_truck_owner_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
@@ -95,6 +97,7 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
     private int REQUEST_CAMERA = 0;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     ImageView logbook_image;
+    String logbook_image_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +149,7 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
         final View dialogView = inflater.inflate(R.layout.layout_truck_owner_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        ImageView logbook_image;
+
         EditText plate_no;
         EditText driver_id_no;
         CheckBox link_driver;
@@ -160,6 +163,7 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
         link_driver = dialogView.findViewById(R.id.link_driver);
 
         dialogBuilder.setTitle("Truck Details");
+        dialogBuilder.setCancelable(false);
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -174,9 +178,9 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
                 } else if (plate_no_txt.isEmpty()) {
                     Toast.makeText(Activity_Truck_Owner.this, "Enter Truck Plate Number ", Toast.LENGTH_LONG).show();
                 } else {
-                    String logbook_image_ = null;
+
                     trucks_list.add(new Model_Truck_Owner(
-                            logbook_image_,
+                            logbook_image_txt,
                             plate_no_txt,
                             driver_id_no_txt));
                     adapter.notifyDataSetChanged();
@@ -267,6 +271,8 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
 
                 params.put("trucks", String.valueOf(trucks));
                 params.put("role_id", "XTON");
+                params.put("client_type", "mobile");
+
 //                params.put("licence_file", "adwerty");
                 return params;
             }
@@ -305,12 +311,12 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
         }
     }
 
-    public void uploadDL(View view) {
+    public void uploadLogbook(View view) {
         PopupMenu popup = new PopupMenu(this, view);
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.id_menu_back);
+        popup.inflate(R.menu.id_menu);
         popup.show();
     }
 
@@ -358,12 +364,15 @@ public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu
                     e.printStackTrace();
                 }
             }
-            link_driver_layout.setVisibility(View.VISIBLE);
+            logbook_layout.setVisibility(View.VISIBLE);
             logbook_image.setImageBitmap(photo);
+            logbook_image_txt = encodeTobase64(photo);
+
         } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-            link_driver_layout.setVisibility(View.VISIBLE);
+            logbook_layout.setVisibility(View.VISIBLE);
             photo = (Bitmap) data.getExtras().get("data");
             logbook_image.setImageBitmap(photo);
+            logbook_image_txt = encodeTobase64(photo);
         }
 
 

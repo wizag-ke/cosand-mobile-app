@@ -43,7 +43,7 @@
             <LinearLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp"
+                android:layout_height="@dimen/_150sdp"
                 android:orientation="vertical">
 
                 <EditText
@@ -61,6 +61,7 @@
 
 
                 <EditText
+                    android:visibility="gone"
                     android:id="@+id/kra_pin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

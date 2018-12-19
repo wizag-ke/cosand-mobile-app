@@ -832,12 +832,12 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                         /*message for verification*/
 
 
-                        Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), Activity_Home.class));
                         finish();
                     } else if (status.equalsIgnoreCase("error")) {
 
-                        Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Supplier_Register.this, message, Toast.LENGTH_LONG).show();
 
 
                     }
@@ -848,7 +848,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                             String data_message = jsonArray.getString(k);
 
                             if (status.equalsIgnoreCase("fail")) {
-                                Toast.makeText(Activity_Supplier_Register.this, data_message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Activity_Supplier_Register.this, data_message, Toast.LENGTH_LONG).show();
                             }
                         }
 
@@ -865,7 +865,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
                         error.printStackTrace();
-                        Toast.makeText(Activity_Supplier_Register.this, "An error occurred" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Supplier_Register.this, "An error occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -876,7 +876,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("name", name_txt);
-                params.put("kra_pin", kra_pin_txt);
+//                params.put("kra_pin", kra_pin_txt);
                 params.put("location", location_txt);
                 params.put("materials", String.valueOf(supplier_materials));
                 params.put("role_id", "XSUP");

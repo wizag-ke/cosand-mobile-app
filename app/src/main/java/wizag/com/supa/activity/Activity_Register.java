@@ -46,6 +46,8 @@ import java.util.Map;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 
+import static wizag.com.supa.activity.Activity_Driver_Register.encodeTobase64;
+
 public class Activity_Register extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ProgressDialog progressDialog;
     EditText edit_firstname, edit_lastname, edit_id, edit_phone, email_address, create_password, confirm_password;
@@ -68,6 +70,10 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     ImageView id_image, id_image_back;
     Bitmap photo, photo_back;
     String front_id, back_id;
+
+    String f_name, l_name, edit_id_txt, edit_phone_txt,
+            email_address_txt, create_password_txt, confirm_password_txt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,13 +215,13 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
 
-                final String f_name = edit_firstname.getText().toString();
-                final String l_name = edit_lastname.getText().toString();
-                final String edit_id_txt = edit_id.getText().toString();
-                final String edit_phone_txt = edit_phone.getText().toString();
-                final String email_address_txt = email_address.getText().toString();
-                final String create_password_txt = create_password.getText().toString();
-                final String confirm_password_txt = confirm_password.getText().toString();
+                f_name = edit_firstname.getText().toString();
+                l_name = edit_lastname.getText().toString();
+                edit_id_txt = edit_id.getText().toString();
+                edit_phone_txt = edit_phone.getText().toString();
+                email_address_txt = email_address.getText().toString();
+                create_password_txt = create_password.getText().toString();
+                confirm_password_txt = confirm_password.getText().toString();
 
                 editor.putString("reg_fname", f_name);
                 editor.putString("reg_lname", l_name);
@@ -334,6 +340,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
+                        error.getMessage();
                         Toast.makeText(Activity_Register.this, "An error occurred" + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -344,14 +351,17 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
             @Override
             protected Map<String, String> getParams() {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("email", email_address.getText().toString());
-                params.put("id_no", edit_id.getText().toString());
-                params.put("password", create_password.getText().toString());
-                params.put("password_confirmation", confirm_password.getText().toString());
-                params.put("fname", edit_firstname.getText().toString());
-                params.put("lname", edit_lastname.getText().toString());
-                params.put("phone", edit_phone.getText().toString());
+                params.put("email",email_address_txt);
+                params.put("id_no", edit_id_txt);
+                params.put("password", create_password_txt);
+                params.put("password_confirmation", confirm_password_txt);
+                params.put("fname", f_name);
+                params.put("lname", l_name);
+                params.put("phone", edit_phone_txt);
                 params.put("role_id", "XIND");
+                params.put("id_file_front", front_id);
+                params.put("id_file_back", back_id);
+                params.put("client_type", "mobile");
 
 //                params.put("role_id", "2");
                 return params;
@@ -438,30 +448,20 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
             }
             image_layout.setVisibility(View.VISIBLE);
             imageView.setImageBitmap(photo);
+            front_id = encodeTobase64(photo);
+
         } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
             image_layout.setVisibility(View.VISIBLE);
             photo = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(photo);
+            front_id = encodeTobase64(photo);
 
-           /* photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
-*/
+
         }
 
-
-        /*convert bitmap to base 64*/
-       /* photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        front_id = Base64.encodeToString(byteArray, Base64.DEFAULT);
-*/
 
         if (requestCode == SELECT_FILE_BACK && resultCode == Activity.RESULT_OK) {
 
@@ -470,31 +470,21 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
                 try {
 
                     photo_back = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                  /*  photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray_back = byteArrayOutputStream.toByteArray();
-                    back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);
-*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             image_layout_back.setVisibility(View.VISIBLE);
             id_image_back.setImageBitmap(photo_back);
+            back_id = encodeTobase64(photo_back);
+
         } else if (requestCode == REQUEST_CAMERA_BACK && resultCode == Activity.RESULT_OK) {
             image_layout_back.setVisibility(View.VISIBLE);
             photo_back = (Bitmap) data.getExtras().get("data");
             id_image_back.setImageBitmap(photo_back);
-
-           /* photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray_back = byteArrayOutputStream.toByteArray();
-            back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);*/
+            back_id = encodeTobase64(photo_back);
         }
 
-        /*convert bitmap to base 64*/
-      /*  photo_back.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray_back = byteArrayOutputStream.toByteArray();
-        back_id = Base64.encodeToString(byteArray_back, Base64.DEFAULT);
-*/
 
     }
 
@@ -508,4 +498,6 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
         popup.inflate(R.menu.id_menu_back);
         popup.show();
     }
+
+
 }

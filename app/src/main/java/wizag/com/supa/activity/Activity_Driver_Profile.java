@@ -69,7 +69,7 @@ public class Activity_Driver_Profile extends AppCompatActivity implements View.O
         driver_model = sp.getString("driver_model", null);
         driver_year = sp.getString("driver_year", null);
 
-        try {
+       /* try {
             roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -134,7 +134,7 @@ public class Activity_Driver_Profile extends AppCompatActivity implements View.O
         }
 
 
-
+*/
 
 
         /*initialize views*/

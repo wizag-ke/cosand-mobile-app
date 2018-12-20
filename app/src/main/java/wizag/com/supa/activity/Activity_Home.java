@@ -41,16 +41,17 @@ import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
 public class Activity_Home extends AppCompatActivity {
-    CardView buy, sell, wallet, profile, supply, owner, track_order;
+    CardView buy, sell, wallet, profile, supply, orders, track_order;
     JSONArray role_array;
     SessionManager session;
     String token, user_role;
     Context context;
-    JSONArray roles;
+    JSONArray role;
     String order_id_txt, order_id_confirm;
     String firebase_token;
     String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
-
+    private static final String SHARED_PREF_NAME = "profile";
+    String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,6 @@ public class Activity_Home extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-
-        checkUserRole();
-
-
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         token = user.get("access_token");
@@ -79,33 +76,22 @@ public class Activity_Home extends AppCompatActivity {
         sell = findViewById(R.id.sell);
         wallet = findViewById(R.id.wallet);
         profile = findViewById(R.id.profile);
-        supply = findViewById(R.id.supply);
+
         track_order = findViewById(R.id.track_order);
+        orders = findViewById(R.id.orders);
 
+        /*get Profiles*/
+        getDriverProfile();
+        getSupplierProfile();
+        getCorporateProfile();
+        getTruckOwner();
 
-        SharedPreferences sharedPreferences_sell = getSharedPreferences("profile", MODE_PRIVATE);
-        String driver_code_sell = sharedPreferences_sell.getString("user_type", null);
-        String indivindual_client_buy = sharedPreferences_sell.getString("user_type", null);
-        String corporate_client_buy = sharedPreferences_sell.getString("user_type", null);
-//        Toast.makeText(context, driver_code_sell, Toast.LENGTH_LONG).show();
+        /*loop through roles array_list*/
 
 
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (driver_code_sell.isEmpty()) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                    builder1.setTitle("Access Denied!");
-                    builder1.setMessage("Create a User Account to continue");
-                    builder1.setCancelable(true);
-
-                    builder1.setPositiveButton(
-                            "Proceed",
-                            (dialog, id) -> {
-                                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-                                finish();
-                            });
-                }
                 startActivity(new Intent(getApplicationContext(), Activity_Buy.class));
 
             }
@@ -120,10 +106,10 @@ public class Activity_Home extends AppCompatActivity {
         });
 
         sell.setOnClickListener(view -> {
-            if (driver_code_sell.isEmpty()) {
+            if (!code.contains("XDRI")) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                 builder1.setTitle("Access Denied!");
-                builder1.setMessage("Create a User Account to continue");
+                builder1.setMessage("Create a Driver Account to continue");
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -140,73 +126,45 @@ public class Activity_Home extends AppCompatActivity {
 
         });
 
-        supply.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class)));
-
         wallet.setOnClickListener(view -> {
 
             startActivity(new Intent(getApplicationContext(), ActivityLoginWallet.class));
-//                if (driver_code_sell.isEmpty()) {
-//                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-////   dont uncomment here                             builder1.setTitle("Access Denied!");
-//                    builder1.setMessage("Create a User Account to continue");
-//                    builder1.setCancelable(true);
-//
-//                    builder1.setPositiveButton(
-//                            "Proceed",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-//                                    finish();
-//                                }
-//                            });
-//
-//                    builder1.setNegativeButton(
-//                            "Not now",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    dialog.cancel();
-//                                }
-//                            });
-//
-//                    AlertDialog alert11 = builder1.create();
-//                    alert11.show();
-//                } else {
-//
-//                    startActivity(new Intent(getApplicationContext(), Activity_Wallet.class));
-//                }
+
+        });
+
+        orders.setOnClickListener(view -> {
+
+            startActivity(new Intent(getApplicationContext(), Activity_List_Orders.class));
+
         });
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-                String driver_code = sp.getString("user_type", null);
 
-                try {
-                    roles = new JSONArray(sp.getString("user_type", null));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    roles = new JSONArray();
-                }
-
-                if (user_role.equalsIgnoreCase("XDRI")) {
+                if(code.contains("XDRI")){
                     Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
                     startActivity(driver_profile);
-                } else if (user_role.equalsIgnoreCase("XIND")) {
-                    Intent ind_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
-                    startActivity(ind_profile);
-                } else if (user_role.equalsIgnoreCase("XCOR")) {
-                    Intent cor_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
-                    startActivity(cor_profile);
-                } else if (user_role.equalsIgnoreCase("XTON")) {
-//                    Intent truck_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
-//                    startActivity(truck_profile);
-                } else if (user_role.equalsIgnoreCase("XSUP")) {
-                    Intent truck_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
-                    startActivity(truck_profile);
                 }
 
+                else if(code.contains("XCOR")){
+                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
+                    startActivity(driver_profile);
+                }
+
+               else if(code.contains("XTON")){
+                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
+                    startActivity(driver_profile);
+                }
+
+              else if(code.contains("XSUP")){
+                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
+                    startActivity(driver_profile);
+                }
+                else {
+                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
+                    startActivity(driver_profile);
+                }
 
             }
         });
@@ -252,83 +210,6 @@ public class Activity_Home extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void checkUserRole() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-//        pDialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    pDialog.dismiss();
-                    if (jsonObject != null) {
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        JSONObject user = data.getJSONObject("user");
-
-                        role_array = user.getJSONArray("roles");
-                        for (int i = 0; i < role_array.length(); i++) {
-                            JSONObject object = role_array.getJSONObject(i);
-                            user_role = object.getString("code");
-
-                            Toast.makeText(context, user_role, Toast.LENGTH_SHORT).show();
-
-
-                            if (user_role.isEmpty()) {
-                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                finish();
-
-                            } else {
-                                pDialog.dismiss();
-                            }
-
-                        }
-
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-//               pDialog.dismiss();
-//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-
-
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                String bearer = "Bearer ".concat(token);
-                Map<String, String> headersSys = super.getHeaders();
-                Map<String, String> headers = new HashMap<String, String>();
-                headersSys.remove("Authorization");
-                headers.put("Authorization", bearer);
-                headers.putAll(headersSys);
-                return headers;
-            }
-        };
-
-
-        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
     }
 
 
@@ -427,6 +308,377 @@ public class Activity_Home extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+    void getDriverProfile() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+////                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject user = data.getJSONObject("user");
+                        String fname = user.getString("fname");
+                        String lname = user.getString("lname");
+                        String email = user.getString("email");
+                        String phone = user.getString("phone");
+                        String id_no = user.getString("id_no");
+
+
+                        role = user.getJSONArray("roles");
+                        for (int i = 0; i <= role.length(); i++) {
+                            try {
+                                JSONObject role_object = role.getJSONObject(i);
+                                code = role_object.getString("code");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+                        editor.putString("driver_fname", fname);
+                        editor.putString("driver_lname", lname);
+                        editor.putString("driver_email", email);
+                        editor.putString("driver_phone", phone);
+                        editor.putString("driver_id_no", id_no);
+//                        editor.putString("user_type", roles.toString());
+                        editor.apply();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+////               pDialog.dismiss();
+//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    void getCorporateProfile() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+//                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject user = data.getJSONObject("user");
+
+                        String fname = user.getString("fname");
+                        String lname = user.getString("lname");
+                        String email = user.getString("email");
+                        String phone = user.getString("phone");
+                        String id_no = user.getString("id_no");
+
+                        role = user.getJSONArray("roles");
+                        for (int i = 0; i <= role.length(); i++) {
+                            try {
+                                JSONObject role_object = role.getJSONObject(i);
+                                code = role_object.getString("code");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("corporate_fname", fname);
+                        editor.putString("corporate_lname", lname);
+                        editor.putString("corporate_email", email);
+                        editor.putString("corporate_phone", phone);
+                        editor.putString("corporate_id_no", id_no);
+//                        editor.putString("user_type", roles.toString());
+                        editor.apply();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+////               pDialog.dismiss();
+//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    void getTruckOwner() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);*/
+//        pDialog.show();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+//                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject user = data.getJSONObject("user");
+
+                        String fname = user.getString("fname");
+                        String lname = user.getString("lname");
+                        String email = user.getString("email");
+                        String phone = user.getString("phone");
+                        String id_no = user.getString("id_no");
+
+                        role = user.getJSONArray("roles");
+                        for (int i = 0; i <= role.length(); i++) {
+                            try {
+                                JSONObject role_object = role.getJSONObject(i);
+                                code = role_object.getString("code");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+                        editor.putString("truck_owner_fname", fname);
+                        editor.putString("truck_owner_lname", lname);
+                        editor.putString("truck_owner_email", email);
+                        editor.putString("truck_owner_phone", phone);
+//                        editor.putString("user_type", role.toString());
+                        editor.putString("truck_owner_id_no", id_no);
+                        editor.apply();
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+////               pDialog.dismiss();
+//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    void getSupplierProfile() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+//                    pDialog.dismiss();
+                    if (jsonObject != null) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject user = data.getJSONObject("user");
+
+                        String fname = user.getString("fname");
+                        String lname = user.getString("lname");
+                        String email = user.getString("email");
+                        String phone = user.getString("phone");
+                        String id_no = user.getString("id_no");
+
+                        role = user.getJSONArray("roles");
+                        for (int i = 0; i <= role.length(); i++) {
+                            try {
+                                JSONObject role_object = role.getJSONObject(i);
+                                code = role_object.getString("code");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+                        editor.putString("supplier_fname", fname);
+                        editor.putString("supplier_lname", lname);
+                        editor.putString("supplier_email", email);
+                        editor.putString("supplier_phone", phone);
+                        editor.putString("supplier_id_no", id_no);
+//                        editor.putString("user_type", role.toString());
+                        editor.apply();
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+//                    Toast.makeText(Activity_Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+////               pDialog.dismiss();
+//                Toast.makeText(getApplicationContext(), "An Error Occurred while loading Driver profile" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
 
 
 }

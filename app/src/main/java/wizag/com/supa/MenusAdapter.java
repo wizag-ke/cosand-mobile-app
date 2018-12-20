@@ -35,7 +35,6 @@ import wizag.com.supa.activity.Activity_Corporate_Client;
 import wizag.com.supa.activity.Activity_Corporate_Profile;
 import wizag.com.supa.activity.Activity_Driver_Profile;
 import wizag.com.supa.activity.Activity_Driver_Register;
-import wizag.com.supa.activity.Activity_Individual_Client;
 import wizag.com.supa.activity.Activity_Indvidual_Client_Profile;
 import wizag.com.supa.activity.Activity_Location;
 import wizag.com.supa.activity.Activity_Login;

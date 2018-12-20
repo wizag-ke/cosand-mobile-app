@@ -8,7 +8,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import wizag.com.supa.BR;
+
 
 public class Model_Supplier {
 
@@ -32,6 +32,7 @@ public class Model_Supplier {
         this.class_name = class_name;
         this.units_name = units_name;
         this.cost = cost;
+
     }
 
     public int getId_material() {
@@ -66,9 +67,7 @@ public class Model_Supplier {
         return units_name;
     }
 
-    public String getCost() {
-        return cost;
-    }
+    public String getCost() { return cost; }
 
 
     public JSONObject getJSONObject() {
@@ -79,6 +78,7 @@ public class Model_Supplier {
             obj.put("material_class_id", id_class);
             obj.put("material_unit_id", id_unit);
             obj.put("material_unit_price",cost);
+
         } catch (JSONException e) {
             e.printStackTrace();
                }

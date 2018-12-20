@@ -1,3 +1,4 @@
+/*
 package wizag.com.supa.activity;
 
 import android.Manifest;
@@ -226,11 +227,13 @@ public class Activity_Individual_Client extends AppCompatActivity implements Pop
                 }
 
 
-               /* if (ContextCompat.checkSelfPermission(Manifest.permission.CAMERA)
+               */
+/* if (ContextCompat.checkSelfPermission(Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA},
                             MY_CAMERA_PERMISSION_CODE);
-                }*/
+                }*//*
+
                 else {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(cameraIntent, REQUEST_CAMERA);
@@ -274,3 +277,4 @@ public class Activity_Individual_Client extends AppCompatActivity implements Pop
         }
     }
 }
+*/

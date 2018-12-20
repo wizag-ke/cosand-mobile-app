@@ -51,6 +51,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
             material_units;
     Button cancel, proceed;
     FloatingActionButton fab;
+    EditText location;
     SessionManager sessionManager;
     JSONArray materialTypes, materials, details_array, units_array, class_array;
 
@@ -71,8 +72,8 @@ public class Activity_Supplier_Register extends AppCompatActivity {
     RecyclerView recyclerView;
     String type_name, details_name, material_name, units_name, class_name;
     Button submit;
-    EditText kra_pin, name, location;
-    String kra_pin_txt, location_txt, name_txt;
+    EditText kra_pin, name;
+    String kra_pin_txt, name_txt;
     String unit_cost_txt;
     String selected_material, selected_unit, selected_class, selected_detail;
     String supplier_Driver_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
@@ -116,7 +117,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 kra_pin_txt = kra_pin.getText().toString();
-                location_txt = location.getText().toString();
+                // location_txt = location.getText().toString();
                 name_txt = name.getText().toString();
 
                 JSONArray jsonArray = new JSONArray();
@@ -139,14 +140,12 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.layout_add_material, null);
         dialogBuilder.setView(dialogView);
-
         material_type = dialogView.findViewById(R.id.material_type);
         material_id = dialogView.findViewById(R.id.material_id);
         material_details = dialogView.findViewById(R.id.material_details);
         material_class = dialogView.findViewById(R.id.material_class);
         material_units = dialogView.findViewById(R.id.material_units);
         unit_cost = dialogView.findViewById(R.id.unit_cost);
-
 
         LoadMaterialTypeSpinner();
         /*get spinner type id*/
@@ -291,10 +290,11 @@ public class Activity_Supplier_Register extends AppCompatActivity {
 
 
         dialogBuilder.setTitle("Supplier Details");
+        dialogBuilder.setCancelable(false);
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 unit_cost_txt = unit_cost.getText().toString();
-
+//              String location_txt=location.getText().toString();
 
                 list.add(new Model_Supplier(
                         id_material,
@@ -876,8 +876,10 @@ public class Activity_Supplier_Register extends AppCompatActivity {
             protected HashMap<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("name", name_txt);
+
 //                params.put("kra_pin", kra_pin_txt);
-                params.put("location", location_txt);
+                params.put("location", location.getText().toString());
+
                 params.put("materials", String.valueOf(supplier_materials));
                 params.put("role_id", "XSUP");
 //                params.put("licence_file", "adwerty");

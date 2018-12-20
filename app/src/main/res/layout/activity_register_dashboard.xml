@@ -80,14 +80,15 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
+
                 <android.support.v7.widget.CardView
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    android:id="@+id/individual_client"
+                    android:id="@+id/supplier"
                     android:layout_height="@dimen/_150sdp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="0.5"
                     android:layout_width="match_parent"
@@ -102,19 +103,21 @@
                         <ImageView
                             android:layout_height="@dimen/_100sdp"
                             android:layout_width="@dimen/_100sdp"
-                            android:src="@drawable/client" />
+                            android:src="@drawable/supplier" />
 
                         <TextView
                             android:gravity="center"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:padding="5dp"
-                            android:text="Individual Client"
+                            android:text="Supplier"
                             android:textColor="@color/text_black"
                             android:textSize="15sp"
                             android:textStyle="normal" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -208,41 +211,7 @@
                 android:padding="@dimen/_10sdp"
                 android:weightSum="1">
 
-                <android.support.v7.widget.CardView
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:id="@+id/supplier"
-                    android:layout_height="@dimen/_150sdp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="0.5"
-                    android:layout_width="match_parent"
-                    app:cardCornerRadius="5dp">
 
-                    <LinearLayout
-                        android:gravity="center"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_height="@dimen/_100sdp"
-                            android:layout_width="@dimen/_100sdp"
-                            android:src="@drawable/supplier" />
-
-                        <TextView
-                            android:gravity="center"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:padding="5dp"
-                            android:text="Supplier"
-                            android:textColor="@color/text_black"
-                            android:textSize="15sp"
-                            android:textStyle="normal" />
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

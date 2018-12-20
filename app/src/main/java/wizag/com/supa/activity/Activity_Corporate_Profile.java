@@ -77,7 +77,7 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
         corporate_email = sp.getString("corporate_email", null);
         corporate_phone = sp.getString("corporate_phone", null);
         corporate_id_no = sp.getString("corporate_id_no", null);
-        ;
+        /*;
 
         try {
             roles = new JSONArray(sp.getString("user_type", null));
@@ -138,7 +138,8 @@ public class Activity_Corporate_Profile extends AppCompatActivity implements Vie
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
-        }
+        }*/
+
         /*on changing role, eg to driver, open driver profile activity then the results will be populated */
 
         flipper = findViewById(R.id.flipper);

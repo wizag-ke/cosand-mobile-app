@@ -1,7 +1,9 @@
 package wizag.com.supa.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -16,8 +18,9 @@ import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
 public class Activity_Register_Dashboard extends AppCompatActivity {
-    CardView driver, truck_owner, individual_client, corporate_client, supplier;
+    CardView driver, truck_owner, corporate_client, supplier;
     SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +34,7 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
         supplier = findViewById(R.id.supplier);
         driver = findViewById(R.id.driver);
         corporate_client = findViewById(R.id.corporate_client);
-        individual_client = findViewById(R.id.individual_client);
+
         truck_owner = findViewById(R.id.truck_owner);
         driver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,14 +56,7 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Activity_Truck_Owner.class));
             }
         });
-
-        individual_client.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Activity_Individual_Client.class));
-            }
-        });
-
+        
 
         corporate_client.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,4 +87,23 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        killActivity();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void killActivity() {
+        finish();
+    }
+
 }

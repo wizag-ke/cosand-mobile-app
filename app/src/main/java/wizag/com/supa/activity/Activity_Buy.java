@@ -115,7 +115,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     JSONObject user_role_object;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     LinearLayout buy_role_layout;
-    TextView xind, xcor;
     GPSLocation gps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

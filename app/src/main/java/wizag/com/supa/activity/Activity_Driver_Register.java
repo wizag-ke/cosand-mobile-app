@@ -301,7 +301,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements Popup
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
 
-        Log.e("LOOK", imageEncoded);
+//        Log.e("LOOK", imageEncoded);
         return imageEncoded;
     }
 }

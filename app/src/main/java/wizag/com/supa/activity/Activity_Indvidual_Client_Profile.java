@@ -55,21 +55,23 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-        individual_fname = sp.getString("individual_fname", null);
-        individual_lname = sp.getString("individual_lname", null);
-        individual_email = sp.getString("individual_email", null);
-        individual_phone = sp.getString("individual_phone", null);
-        individual_id_no = sp.getString("individual_id_no", null);
+        individual_fname = sp.getString("reg_fname", null);
+        individual_lname = sp.getString("reg_lname", null);
+        individual_email = sp.getString("reg_email", null);
+        individual_phone = sp.getString("reg_phone", null);
+        individual_id_no = sp.getString("reg_id", null);
         user_code = sp.getString("user_type", null);
 
         SharedPreferences ipay_sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = ipay_sp.edit();
+
+
         editor.putString("email", individual_email);
         editor.putString("phone", individual_phone);
         editor.apply();
 
 
-        try {
+      /*  try {
             roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -121,7 +123,7 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity {
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
-        }
+        }*/
 
 
         flipper = findViewById(R.id.flipper);

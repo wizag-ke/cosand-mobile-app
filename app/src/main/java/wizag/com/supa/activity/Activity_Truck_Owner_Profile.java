@@ -108,7 +108,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         String truck_owner_id_no = sp.getString("truck_owner_id_no", null);
 
 
-        try {
+        /*try {
             roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -172,8 +172,8 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         }
         else {
             loadTrucks();
-        }
-
+        }*/
+        loadTrucks();
 
         flipper = findViewById(R.id.flipper);
         fname = findViewById(R.id.fname);

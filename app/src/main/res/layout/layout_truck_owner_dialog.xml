@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Enter Driver ID Number"
                 android:textColorHint="@color/textColor"
-               >
+                >
 
 
                 <EditText
@@ -138,4 +138,3 @@
 
     </LinearLayout>
 </ScrollView>
-

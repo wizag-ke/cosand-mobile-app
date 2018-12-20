@@ -84,7 +84,7 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
         recyclerView.setAdapter(adapter);
 
 
-        try {
+       /* try {
             roles = new JSONArray(sp.getString("user_type", null));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -144,7 +144,9 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
             alert11.show();
         } else {
             loadSupplierMaterials();
-        }
+        }*/
+
+        loadSupplierMaterials();
 
         flipper = findViewById(R.id.flipper);
         fname = findViewById(R.id.fname);

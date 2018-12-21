@@ -141,31 +141,25 @@ public class Activity_Home extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(code!=null) {
 
-                if(code.contains("XDRI")){
-                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
-                    startActivity(driver_profile);
+                    if (code.contains("XDRI")) {
+                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
+                        startActivity(driver_profile);
+                    } else if (code.contains("XCOR")) {
+                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
+                        startActivity(driver_profile);
+                    } else if (code.contains("XTON")) {
+                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
+                        startActivity(driver_profile);
+                    } else if (code.contains("XSUP")) {
+                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
+                        startActivity(driver_profile);
+                    } else {
+                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
+                        startActivity(driver_profile);
+                    }
                 }
-
-                else if(code.contains("XCOR")){
-                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
-                    startActivity(driver_profile);
-                }
-
-               else if(code.contains("XTON")){
-                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
-                    startActivity(driver_profile);
-                }
-
-              else if(code.contains("XSUP")){
-                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
-                    startActivity(driver_profile);
-                }
-                else {
-                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
-                    startActivity(driver_profile);
-                }
-
             }
         });
 

@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,20 +46,34 @@ import java.util.Map;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
 
+import static wizag.com.supa.activity.Activity_Driver_Register.encodeTobase64;
+
 public class Activity_Corporate_Client extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
-    Button submit,upload_id_front, upload_id_back, upload_company_cert;
-    EditText company_name,registration_certificate_no,telephone_no,email_address, first_name, last_name, id_no, telephone_number;
+    Button submit, upload_id_front, upload_id_back, upload_company_cert, next_company_contact, previous_company_contact, previous;
+    ;
+    EditText company_name, registration_certificate_no, telephone_no, email_address;
     ViewFlipper flipper;
     String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
-    ImageView id_front_image, id_back_image, company_cert_image;
-    String company_name_txt,registration_certificate_no_txt,telephone_no_txt,email_address_txt, first_name_txt, last_name_txt, id_no_txt, telephone_number_txt;
+    ImageView company_cert_image;
+    String company_name_txt, registration_certificate_no_txt, telephone_no_txt, email_address_txt;
     EditText email;
-    LinearLayout id_front,image_id_back,image_company_cert;
+    LinearLayout id_front, image_id_back, image_company_cert;
+    String id_front_txt, id_back_txt, cert_txt;
     //ImageView id_image;
     private int SELECT_FILE = 1;
-    private int REQUEST_CAMERA = 0;
+    private int SELECT_FILE_BACK = 2;
+    private int SELECT_FILE_CERT = 3;
+    private int REQUEST_CAMERA = 4;
+    private int REQUEST_CAMERA_BACK = 5;
+    private int REQUEST_CAMERA_CERT = 6;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    Bitmap photo;
+
+    private static final int MY_CAMERA_PERMISSION_CODE_BACK = 200;
+
+    private static final int MY_CAMERA_PERMISSION_CODE_CERT = 300;
+
+    Bitmap photo, photo_back, cert;
+    String front_id;
     SessionManager sessionManager;
 
     @Override
@@ -69,37 +85,34 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        id_front_image=findViewById(R.id.id_front_image);
-        id_back_image=findViewById(R.id.id_back_image);
-        company_cert_image=findViewById(R.id.company_cert_image);
-        upload_id_front=findViewById(R.id.upload_id_front);
-        upload_id_back=findViewById(R.id.upload_id_back);
-        upload_company_cert=findViewById(R.id.upload_company_cert);
+
+        company_cert_image = findViewById(R.id.company_cert_image);
+        upload_company_cert = findViewById(R.id.upload_company_cert);
         company_name = findViewById(R.id.company_name);
         registration_certificate_no = findViewById(R.id.registration_certificate_no);
-        telephone_no = findViewById(R.id.telephone_no);
+        telephone_no = findViewById(R.id.phone_no);
         email_address = findViewById(R.id.email_address);
-        first_name=findViewById(R.id.first_name);
-        last_name=findViewById(R.id.last_name);
-        id_no=findViewById(R.id.id_no);
-        telephone_number=findViewById(R.id.telephone_number);
+
+        image_company_cert = findViewById(R.id.image_company_cert);
 
 
-
-
-       // email = findViewById(R.id.email);
-        id_front_image = findViewById(R.id.id_front_image);
-        id_back_image = findViewById(R.id.id_back_image);
         company_cert_image = findViewById(R.id.company_cert_image);
-        id_front.setVisibility(View.GONE);
-        image_id_back.setVisibility(View.GONE);
-        image_company_cert.setVisibility(View.GONE);
+
         flipper = findViewById(R.id.flipper);
 
 
+        next_company_contact = findViewById(R.id.next_company_contact);
+        next_company_contact.setOnClickListener(this);
+
+
+        previous_company_contact = findViewById(R.id.previous_company_contact);
+
+//        previous = findViewById(R.id.previous);
+
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(this);
-
+//        previous.setOnClickListener(v -> flipper.showPrevious());
+        previous_company_contact.setOnClickListener(v -> flipper.showPrevious());
 
     }
 
@@ -107,9 +120,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     public void onClick(View view) {
 
         switch (view.getId()) {
-
-            case R.id.submit:
-//                validate
+            case R.id.next_company_contact:
                 if (company_name.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Company Name to continue", Toast.LENGTH_LONG).show();
                 } else if (registration_certificate_no.getText().toString().isEmpty()) {
@@ -118,18 +129,16 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                     Toast.makeText(this, "Enter Telephone number to continue", Toast.LENGTH_LONG).show();
                 } else if (email_address.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Email Address to continue", Toast.LENGTH_LONG).show();
-                } else if (first_name.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter First Name to proceed", Toast.LENGTH_LONG).show();
-                }else if (last_name.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter Last Name to proceed", Toast.LENGTH_LONG).show();
+                } else {
+                    flipper.showNext();
                 }
-                else if (id_no.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter ID Number to proceed", Toast.LENGTH_LONG).show();
-                }
-                else if (telephone_number.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter Telephone Number to proceed", Toast.LENGTH_LONG).show();
-                }
-                else if (!isNetworkConnected()) {
+
+
+                break;
+
+            case R.id.submit:
+//                validate
+                if (!isNetworkConnected()) {
 
                     Toast.makeText(Activity_Corporate_Client.this, "Ensure you have internet connection", Toast.LENGTH_SHORT).show();
 
@@ -157,13 +166,9 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         //getText
 
         company_name_txt = company_name.getText().toString();
-        registration_certificate_no_txt= registration_certificate_no.getText().toString();
-        //telephone_no_txt=telephone_no.getText().toString();
-        email_address_txt=email_address.getText().toString();
-        first_name_txt=first_name.getText().toString();
-        last_name_txt=last_name.getText().toString();
-        id_no_txt=id_no.getText().toString();
-        telephone_number_txt=telephone_number.getText().toString();
+        registration_certificate_no_txt = registration_certificate_no.getText().toString();
+        email_address_txt = email_address.getText().toString();
+        String telephone_number_txt = telephone_no.getText().toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, register_corporate_client_url, new Response.Listener<String>() {
 
 
@@ -221,12 +226,11 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                 params.put("email", email_address_txt);
                 params.put("company", company_name_txt);
                 params.put("certificate_number", registration_certificate_no_txt);
-                params.put("first_name", first_name_txt);
-                params.put("company", company_name_txt);
-                params.put("last_name", last_name_txt);
-                params.put("id_no", id_no_txt);
-                params.put("tel_no", telephone_no_txt);
+                params.put("tel_no", telephone_number_txt);
                 params.put("role_id", "XCOR");
+                params.put("client_type", "mobile");
+                params.put("certificate_file", cert_txt);
+
 //                params.put("id_file", "");
                 return params;
             }
@@ -274,32 +278,25 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.existing:
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+            case R.id.select_cert:
+                Intent cert_intent = new Intent();
+                cert_intent.setType("image/*");
+                cert_intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(cert_intent, "Select File"), SELECT_FILE_CERT);
 
                 return true;
-            case R.id.camera_photo:
+            case R.id.camera_cert:
 
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE);
-                }
-
-
-               /* if (ContextCompat.checkSelfPermission(Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            MY_CAMERA_PERMISSION_CODE);
-                }*/
-                else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, REQUEST_CAMERA);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE_CERT);
+                } else {
+                    Intent back_cameraCert = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(back_cameraCert, REQUEST_CAMERA_CERT);
                 }
 
                 return true;
+
             default:
                 return false;
         }
@@ -308,33 +305,37 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_FILE_CERT && resultCode == Activity.RESULT_OK) {
 
-        if (resultCode == Activity.RESULT_OK) {
+            cert = null;
+            if (data != null) {
+                try {
 
-            if (requestCode == SELECT_FILE) {
-                photo = null;
-                if (data != null) {
-                    id_front.setVisibility(View.VISIBLE);
-                    try {
-                        photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    cert = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-                id_front_image.setImageBitmap(photo);
-            } else if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-                id_front.setVisibility(View.VISIBLE);
-                photo = (Bitmap) data.getExtras().get("data");
-                id_front_image.setImageBitmap(photo);
-
-//                encodedCameraImage = encodeImage(photo);
-
-
+                image_company_cert.setVisibility(View.VISIBLE);
+                company_cert_image.setImageBitmap(cert);
+                cert_txt = encodeTobase64(cert);
             }
 
-
+        } else if (requestCode == REQUEST_CAMERA_CERT && resultCode == Activity.RESULT_OK) {
+            image_company_cert.setVisibility(View.VISIBLE);
+            cert = (Bitmap) data.getExtras().get("data");
+            company_cert_image.setImageBitmap(cert);
+            cert_txt = encodeTobase64(cert);
         }
+
     }
 
+
+    public void Cert(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.id_menu_cert);
+        popup.show();
+    }
 }

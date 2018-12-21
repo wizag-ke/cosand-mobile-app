@@ -56,7 +56,7 @@ public class Activity_Register_Dashboard extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Activity_Truck_Owner.class));
             }
         });
-        
+
 
         corporate_client.setOnClickListener(new View.OnClickListener() {
             @Override

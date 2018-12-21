@@ -1,131 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:fillViewport="true">
 
-        <LinearLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/coordinatorLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                android:layout_height="match_parent">
 
-
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/colorPrimary"
-                    android:fontFamily="@font/opensans_bold"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="Company Details"
-                    android:textColor="#ffffff"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            </android.support.v7.widget.Toolbar>
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
 
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/_5sdp">
-
-                <EditText
-                    android:id="@+id/company_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:background="@drawable/sell"
-                    android:fontFamily="@font/opensans_regular"
-                    android:hint="Company Name"
-                    android:inputType="textCapSentences"
-                    android:padding="@dimen/_10sdp"
-                    android:textColor="@color/textColor"
-                    android:textColorHint="@color/textColor"
-                    android:textSize="20sp" />
-
-                <EditText
-                    android:id="@+id/registration_certificate_no"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:background="@drawable/sell"
-                    android:fontFamily="@font/opensans_regular"
-                    android:hint="Registration Certificate Number"
-                    android:inputType="textCapSentences"
-                    android:padding="@dimen/_10sdp"
-                    android:textColor="@color/textColor"
-                    android:textColorHint="@color/textColor"
-                    android:textSize="20sp" />
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
-                <EditText
-                    android:id="@+id/telephone_no"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:background="@drawable/sell"
-                    android:fontFamily="@font/opensans_regular"
-                    android:hint="Telephone Number"
-                    android:inputType="textCapCharacters"
-                    android:padding="@dimen/_10sdp"
-                    android:textColor="@color/textColor"
-                    android:textColorHint="@color/textColor"
-                    android:textSize="20sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:fontFamily="@font/opensans_bold"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="Company Details"
+                            android:textColor="#ffffff"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/email_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:background="@drawable/sell"
-                    android:fontFamily="@font/opensans_regular"
-                    android:hint="Email Address"
-                    android:inputType="textCapSentences"
-                    android:padding="@dimen/_10sdp"
-                    android:textColor="@color/textColor"
-                    android:textColorHint="@color/textColor"
-                    android:textSize="20sp" />
+                    </android.support.v7.widget.Toolbar>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_5sdp">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/company_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:background="@drawable/sell"
+                                android:fontFamily="@font/opensans_regular"
+                                android:hint="Company Name"
+                                android:inputType="textCapSentences"
+                                android:padding="@dimen/_10sdp"
+                                android:textColor="@color/textColor"
+                                android:textColorHint="@color/textColor"
+                                android:textSize="20sp" />
+                        </android.support.design.widget.TextInputLayout>
 
 
-                <Button
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                    android:id="@+id/next_truck_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/proceed_button"
-                    android:fontFamily="@font/opensans_bold"
-                    android:text="Next"
-                    android:textAllCaps="false"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                            <EditText
+                                android:id="@+id/registration_certificate_no"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:background="@drawable/sell"
+                                android:fontFamily="@font/opensans_regular"
+                                android:hint="Registration Certificate Number"
+                                android:inputType="textCapSentences"
+                                android:padding="@dimen/_10sdp"
+                                android:textColor="@color/textColor"
+                                android:textColorHint="@color/textColor"
+                                android:textSize="20sp" />
+                        </android.support.design.widget.TextInputLayout>
 
-            </LinearLayout>
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
+                            <EditText
+                                android:id="@+id/phone_no"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:background="@drawable/sell"
+                                android:fontFamily="@font/opensans_regular"
+                                android:hint="Phone Number"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:padding="@dimen/_10sdp"
+                                android:textColor="@color/textColor"
+                                android:textColorHint="@color/textColor"
+                                android:textSize="20sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/email_address"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:background="@drawable/sell"
+                                android:fontFamily="@font/opensans_regular"
+                                android:hint="Email Address"
+                                android:inputType="textCapSentences"
+                                android:padding="@dimen/_10sdp"
+                                android:textColor="@color/textColor"
+                                android:textColorHint="@color/textColor"
+                                android:textSize="20sp" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <Button
+
+                            android:id="@+id/next_company_contact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@drawable/proceed_button"
+                            android:fontFamily="@font/opensans_bold"
+                            android:text="Next"
+                            android:textAllCaps="false"
+                            android:textColor="#ffffff"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.design.widget.CoordinatorLayout>
         </LinearLayout>
-
-
     </ScrollView>
 
-    <include layout="@layout/company_contact"/>
-
-    <include layout="@layout/upload_company_copies"/>
+    <include layout="@layout/upload_company_copies" />
 </ViewFlipper>

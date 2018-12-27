@@ -172,31 +172,33 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                             selectRole();
 
                         } else {
-                            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                            builder1.setMessage("Create Corporate or Individual Client account to continue");
-                            builder1.setCancelable(false);
-
-                            builder1.setPositiveButton(
-                                    "Proceed",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                            finish();
-                                        }
-                                    });
-
-                            builder1.setNegativeButton(
-                                    "Not now",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-                                            finish();
-                                        }
-                                    });
-
-                            AlertDialog alert11 = builder1.create();
-                            alert11.show();
+                            selectRole();
+                            ////TO BE UNCOMMENTED LATER
+//                            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+//                            builder1.setMessage("Create Corporate or Individual Client account to continue");
+//                            builder1.setCancelable(false);
+//
+//                            builder1.setPositiveButton(
+//                                    "Proceed",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+//                                            finish();
+//                                        }
+//                                    });
+//
+//                            builder1.setNegativeButton(
+//                                    "Not now",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            dialog.cancel();
+//                                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+//                                            finish();
+//                                        }
+//                                    });
+//
+//                            AlertDialog alert11 = builder1.create();
+//                            alert11.show();
 
                             break;
                         }

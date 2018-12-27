@@ -117,7 +117,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
 
                    Intent intent=new Intent(getApplicationContext(), Activity_Wallet.class);
                    startActivity(intent);
-
+                    finish();
 
                 } else {
                     Snackbar snackbar = Snackbar

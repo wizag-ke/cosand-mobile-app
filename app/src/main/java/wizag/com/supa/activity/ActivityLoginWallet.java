@@ -172,18 +172,18 @@ public class ActivityLoginWallet extends AppCompatActivity {
 
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
-        enter_username.addTextChangedListener(new TextWatcher() {
-            // after every change has been made to this editText, we would like to check validity
-            public void afterTextChanged(Editable s) {
-                Validation.isEmailAddress(enter_username, true);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
+//        enter_username.addTextChangedListener(new TextWatcher() {
+//            // after every change has been made to this editText, we would like to check validity
+//            public void afterTextChanged(Editable s) {
+//              //  Validation.isEmailAddress(enter_username, true);
+//            }
+//
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//        });
 
 
         enter_password.addTextChangedListener(new TextWatcher() {

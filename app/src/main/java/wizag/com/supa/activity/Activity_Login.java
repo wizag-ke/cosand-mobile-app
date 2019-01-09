@@ -177,7 +177,7 @@ public class Activity_Login extends AppCompatActivity {
         enter_username.addTextChangedListener(new TextWatcher() {
             // after every change has been made to this editText, we would like to check validity
             public void afterTextChanged(Editable s) {
-                Validation.isEmailAddress(enter_username, true);
+              //  Validation.isEmailAddress(enter_username, true);
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -1,7 +1,7 @@
 package wizag.com.supa.activity;
 
 import android.app.ActivityManager;
-import android.app.ProgressDialog;
+//import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -209,10 +209,10 @@ public class Activity_Home extends AppCompatActivity {
 
     private void postFirebaseToken() {
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Home.this);
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+//        final ProgressDialog pDialog = new ProgressDialog(this);
+//        pDialog.setMessage("Loading...");
+//        pDialog.setCancelable(false);
+//        pDialog.show();
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PostToken,
                 new com.android.volley.Response.Listener<String>() {
@@ -221,9 +221,9 @@ public class Activity_Home extends AppCompatActivity {
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
-                            pDialog.dismiss();
+                           // pDialog.dismiss();
                             String message = jsonObject.getString("message");
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -236,8 +236,8 @@ public class Activity_Home extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 error.getMessage();
-                Toast.makeText(Activity_Home.this, "Error sending instance token", Toast.LENGTH_LONG).show();
-                pDialog.dismiss();
+              //  Toast.makeText(Activity_Home.this, "Error sending instance token", Toast.LENGTH_LONG).show();
+              //  pDialog.dismiss();
             }
         }) {
             //adding parameters to the request

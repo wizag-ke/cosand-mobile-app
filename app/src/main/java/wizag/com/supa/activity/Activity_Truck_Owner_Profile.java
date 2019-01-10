@@ -1,6 +1,7 @@
 package wizag.com.supa.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -75,12 +76,14 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
     String LoadTrucks = "http://sduka.wizag.biz/api/v1/profiles";
     JSONObject details;
     Activity_Truck_Owner_Profile login;
+    SharedPreferences sp;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_owner_user_profile);
-
+        context = this;
         login = new Activity_Truck_Owner_Profile();
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -99,7 +102,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             }
         });
 
-        SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
+        sp = getSharedPreferences("profile", MODE_PRIVATE);
         String truck_owner_fname = sp.getString("truck_owner_fname", null);
         String driver_code = sp.getString("user_type", null);
         String truck_owner_lname = sp.getString("truck_owner_lname", null);
@@ -108,72 +111,9 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
         String truck_owner_id_no = sp.getString("truck_owner_id_no", null);
 
 
-        /*try {
-            roles = new JSONArray(sp.getString("user_type", null));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            roles = new JSONArray();
-        }
-        if (roles.length() < 1) {
-            Toast.makeText(this, "You got no roles", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        boolean available = false;
-        for (int i = 0; i < roles.length(); i++) {
+//            loadTrucks();
 
-            try {
-                JSONObject role = roles.getJSONObject(i);
-
-
-                if (role.getString("code").contains("XTON")) {
-                    available = true;
-//                    JSONObject truck = role.getJSONObject("details").getJSONObject("company");
-                    details = role.getJSONObject("details");
-                    JSONObject company = details.getJSONObject("company");
-
-                    truck_sacco = company.getString("sacco");
-                    truck_sacco_member = company.getString("sacco_member");
-                    truck_kra_pin = company.getString("kra_pin");
-
-
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (!available) {
-
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-            builder1.setMessage("Create Truck Owner account to continue");
-            builder1.setCancelable(false);
-
-            builder1.setPositiveButton(
-                    "Proceed",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                            finish();
-                        }
-                    });
-
-            builder1.setNegativeButton(
-                    "Not now",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            finish();
-                        }
-                    });
-
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
-        }
-        else {
-            loadTrucks();
-        }*/
-        loadTrucks();
+//        loadTrucks();
 
         flipper = findViewById(R.id.flipper);
         fname = findViewById(R.id.fname);
@@ -261,10 +201,10 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
                 }
             }
 
-            } catch(JSONException e){
-                e.printStackTrace();
-            }
-            adapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        adapter.notifyDataSetChanged();
 
 
     }
@@ -286,32 +226,158 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             builder.setTitle("Choose an Account");
 
 // add a list
-            String[] codes = {"Corporate Client", "Driver", "Individual Client", "Supplier"};
+            String[] codes = {"Corporate Client", "Driver", "Supplier"};
             builder.setItems(codes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case 0:
 
+                            try {
+                                roles = new JSONArray(sp.getString("user_type", null));
+                                for (int i = 0; i <= roles.length(); i++) {
+                                    try {
+                                        JSONObject role_object = roles.getJSONObject(i);
+                                        if (role_object.getString("code").contains("XCOR")) {
+                                            getCorporateProfile();
+                                            finish();
+                                            startActivity(new Intent(getApplicationContext(), Activity_Corporate_Profile.class));
 
-                            getCorporateProfile();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
-                            startActivity(new Intent(getApplicationContext(), Activity_Corporate_Profile.class));
+                                }
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setMessage("Create Corporate Client account to continue");
+                                builder1.setCancelable(false);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                                finish();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                                                finish();
+
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             break;
 
                         case 1:
-                            getDriverProfile();
-                            startActivity(new Intent(getApplicationContext(), Activity_Driver_Profile.class));
+                            try {
+                                roles = new JSONArray(sp.getString("user_type", null));
+                                for (int i = 0; i <= roles.length(); i++) {
+                                    try {
+                                        JSONObject role_object = roles.getJSONObject(i);
+                                        if (role_object.getString("code").contains("XDRI")) {
+                                            getDriverProfile();
+                                            finish();
+                                            startActivity(new Intent(getApplicationContext(), Activity_Driver_Profile.class));
+
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setMessage("Create Driver account to continue");
+                                builder1.setCancelable(false);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                                finish();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                                                finish();
+
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
 
                         case 2:
-                            getIndividualProfile();
-                            startActivity(new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class));
-                            break;
+                            try {
+                                roles = new JSONArray(sp.getString("user_type", null));
+                                for (int i = 0; i <= roles.length(); i++) {
+                                    try {
+                                        JSONObject role_object = roles.getJSONObject(i);
+                                        if (role_object.getString("code").contains("XSUP")) {
+                                            getDriverProfile();
+                                            finish();
+                                            startActivity(new Intent(getApplicationContext(), Activity_Supplier_Profile.class));
 
-                        case 3:
-                            getSupplierProfile();
-                            startActivity(new Intent(getApplicationContext(), Activity_Supplier_Profile.class));
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setMessage("Create Supplier account to continue");
+                                builder1.setCancelable(false);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                                finish();
+                                            }
+                                        });
+
+                                builder1.setNegativeButton(
+                                        "Not now",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                                startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                                                finish();
+
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             break;
 
                         default:
@@ -484,7 +550,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                SessionManager    session = new SessionManager(getApplicationContext());
+                SessionManager session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
                 String accessToken = user.get("access_token");
 
@@ -657,7 +723,7 @@ public class Activity_Truck_Owner_Profile extends AppCompatActivity implements V
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                SessionManager  session = new SessionManager(getApplicationContext());
+                SessionManager session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
                 String accessToken = user.get("access_token");
 

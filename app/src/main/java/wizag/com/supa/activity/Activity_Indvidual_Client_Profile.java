@@ -74,61 +74,6 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity {
         editor.apply();
 
 
-      /*  try {
-            roles = new JSONArray(sp.getString("user_type", null));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (roles.length() < 1) {
-            Toast.makeText(this, "You got no roles", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        boolean available = false;
-        for (int i = 0; i < roles.length(); i++) {
-            try {
-                JSONObject role = roles.getJSONObject(i);
-                if (role.getString("code").contains("XIND")) {
-                    available = true;
-                    break;
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        if (!available) {
-
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-            builder1.setMessage("Create Individual Client account to continue");
-            builder1.setCancelable(false);
-
-            builder1.setPositiveButton(
-                    "Proceed",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                            finish();
-                        }
-                    });
-
-            builder1.setNegativeButton(
-                    "Not now",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            finish();
-                        }
-                    });
-
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
-        }*/
-
-
         flipper = findViewById(R.id.flipper);
         fname = findViewById(R.id.fname);
         lname = findViewById(R.id.lname);
@@ -153,15 +98,6 @@ public class Activity_Indvidual_Client_Profile extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.next:
-//                flipper.showNext();
-//                break;
-//
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

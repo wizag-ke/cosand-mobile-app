@@ -305,7 +305,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 try {
                     JSONObject dataClicked = materials.getJSONObject(i);
                     id_material = dataClicked.getInt("id");
-
                     getMaterialDetails();
                     DetailsName.clear();
                     getMaterialClasses();

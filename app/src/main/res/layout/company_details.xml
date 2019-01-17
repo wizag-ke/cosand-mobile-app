@@ -135,6 +135,26 @@
 
                         </android.support.design.widget.TextInputLayout>
 
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/kra_pin"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:background="@drawable/sell"
+                                android:fontFamily="@font/opensans_regular"
+                                android:hint="Kra Pin"
+                                android:inputType="textCapSentences"
+                                android:padding="@dimen/_10sdp"
+                                android:textColor="@color/textColor"
+                                android:textColorHint="@color/textColor"
+                                android:textSize="20sp" />
+
+                        </android.support.design.widget.TextInputLayout>
+
                         <Button
 
                             android:id="@+id/next_company_contact"

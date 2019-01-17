@@ -50,15 +50,15 @@ import static wizag.com.supa.activity.Activity_Driver_Register.encodeTobase64;
 
 public class Activity_Corporate_Client extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     Button submit, upload_id_front, upload_id_back, upload_company_cert, next_company_contact, previous_company_contact, previous;
-    ;
-    EditText company_name, registration_certificate_no, telephone_no, email_address;
+
+    EditText company_name, registration_certificate_no, telephone_no, email_address, kra_pin;
     ViewFlipper flipper;
     String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
     ImageView company_cert_image;
-    String company_name_txt, registration_certificate_no_txt, telephone_no_txt, email_address_txt;
+    String company_name_txt, registration_certificate_no_txt, telephone_no_txt, email_address_txt, kra_pin_txt;
     EditText email;
     LinearLayout id_front, image_id_back, image_company_cert;
-    String id_front_txt, id_back_txt, cert_txt;
+    String id_front_txt, id_back_txt, cert_txt,telephone_number_txt;
     //ImageView id_image;
     private int SELECT_FILE = 1;
     private int SELECT_FILE_BACK = 2;
@@ -92,7 +92,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         registration_certificate_no = findViewById(R.id.registration_certificate_no);
         telephone_no = findViewById(R.id.phone_no);
         email_address = findViewById(R.id.email_address);
-
+        kra_pin=findViewById(R.id.kra_pin);
         image_company_cert = findViewById(R.id.image_company_cert);
 
 
@@ -129,7 +129,10 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                     Toast.makeText(this, "Enter Telephone number to continue", Toast.LENGTH_LONG).show();
                 } else if (email_address.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Email Address to continue", Toast.LENGTH_LONG).show();
-                } else {
+                }
+                else if (kra_pin.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter Kra Pin to continue", Toast.LENGTH_LONG).show();
+                }else {
                     flipper.showNext();
                 }
 
@@ -158,105 +161,6 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
     }
 
 
-    private void registerCorporateClient() {
-        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Corporate_Client.this);
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing in...");
-        progressDialog.show();
-        //getText
-
-        company_name_txt = company_name.getText().toString();
-        registration_certificate_no_txt = registration_certificate_no.getText().toString();
-        email_address_txt = email_address.getText().toString();
-        String telephone_number_txt = telephone_no.getText().toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, register_corporate_client_url, new Response.Listener<String>() {
-
-
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(response);
-
-                    String message = obj.getString("message");
-                    String status = obj.getString("status");
-//                            JSONObject data = new JSONObject("data");
-                    if (status.equalsIgnoreCase("success")) {
-                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-                        finish();
-                    } else if (status.equalsIgnoreCase("error")) {
-
-                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
-
-
-                    }
-
-                    JSONArray jsonArray = obj.getJSONArray("data");
-                    for (int k = 0; k < jsonArray.length(); k++) {
-                        String data_message = jsonArray.getString(k);
-
-                        if (status.equalsIgnoreCase("fail")) {
-                            Toast.makeText(Activity_Corporate_Client.this, data_message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(Activity_Corporate_Client.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressDialog.dismiss();
-                        Toast.makeText(Activity_Corporate_Client.this, "An error occurred" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-
-        ) {
-
-            @Override
-            protected HashMap<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("email", email_address_txt);
-                params.put("company", company_name_txt);
-                params.put("certificate_number", registration_certificate_no_txt);
-                params.put("tel_no", telephone_number_txt);
-                params.put("role_id", "XCOR");
-                params.put("client_type", "mobile");
-                params.put("certificate_file", cert_txt);
-
-//                params.put("id_file", "");
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                sessionManager = new SessionManager(getApplicationContext());
-                HashMap<String, String> user = sessionManager.getUserDetails();
-                String accessToken = user.get("access_token");
-
-                String bearer = "Bearer " + accessToken;
-                Map<String, String> headersSys = super.getHeaders();
-                Map<String, String> headers = new HashMap<String, String>();
-                headersSys.remove("Authorization");
-                headers.put("Authorization", bearer);
-                headers.putAll(headersSys);
-                return headers;
-            }
-
-        };
-
-
-        queue.add(stringRequest);
-
-    }
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -338,4 +242,108 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         popup.inflate(R.menu.id_menu_cert);
         popup.show();
     }
+
+
+    private void registerCorporateClient() {
+        com.android.volley.RequestQueue queue = Volley.newRequestQueue(Activity_Corporate_Client.this);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Registering...");
+        progressDialog.show();
+        //getText
+        company_name_txt = company_name.getText().toString();
+        registration_certificate_no_txt = registration_certificate_no.getText().toString();
+        email_address_txt = email_address.getText().toString();
+        telephone_number_txt = telephone_no.getText().toString();
+        //cert_txt="hdbfhjebfhjerbkjrb";
+        kra_pin_txt=kra_pin.getText().toString().trim();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, register_corporate_client_url, new Response.Listener<String>() {
+
+
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(response);
+
+                    String message = obj.getString("message");
+                    String status = obj.getString("status");
+//                            JSONObject data = new JSONObject("data");
+                    if (status.equalsIgnoreCase("success")) {
+                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                        finish();
+                    } else if (status.equalsIgnoreCase("error")) {
+
+                        Toast.makeText(Activity_Corporate_Client.this, message, Toast.LENGTH_SHORT).show();
+
+
+                    }
+
+                    JSONArray jsonArray = obj.getJSONArray("data");
+                    for (int k = 0; k < jsonArray.length(); k++) {
+                        String data_message = jsonArray.getString(k);
+
+                        if (status.equalsIgnoreCase("fail")) {
+                            Toast.makeText(Activity_Corporate_Client.this, data_message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(Activity_Corporate_Client.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(Activity_Corporate_Client.this, "An error occurred" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+        ) {
+
+            @Override
+            protected HashMap<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("role_id", "XCOR");
+                params.put("email", email_address_txt);
+                params.put("company", company_name_txt);
+                params.put("certificate_number", registration_certificate_no_txt);
+                params.put("kra_pin", kra_pin_txt);
+                params.put("client_type", "mobile");
+                //params.put("tel_no", telephone_number_txt);
+                params.put("certificate_file", cert_txt);
+
+//                params.put("id_file", "");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+
+        };
+
+
+        queue.add(stringRequest);
+
+    }
+
 }

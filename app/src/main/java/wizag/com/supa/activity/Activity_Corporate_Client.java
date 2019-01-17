@@ -9,14 +9,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,36 +25,29 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
-
 import static wizag.com.supa.activity.Activity_Driver_Register.encodeTobase64;
 
 public class Activity_Corporate_Client extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     Button submit, upload_id_front, upload_id_back, upload_company_cert, next_company_contact, previous_company_contact, previous;
-
-    EditText company_name, registration_certificate_no, telephone_no, email_address, kra_pin;
+    EditText company_name, registration_certificate_no, email_address, kra_pin;
     ViewFlipper flipper;
     String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
     ImageView company_cert_image;
-    String company_name_txt, registration_certificate_no_txt, telephone_no_txt, email_address_txt, kra_pin_txt;
+    String company_name_txt, registration_certificate_no_txt, email_address_txt, kra_pin_txt;
     EditText email;
     LinearLayout id_front, image_id_back, image_company_cert;
     String id_front_txt, id_back_txt, cert_txt,telephone_number_txt;
@@ -90,7 +82,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         upload_company_cert = findViewById(R.id.upload_company_cert);
         company_name = findViewById(R.id.company_name);
         registration_certificate_no = findViewById(R.id.registration_certificate_no);
-        telephone_no = findViewById(R.id.phone_no);
+       // telephone_no = findViewById(R.id.phone_no);
         email_address = findViewById(R.id.email_address);
         kra_pin=findViewById(R.id.kra_pin);
         image_company_cert = findViewById(R.id.image_company_cert);
@@ -125,8 +117,8 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
                     Toast.makeText(this, "Enter Company Name to continue", Toast.LENGTH_LONG).show();
                 } else if (registration_certificate_no.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Registration Certificate No to continue", Toast.LENGTH_LONG).show();
-                } else if (telephone_no.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Enter Telephone number to continue", Toast.LENGTH_LONG).show();
+//                } else if (telephone_no.getText().toString().isEmpty()) {
+//                    Toast.makeText(this, "Enter Telephone number to continue", Toast.LENGTH_LONG).show();
                 } else if (email_address.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Enter Email Address to continue", Toast.LENGTH_LONG).show();
                 }
@@ -253,7 +245,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
         company_name_txt = company_name.getText().toString();
         registration_certificate_no_txt = registration_certificate_no.getText().toString();
         email_address_txt = email_address.getText().toString();
-        telephone_number_txt = telephone_no.getText().toString();
+        //telephone_number_txt = telephone_no.getText().toString();
         //cert_txt="hdbfhjebfhjerbkjrb";
         kra_pin_txt=kra_pin.getText().toString().trim();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, register_corporate_client_url, new Response.Listener<String>() {

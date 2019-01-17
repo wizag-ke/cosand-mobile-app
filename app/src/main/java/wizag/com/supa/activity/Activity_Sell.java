@@ -72,7 +72,6 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
     Button proceed_sell;
     private static final String SHARED_PREF_NAME = "mysharedpref";
     Spinner material_type;
-
     String POST_MATERIAL = "http://sduka.wizag.biz/api/v1/orders/load-request";
     String PostLocation = "http://sduka.wizag.biz/api/v1/orders/load-request/25/location";
     Double value_lat, value_long;

@@ -1,16 +1,14 @@
 package wizag.com.supa.activity;
 
-import android.app.ActivityManager;
-//import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,6 +37,8 @@ import java.util.Map;
 import wizag.com.supa.MySingleton;
 import wizag.com.supa.R;
 import wizag.com.supa.SessionManager;
+
+//import android.app.ProgressDialog;
 
 public class Activity_Home extends AppCompatActivity {
     CardView buy, sell, wallet, profile, supply, orders, track_order;
@@ -141,8 +141,14 @@ public class Activity_Home extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(code!=null) {
-
+                if(code==null)
+                {
+                    Toast.makeText(getApplicationContext(), "code is null", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), code, Toast.LENGTH_LONG).show();
+                }
+                else if(code!=null) {
+                    Log.d("Print code",code);
+                Toast.makeText(getApplicationContext(), code, Toast.LENGTH_LONG).show();
                     if (code.contains("XDRI")) {
                         Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
                         startActivity(driver_profile);

@@ -433,7 +433,7 @@ public class Activity_Driver_Movement extends FragmentActivity implements OnMapR
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/load-request/" + sell_id + "/location",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.dnsalias.com/api/v1/orders/load-request/" + sell_id + "/location",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

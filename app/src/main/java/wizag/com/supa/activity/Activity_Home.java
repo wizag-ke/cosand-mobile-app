@@ -49,7 +49,7 @@ public class Activity_Home extends AppCompatActivity {
     JSONArray role;
     String order_id_txt, order_id_confirm;
     String firebase_token;
-    String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
+    String PostToken = "http://sduka.dnsalias.com/api/v1/profiles/token";
     private static final String SHARED_PREF_NAME = "profile";
     String code;
 
@@ -106,22 +106,97 @@ public class Activity_Home extends AppCompatActivity {
         });
 
         sell.setOnClickListener(view -> {
-            if (!code.contains("XDRI")) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setTitle("Access Denied!");
-                builder1.setMessage("Create a Driver Account to continue");
-                builder1.setCancelable(true);
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-                builder1.setPositiveButton(
-                        "Proceed",
-                        (dialog, id) -> {
-                            startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-                            finish();
-                        });
-            } else {
-                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
-                finish();
-            }
+            StringRequest stringRequest4 = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONObject user_data = jsonObject.getJSONObject("data").getJSONObject("user");
+                        JSONArray roles = user_data.getJSONArray("roles");
+
+                        for(int i = 0;i<roles.length();i++){
+                            JSONObject roles_object = roles.getJSONObject(i);
+                            code = roles_object.getString("code");
+                            if(code.equalsIgnoreCase("XDRI")){
+
+                                startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
+                                finish();
+
+
+
+                            }
+                            else{
+
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setTitle("Access Denied!");
+                                builder1.setMessage("Create a Driver Account to continue");
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Proceed",
+                                        (dialog, id) -> {
+                                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                            finish();
+                                        });
+                            }
+
+
+                        }
+
+
+
+
+                        /*pDialog.dismiss();*/
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                    /*pDialog.dismiss();*/
+                    Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+
+            }) {
+
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    SessionManager  sessionManager = new SessionManager(getApplicationContext());
+                    HashMap<String, String> user = sessionManager.getUserDetails();
+                    String accessToken = user.get("access_token");
+
+                    String bearer = "Bearer " + accessToken;
+                    Map<String, String> headersSys = super.getHeaders();
+                    Map<String, String> headers = new HashMap<String, String>();
+                    headersSys.remove("Authorization");
+                    headers.put("Authorization", bearer);
+                    headers.putAll(headersSys);
+                    return headers;
+                }
+            };
+
+
+            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest4);
+
+
+            int socketTimeout4 = 30000;
+            RetryPolicy policy4 = new DefaultRetryPolicy(socketTimeout4, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            stringRequest4.setRetryPolicy(policy4);
+            requestQueue.add(stringRequest4);
+
+
+
+
 
 
         });
@@ -173,6 +248,7 @@ public class Activity_Home extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        context.getSharedPreferences("profile", 0).edit().clear().commit();
                         killActivity();
                     }
                 })
@@ -307,7 +383,7 @@ public class Activity_Home extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -398,7 +474,7 @@ public class Activity_Home extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -493,7 +569,7 @@ public class Activity_Home extends AppCompatActivity {
 //        pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -586,7 +662,7 @@ public class Activity_Home extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

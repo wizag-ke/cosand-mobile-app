@@ -53,7 +53,7 @@ public class Activity_Corporate_Client extends AppCompatActivity implements View
 
     EditText company_name, registration_certificate_no, telephone_no, email_address, kra_pin;
     ViewFlipper flipper;
-    String register_corporate_client_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
+    String register_corporate_client_url = "http://sduka.dnsalias.com/api/v1/profiles/roles";
     ImageView company_cert_image;
     String company_name_txt, registration_certificate_no_txt, telephone_no_txt, email_address_txt, kra_pin_txt;
     EditText email;

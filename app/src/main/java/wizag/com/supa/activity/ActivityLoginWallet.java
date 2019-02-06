@@ -71,7 +71,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
     SharedPreferences prefs;
     SessionManager session;
     private static final String SHARED_PREF_NAME = "profile";
-    String get_profile_url = "http://sduka.wizag.biz/api/v1/profiles";
+    String get_profile_url = "http://sduka.dnsalias.com/api/v1/profiles";
     String token;
     JSONArray role_array;
 
@@ -339,7 +339,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -424,7 +424,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -511,7 +511,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -596,7 +596,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
 //        pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -683,7 +683,7 @@ public class ActivityLoginWallet extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

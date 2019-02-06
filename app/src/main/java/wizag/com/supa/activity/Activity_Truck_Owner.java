@@ -81,7 +81,7 @@ import static wizag.com.supa.activity.Activity_Driver_Register.encodeTobase64;
 
 public class Activity_Truck_Owner extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-    String register_truck_owner_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
+    String register_truck_owner_url = "http://sduka.dnsalias.com/api/v1/profiles/roles";
     RecyclerView recyclerView;
     Button submit;
     Adapter_Truck_Owner adapter;

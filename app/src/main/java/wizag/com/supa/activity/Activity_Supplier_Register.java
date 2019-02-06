@@ -76,7 +76,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
     String kra_pin_txt, name_txt;
     String unit_cost_txt;
     String selected_material, selected_unit, selected_class, selected_detail;
-    String supplier_Driver_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
+    String supplier_Driver_url = "http://sduka.dnsalias.com/api/v1/profiles/roles";
     JSONArray supplier_materials;
 
     @Override
@@ -329,7 +329,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/types", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -424,7 +424,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -520,7 +520,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -622,7 +622,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -718,7 +718,7 @@ public class Activity_Supplier_Register extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

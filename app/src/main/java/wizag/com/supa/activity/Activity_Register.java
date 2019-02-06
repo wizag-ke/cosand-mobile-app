@@ -53,7 +53,7 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
     EditText edit_firstname, edit_lastname, edit_id, edit_phone, email_address, create_password, confirm_password;
     private static final String SHARED_PREF_NAME = "profile";
     Button button_register, upload_image, upload_image_back;
-    String RegisterUrl = "http://sduka.wizag.biz/api/v1/auth/signup";
+    String RegisterUrl = "http://sduka.dnsalias.com/api/v1/auth/signup";
     private int SELECT_FILE = 1;
     private int SELECT_FILE_BACK = 2;
     private int REQUEST_CAMERA = 0;

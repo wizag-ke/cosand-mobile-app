@@ -68,7 +68,7 @@ public class Activity_Driver_Register extends AppCompatActivity implements Popup
     EditText plate_no;
     Button submit;
     private int SELECT_FILE = 1;
-    String register_driver_url = "http://sduka.wizag.biz/api/v1/profiles/roles";
+    String register_driver_url = "http://sduka.dnsalias.com/api/v1/profiles/roles";
     private int REQUEST_CAMERA = 0;
     String encoded;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;

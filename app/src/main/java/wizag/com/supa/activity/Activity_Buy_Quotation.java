@@ -50,7 +50,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
     String order_id;
     String unit_cost_txt, order_quantity_txt, total_cost_txt;
     String wallet_balance;
-    String makePaymentUrl = "http://sduka.wizag.biz/api/v1/wallet/pay-order";
+    String makePaymentUrl = "http://sduka.dnsalias.com/api/v1/wallet/pay-order";
     String pay_code;
     String message;
     String formattedNumber;
@@ -103,7 +103,7 @@ public class Activity_Buy_Quotation extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/orders/" + order_id + "/quotation", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/orders/" + order_id + "/quotation", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

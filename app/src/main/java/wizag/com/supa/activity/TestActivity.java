@@ -47,7 +47,7 @@ SessionManager sessionManager;
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

@@ -121,7 +121,7 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/orders/" + order_id, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/orders/" + order_id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -275,7 +275,7 @@ public class Activity_Confirm_Notification_Order extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/" + order_id + "/deliver",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.dnsalias.com/api/v1/orders/" + order_id + "/deliver",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

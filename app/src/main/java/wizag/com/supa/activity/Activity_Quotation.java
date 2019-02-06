@@ -133,7 +133,7 @@ public class Activity_Quotation extends AppCompatActivity {
     }
 
     public void loadRequest() {
-        String POST_MATERIAL_URL = "http://sduka.wizag.biz/api/order-request";
+        String POST_MATERIAL_URL = "http://sduka.dnsalias.com/api/order-request";
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         material_id = sp.getString("material_id", null);
         quality_id = sp.getString("quality_id", null);

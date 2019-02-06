@@ -42,7 +42,7 @@ public class Activity_View_Indivindual_Sites extends AppCompatActivity {
     RecyclerView recycle;
     private RecyclerView.Adapter adapter;
     private List<Model_Indivindual_Sites> indivindual_sites;
-    private static final String URL_DATA = "http://sduka.wizag.biz/api/v1/profiles/sites/";
+    private static final String URL_DATA = "http://sduka.dnsalias.com/api/v1/profiles/sites/";
     String id;
 
     @Override
@@ -73,7 +73,7 @@ public class Activity_View_Indivindual_Sites extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/profiles/sites/", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles/sites/", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

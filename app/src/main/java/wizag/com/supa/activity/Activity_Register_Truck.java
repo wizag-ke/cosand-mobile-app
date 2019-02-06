@@ -61,8 +61,8 @@ public class Activity_Register_Truck extends AppCompatActivity implements PopupM
     Spinner tonnage;
     SessionManager sessionManager;
     String token;
-    String URL = "http://sduka.wizag.biz/api/tonnage";
-    String truck = "http://sduka.wizag.biz/api/truck";
+    String URL = "http://sduka.dnsalias.com/api/tonnage";
+    String truck = "http://sduka.dnsalias.com/api/truck";
     ArrayList<String> CountryName;
     LinearLayout parent_layout;
     Button submit_truck;

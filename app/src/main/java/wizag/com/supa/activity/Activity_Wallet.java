@@ -60,8 +60,8 @@ import wizag.com.supa.models.Model_Transaction;
 public class Activity_Wallet extends AppCompatActivity {
     TextView balance;
     Button deposit, withdraw, cancel;
-    String LoadWalletUrl = "http://sduka.wizag.biz/api/v1/wallet/load";
-    String LoadTransactions = "http://sduka.wizag.biz/api/v1/wallet/summary";
+    String LoadWalletUrl = "http://sduka.dnsalias.com/api/v1/wallet/load";
+    String LoadTransactions = "http://sduka.dnsalias.com/api/v1/wallet/summary";
     SessionManager sessionManager;
     String token, amount_txt, email_txt, phone_txt, prefs_phone;
     RecyclerView recycler_view;
@@ -507,7 +507,7 @@ public class Activity_Wallet extends AppCompatActivity {
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/wallet/balance", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/wallet/balance", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

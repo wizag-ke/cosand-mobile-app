@@ -73,8 +73,8 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
     private static final String SHARED_PREF_NAME = "mysharedpref";
     Spinner material_type;
 
-    String POST_MATERIAL = "http://sduka.wizag.biz/api/v1/orders/load-request";
-    String PostLocation = "http://sduka.wizag.biz/api/v1/orders/load-request/25/location";
+    String POST_MATERIAL = "http://sduka.dnsalias.com/api/v1/orders/load-request";
+    String PostLocation = "http://sduka.dnsalias.com/api/v1/orders/load-request/25/location";
     Double value_lat, value_long;
     ArrayList<String> SellName;
     ArrayList<String> Supplier;
@@ -401,7 +401,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material + "/suppliers", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material + "/suppliers", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -498,7 +498,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -595,7 +595,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -693,7 +693,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -869,7 +869,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.show();
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -1037,7 +1037,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.setCancelable(false);
         pDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/types", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -1199,7 +1199,7 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/load-request/" + request_id + "/location",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.dnsalias.com/api/v1/orders/load-request/" + request_id + "/location",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

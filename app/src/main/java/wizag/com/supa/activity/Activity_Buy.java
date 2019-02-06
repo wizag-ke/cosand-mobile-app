@@ -103,15 +103,15 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     TextView location_name;
     List<Model_Buy> list = new ArrayList<>();
     JSONArray buy_materials;
-    String OrderRequest = "http://sduka.wizag.biz/api/v1/orders/new";
-    String PostToken = "http://sduka.wizag.biz/api/v1/profiles/token";
+    String OrderRequest = "http://sduka.dnsalias.com/api/v1/orders/new";
+    String PostToken = "http://sduka.dnsalias.com/api/v1/profiles/token";
     String code, code_buy;
     TextView service, material, detail, material_class, unit, quantity_confirm, location_confirm;
     String service_name, material_name, details_name, class_name, unit_name;
     String firebase_token;
     private static final String SHARED_PREF_NAME = "confirm_notification";
     LinearLayout buy_role;
-    String buy_code = "";
+    String buy_code = "XIND";
     JSONObject user_role_object;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     LinearLayout buy_role_layout;
@@ -151,67 +151,41 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
+        builder.setTitle("info");
+        builder.setIcon(R.drawable.info);
+        builder.setMessage("Select Role to proceed");
+        builder.setCancelable(false);
 
-
-        /*get roles*/
-        SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-        String driver_code = sp.getString("user_type", null);
-
-        try {
-            JSONArray user_role = new JSONArray(driver_code);
-            if (user_role != null) {
-                for (int l = 0; l < user_role.length(); l++) {
-
-                    user_role_object = user_role.getJSONObject(l);
-                    code = user_role_object.getString("code");
-                    code_buy = user_role_object.getString("name");
-
-                    String[] matches = new String[]{code};
-                    for (String s : matches) {
-                        if (s.contains("XIND") || s.contains("XCOR")) {
-                            selectRole();
-
-                        } else {
-                            selectRole();
-                            ////TO BE UNCOMMENTED LATER
-//                            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-//                            builder1.setMessage("Create Corporate or Individual Client account to continue");
-//                            builder1.setCancelable(false);
-//
-//                            builder1.setPositiveButton(
-//                                    "Proceed",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-//                                            finish();
-//                                        }
-//                                    });
-//
-//                            builder1.setNegativeButton(
-//                                    "Not now",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            dialog.cancel();
-//                                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-//                                            finish();
-//                                        }
-//                                    });
-//
-//                            AlertDialog alert11 = builder1.create();
-//                            alert11.show();
-
-                            break;
-                        }
+        builder.setPositiveButton("Individual Client",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        buy_code = "XIND";
+//                        dialog.cancel();
+                        dialog.dismiss();
                     }
+                });
 
-                }
-            }
+        builder.setNeutralButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                        finish();
+                    }
+                });
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        builder.setNegativeButton("Corporate Client",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        buy_code = "XCOR";
+//                        dialog.cancel();
+                    }
+                });
 
-//        selectRole();
+
+        builder.create().show();
+
 
         spinner_service_id = findViewById(R.id.spinner_service_id);
         material_item_id = findViewById(R.id.material_item_id);
@@ -401,12 +375,8 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
 
     private void getServiceType() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-      /*  final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-        pDialog.show();*/
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/types", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -500,7 +470,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         pDialog.show();*/
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/types/" + id_service + "/items", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -595,7 +565,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         pDialog.show();*/
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -692,7 +662,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         pDialog.show();*/
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -794,7 +764,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         pDialog.show();*/
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/materials/" + id_material, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/materials/" + id_material, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -1013,7 +983,9 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 for (int i = 0; i < list.size(); i++) {
                     buy_materials = jsonArray.put(list.get(i).getJSONObject());
 
-//                    Log.d("ufala",buy_materials);
+
+
+                    Log.d("ufala",buy_materials.toString());
                 }
 
 //                confirmQuote();
@@ -1076,8 +1048,15 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 params.put("client_location", address);
                 params.put("client_location_name", name);
                 params.put("client_location_details", location_description.getText().toString());
-                params.put("order_details", String.valueOf(buy_materials));
+                params.put("order_details", buy_materials.toString());
                 params.put("client_type", buy_code);
+
+                Log.d("post_details",address );
+                Log.d("post_details",name);
+                Log.d("location_description",location_description.getText().toString());
+                Log.d("buy_code", buy_code);
+
+
 
 
                 return params;
@@ -1201,42 +1180,9 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
         return super.onKeyDown(keyCode, event);
     }
 
-    private void selectRole() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
-        builder.setTitle("info");
-        builder.setIcon(R.drawable.info);
-        builder.setMessage("Select Role to proceed");
-        builder.setCancelable(false);
-
-        builder.setPositiveButton("Individual Client",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        buy_code = "XIND";
-//                        dialog.cancel();
-                        dialog.dismiss();
-                    }
-                });
-
-        builder.setNeutralButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-                        finish();
-                    }
-                });
-
-        builder.setNegativeButton("Corporate Client",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        buy_code = "XCOR";
-//                        dialog.cancel();
-                    }
-                });
-
-
-        builder.create().show();
-    }
+//    private void selectRole() {
+//
+//    }
 
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,

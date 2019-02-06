@@ -30,6 +30,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.koushikdutta.async.http.body.JSONObjectBody;
 
 import junit.runner.Version;
 
@@ -150,6 +151,8 @@ public class Activity_Login extends AppCompatActivity {
 
         prefs = this.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         checkConnection();
+
+        getBasicDetails();
     }
 
     private void checkConnection() {
@@ -359,5 +362,100 @@ public class Activity_Login extends AppCompatActivity {
 
     }
 
+    private void getBasicDetails() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();*/
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    /*store into shared prefs*/
+
+                    SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE).edit();
+
+
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject user_data = jsonObject.getJSONObject("data").getJSONObject("user");
+
+                    String email = user_data.getString("email");
+                    String phone = user_data.getString("phone");
+
+                    editor.putString("reg_email", email);
+                    editor.putString("reg_phone", phone);
+                    editor.apply();
+
+                    JSONArray roles = user_data.getJSONArray("roles");
+                    for(int i = 0;i<roles.length();i++){
+                        JSONObject roles_object = roles.getJSONObject(i).getJSONObject("details").getJSONObject("contact_person");
+                        String f_name = roles_object.getString("fname");
+                        String l_name = roles_object.getString("lname");
+                        String id_no = roles_object.getString("id_no");
+
+
+//                        String parent_type = roles_object.getString("roles");
+
+
+
+                        editor.putString("reg_fname", f_name);
+                        editor.putString("reg_lname", l_name);
+                        editor.putString("reg_id", id_no);
+
+                        editor.apply();
+                    }
+
+
+                    /*pDialog.dismiss();*/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                /*pDialog.dismiss();*/
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+              SessionManager  sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
 
 }

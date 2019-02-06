@@ -22,7 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Wallet extends Fragment {
     String live = "1";
     String vid = "annisa";
-    String cbk = "http://sduka.wizag.biz/api/v1/cb/ipayaadb";
+    String cbk = "http://sduka.dnsalias.com/api/v1/cb/ipayaadb";
     String security_key = "65ksc8dsckd5djud";
     String amount = "10";
     String p1 = "value1";

@@ -90,7 +90,7 @@ public class Activity_HandShake extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.show();
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.wizag.biz/api/v1/orders/" + order_id + "/complete",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sduka.dnsalias.com/api/v1/orders/" + order_id + "/complete",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

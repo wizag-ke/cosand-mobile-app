@@ -88,7 +88,7 @@ public class Activity_View_Order_summary extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/orders/" + order_id, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/orders/" + order_id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

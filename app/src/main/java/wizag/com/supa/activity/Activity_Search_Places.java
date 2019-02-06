@@ -94,9 +94,9 @@ public class Activity_Search_Places extends AppCompatActivity implements
     private Geofencing mGeofencing;
 
     String name, address;
-    String POST_Location_URL = "http://sduka.wizag.biz/api/user-ddp";
-    String get_Location_URL = "http://sduka.wizag.biz/api/user-ddp";
-    String post_Location_calc = "http://sduka.wizag.biz/api/qc";
+    String POST_Location_URL = "http://sduka.dnsalias.com/api/user-ddp";
+    String get_Location_URL = "http://sduka.dnsalias.com/api/user-ddp";
+    String post_Location_calc = "http://sduka.dnsalias.com/api/qc";
     String token;
 
     ArrayList<String> LocationName;

@@ -45,7 +45,7 @@ public class Activity_List_Orders extends AppCompatActivity {
     RecyclerView recycle;
     private RecyclerView.Adapter adapter;
     private List<Model_Orders> orderList;
-    private static final String URL_DATA = "http://sduka.wizag.biz/api/v1/orders/";
+    private static final String URL_DATA = "http://sduka.dnsalias.com/api/v1/orders/";
     String order_id;
 
     @Override
@@ -81,7 +81,7 @@ public class Activity_List_Orders extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.wizag.biz/api/v1/orders/", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/orders/", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

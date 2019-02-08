@@ -51,7 +51,7 @@ public class Activity_Home extends AppCompatActivity {
     String firebase_token;
     String PostToken = "http://sduka.dnsalias.com/api/v1/profiles/token";
     private static final String SHARED_PREF_NAME = "profile";
-    String code;
+    String code,profile_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,7 @@ public class Activity_Home extends AppCompatActivity {
                         for(int i = 0;i<roles.length();i++){
                             JSONObject roles_object = roles.getJSONObject(i);
                             code = roles_object.getString("code");
+                            Toast.makeText(context, code, Toast.LENGTH_SHORT).show();
                             if(code.equalsIgnoreCase("XDRI")){
 
                                 startActivity(new Intent(getApplicationContext(), Activity_Sell.class));
@@ -160,7 +161,7 @@ public class Activity_Home extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
                     /*pDialog.dismiss();*/
-                    Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
 
                 }
 
@@ -216,25 +217,96 @@ public class Activity_Home extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(code!=null) {
 
-                    if (code.contains("XDRI")) {
-                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
-                        startActivity(driver_profile);
-                    } else if (code.contains("XCOR")) {
-                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
-                        startActivity(driver_profile);
-                    } else if (code.contains("XTON")) {
-                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
-                        startActivity(driver_profile);
-                    } else if (code.contains("XSUP")) {
-                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
-                        startActivity(driver_profile);
-                    } else {
-                        Intent driver_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
-                        startActivity(driver_profile);
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+                StringRequest stringRequest3 = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONObject user_data = jsonObject.getJSONObject("data").getJSONObject("user");
+                            JSONArray roles = user_data.getJSONArray("roles");
+
+                            for(int i = 0;i<roles.length();i++){
+                                JSONObject roles_object = roles.getJSONObject(i);
+                                profile_code = roles_object.getString("code");
+
+                                if (profile_code.equalsIgnoreCase("XDRI")) {
+                                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Driver_Profile.class);
+                                    startActivity(driver_profile);
+                                } else if (profile_code.equalsIgnoreCase("XCOR")) {
+                                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Corporate_Profile.class);
+                                    startActivity(driver_profile);
+                                } else if (profile_code.equalsIgnoreCase("XTON")) {
+                                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Truck_Owner_Profile.class);
+                                    startActivity(driver_profile);
+                                } else if (profile_code.equalsIgnoreCase("XSUP")) {
+
+                                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Supplier_Profile.class);
+                                    startActivity(driver_profile);
+
+                                }
+
+
+                                else {
+                                    Intent driver_profile = new Intent(getApplicationContext(), Activity_Indvidual_Client_Profile.class);
+                                    startActivity(driver_profile);
+                                }
+
+                            }
+
+
+
+
+                            /*pDialog.dismiss();*/
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
+                }, new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        /*pDialog.dismiss();*/
+//                        Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
+
+
+                }) {
+
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        SessionManager  sessionManager = new SessionManager(getApplicationContext());
+                        HashMap<String, String> user = sessionManager.getUserDetails();
+                        String accessToken = user.get("access_token");
+
+                        String bearer = "Bearer " + accessToken;
+                        Map<String, String> headersSys = super.getHeaders();
+                        Map<String, String> headers = new HashMap<String, String>();
+                        headersSys.remove("Authorization");
+                        headers.put("Authorization", bearer);
+                        headers.putAll(headersSys);
+                        return headers;
+                    }
+                };
+
+
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest3);
+
+
+                int socketTimeout3 = 30000;
+                RetryPolicy policy3 = new DefaultRetryPolicy(socketTimeout3, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                stringRequest3.setRetryPolicy(policy3);
+                requestQueue.add(stringRequest3);
+
+
+
             }
         });
 

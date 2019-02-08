@@ -275,8 +275,8 @@ public class Activity_Register extends AppCompatActivity implements PopupMenu.On
 
                 } else {
                     registerUser();
-                    Toast.makeText(Activity_Register.this, front_id + "\n", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(Activity_Register.this, back_id + "\n", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Activity_Register.this, front_id + "\n", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Activity_Register.this, back_id + "\n", Toast.LENGTH_SHORT).show();
 
                 }
 

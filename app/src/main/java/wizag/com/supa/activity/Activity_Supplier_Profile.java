@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,7 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
     Context context;
     String code;
 
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +74,11 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
         sp = getSharedPreferences("profile", MODE_PRIVATE);
 
 
-        String supplier_fname = sp.getString("reg_fname", null);
-        String supplier_lname = sp.getString("reg_lname", null);
-        String supplier_email = sp.getString("reg_email", null);
-        String supplier_phone = sp.getString("reg_phone", null);
-        String supplier_id_no = sp.getString("reg_id", null);
+        String supplier_fname = sp.getString("supplier_fname", null);
+        String supplier_lname = sp.getString("supplier_lname", null);
+        String supplier_email = sp.getString("supplier_email", null);
+        String supplier_phone = sp.getString("supplier_phone", null);
+        String supplier_id_no = sp.getString("supplier_id", null);
 
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -107,10 +109,6 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
         email.setText(supplier_email);
         mobile_no.setText(supplier_phone);
 
-        name.setText(name_txt);
-        location.setText(location_txt);
-        kra_pin.setText(kra_pin_txt);
-
 
         next = findViewById(R.id.next);
         next.setOnClickListener(this);
@@ -130,6 +128,8 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
                 flipper.showPrevious();
             }
         });
+
+        getSupplierDetails();
 
     }
 
@@ -189,7 +189,7 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
                                             code = roles_object.getString("code");
                                             if(code.equalsIgnoreCase("XCOR")){
 
-                                                startActivity(new Intent(getApplicationContext(), Activity_Corporate_Profile.class));
+                                                startActivity(new Intent(getApplicationContext(), Activity_Supplier_Profile.class));
                                                 finish();
 
                                             }else {
@@ -574,14 +574,126 @@ public class Activity_Supplier_Profile extends AppCompatActivity implements View
         return super.onOptionsItemSelected(item);
     }
 
+    private void getSupplierDetails() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+      /*  final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();*/
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject user_data = jsonObject.getJSONObject("data").getJSONObject("user");
 
 
 
 
+                    JSONArray roles = user_data.getJSONArray("roles");
+                    for(int i = 0;i<=roles.length();i++){
+                        JSONObject roles_object = roles.getJSONObject(i);
+                        String coop_code = roles_object.getString("code");
+
+                        JSONObject details_driver = roles_object.getJSONObject("details");
+                        if(coop_code.equalsIgnoreCase("XSUP")) {
+
+                            JSONObject company = details_driver.getJSONObject("company");
+                            name_txt = company.getString("name");
+                            kra_pin_txt = company.getString("kra_pin");
+                            location_txt = company.getString("location");
+
+
+                            name.setText(name_txt);
+                            location.setText(location_txt);
+                            kra_pin.setText(kra_pin_txt);
+
+                            Model_Supplier_Profile model_supplier_profile = new Model_Supplier_Profile();
+
+                           JSONArray materials = details_driver.getJSONArray("materials");
+                           for(int n = 0;n<=materials.length();n++){
+                               JSONObject materials_object = materials.getJSONObject(n);
+                               String item = materials_object.getString("item");
+                               String item_id = materials_object.getString("id");
+                               String detail = materials_object.getString("detail");
+                               String item_class = materials_object.getString("class");
+                               String unit = materials_object.getString("unit");
+                               String price = materials_object.getString("unit_price");
+
+                               model_supplier_profile.setMaterial_name(item);
+                               model_supplier_profile.setDetails_name(detail);
+                               model_supplier_profile.setClass_name(item_class);
+                               model_supplier_profile.setUnits_name(unit);
+                               model_supplier_profile.setCost(price);
+
+
+                               if (materials_list.contains(item_id)) {
+                                   /*do nothing*/
+                               } else {
+                                   materials_list.add(model_supplier_profile);
+                               }
+
+                           }
 
 
 
 
+                        }
 
+
+                    }
+
+
+                    /*pDialog.dismiss();*/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                /*pDialog.dismiss();*/
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SessionManager  sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
+    }
 
 }

@@ -3,6 +3,7 @@ package wizag.com.supa.activity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -129,46 +130,11 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.sell);
         points = new ArrayList<LatLng>();
 
-        /*get roles*/
-      /*  SharedPreferences sp = getSharedPreferences("profile", MODE_PRIVATE);
-        String driver_code = sp.getString("user_type", null);
-        try {
-            JSONArray user_role = new JSONArray(driver_code);
-            for (int m = 0; m < user_role.length(); m++) {
-                JSONObject user_role_object = user_role.getJSONObject(m);
-                code = user_role_object.getString("code");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (sp != null) {
-            if (!code.contains("XDRI") || code.contains("XTON")) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                builder1.setMessage("Create Driver or Truck Owner account to continue");
-                builder1.setCancelable(false);
-                builder1.setPositiveButton(
-                        "Proceed",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
-                                finish();
-                            }
-                        });
-                builder1.setNegativeButton(
-                        "Not now",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                finish();
-                            }
-                        });
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-            }
-        }*/
 
 
-//        LoadMaterialTypeSpinner();
+
+
+
         getServiceType();
 
 
@@ -1298,5 +1264,105 @@ public class Activity_Sell extends AppCompatActivity implements OnMapReadyCallba
     public void onBackPressed() {
         Intent in =new Intent(getApplicationContext(),Activity_Home.class);
         startActivity(in);
+    }
+
+    void checkRole(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject user_data = jsonObject.getJSONObject("data").getJSONObject("user");
+                    JSONArray roles = user_data.getJSONArray("roles");
+
+                    for(int i = 0;i<roles.length();i++){
+                        JSONObject roles_object = roles.getJSONObject(i);
+                        code = roles_object.getString("code");
+                        if(code.equalsIgnoreCase("XDRI")){
+
+
+                        }else {
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(getApplicationContext());
+                            builder1.setMessage("Create Driver Account to continue");
+                            builder1.setCancelable(false);
+
+                            builder1.setPositiveButton(
+                                    "Proceed",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            startActivity(new Intent(getApplicationContext(), Activity_Register_Dashboard.class));
+                                            finish();
+                                        }
+                                    });
+
+                            builder1.setNegativeButton(
+                                    "Not now",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                            startActivity(new Intent(getApplicationContext(), Activity_Home.class));
+                                            finish();
+
+                                        }
+                                    });
+
+                            AlertDialog alert11 = builder1.create();
+                            alert11.show();
+                        }
+
+
+
+                    }
+
+
+
+
+                    /*pDialog.dismiss();*/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                /*pDialog.dismiss();*/
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SessionManager  sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
     }
 }

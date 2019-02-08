@@ -111,7 +111,7 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
     String firebase_token;
     private static final String SHARED_PREF_NAME = "confirm_notification";
     LinearLayout buy_role;
-    String buy_code = "XIND";
+    String buy_code ;
     JSONObject user_role_object;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     LinearLayout buy_role_layout;
@@ -151,40 +151,86 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Buy.this);
-        builder.setTitle("info");
-        builder.setIcon(R.drawable.info);
-        builder.setMessage("Select Role to proceed");
-        builder.setCancelable(false);
 
-        builder.setPositiveButton("Individual Client",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        buy_code = "XIND";
-//                        dialog.cancel();
-                        dialog.dismiss();
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://sduka.dnsalias.com/api/v1/profiles", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject user_data = jsonObject.getJSONObject("data").getJSONObject("user");
+                    JSONArray roles = user_data.getJSONArray("roles");
+
+                    for(int i = 0;i<roles.length();i++){
+                        JSONObject roles_object = roles.getJSONObject(i);
+                        code = roles_object.getString("code");
+                        if(code.equals("XCOR")){
+
+                           buy_code = "XCOR";
+
+                        }
+
+                        else {
+                            buy_code = "XIND";
+                        }
+
+
+
+
+
                     }
-                });
-
-        builder.setNeutralButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        startActivity(new Intent(getApplicationContext(), Activity_Home.class));
-                        finish();
-                    }
-                });
-
-        builder.setNegativeButton("Corporate Client",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        buy_code = "XCOR";
-//                        dialog.cancel();
-                    }
-                });
 
 
-        builder.create().show();
+
+
+                    /*pDialog.dismiss();*/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                /*pDialog.dismiss();*/
+                Toast.makeText(getApplicationContext(), "An Error Occurred" + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SessionManager  sessionManager = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String accessToken = user.get("access_token");
+
+                String bearer = "Bearer " + accessToken;
+                Map<String, String> headersSys = super.getHeaders();
+                Map<String, String> headers = new HashMap<String, String>();
+                headersSys.remove("Authorization");
+                headers.put("Authorization", bearer);
+                headers.putAll(headersSys);
+                return headers;
+            }
+        };
+
+
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
+
 
 
         spinner_service_id = findViewById(R.id.spinner_service_id);
@@ -1050,12 +1096,6 @@ public class Activity_Buy extends AppCompatActivity implements GoogleApiClient.C
                 params.put("client_location_details", location_description.getText().toString());
                 params.put("order_details", buy_materials.toString());
                 params.put("client_type", buy_code);
-
-                Log.d("post_details",address );
-                Log.d("post_details",name);
-                Log.d("location_description",location_description.getText().toString());
-                Log.d("buy_code", buy_code);
-
 
 
 
